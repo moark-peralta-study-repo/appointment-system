@@ -24,6 +24,7 @@ A MERN-stack appointment system developed as a group project.
 
 # 1. Project Structure
 
+## EXAMPLE STRUCTURE
 ```text
 appointment-system/
 │
