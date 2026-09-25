@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 150" width="768" height="300" role="img" aria-label="Happy Paws Veterinary logo">
+  <title>Happy Paws Veterinary</title>
+  <g transform="translate(47 76) scale(0.58) translate(-100 -98.5)">
+    <ellipse cx="48"  cy="78" rx="12"   ry="18" transform="rotate(-30 48 78)"  fill="#F4A261"/>
+    <ellipse cx="80"  cy="54" rx="13.5" ry="24" transform="rotate(-10 80 54)"  fill="#F4A261"/>
+    <ellipse cx="120" cy="54" rx="13.5" ry="24" transform="rotate(10 120 54)"  fill="#F4A261"/>
+    <ellipse cx="152" cy="78" rx="12"   ry="18" transform="rotate(30 152 78)"  fill="#F4A261"/>
+    <path d="M100 168
+             C 74 148, 62 134, 62 118
+             C 62 102, 72 92, 86 92
+             C 94 92, 100 98, 100 106
+             C 100 98, 106 92, 114 92
+             C 128 92, 138 102, 138 118
+             C 138 134, 126 148, 100 168 Z"
+          fill="#0F766E"/>
+  </g>
+  <text x="112" y="78" font-family="'Baloo 2','Trebuchet MS',sans-serif" font-weight="800" font-size="44" fill="#1F2A2A">Happy Paws</text>
+  <text x="116" y="106" font-family="'Nunito Sans','Segoe UI',sans-serif" font-weight="800" font-size="17" letter-spacing="5.8" fill="#5B6A69">VETERINARY</text>
+  <rect x="114" y="120" width="150" height="4" rx="2" fill="#F4A261"/>
+</svg>
