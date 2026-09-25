@@ -1,0 +1,247 @@
+/* =============================================================
+   Happy Paws Veterinary — Design Tokens (vanilla CSS)
+   Light + dark mode. Use as-is or copy :root/.dark blocks.
+   ============================================================= */
+
+/* ---------- Fonts (variable, loaded here — no <link> needed) ----------
+   Baloo 2 (display): variable weight 400–800
+   Nunito Sans (body): variable weight 200–1000
+-----------------------------------------------------------------*/
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Nunito+Sans:opsz,wght@6..12,200..1000&display=swap");
+
+:root {
+	color-scheme: light;
+
+	/* ---- surfaces ---- */
+	--background: #faf6ef; /* app bg (cream) */
+	--surface: #ffffff; /* cards, modals */
+	--surface-2: #f4efe6; /* inset panels, zebra rows */
+	--border: #e7e0d3; /* hairlines */
+	--border-strong: #d8cfbe; /* dividers, input focus ring base */
+
+	/* ---- text ---- */
+	--foreground: #1f2a2a; /* ink */
+	--muted: #5b6a69; /* secondary text */
+	--faint: #8a8f8c; /* decorative only (meta, watermarks) */
+	--on-inverted: #ffffff;
+
+	/* ---- brand: primary (teal = paw's heart) ---- */
+	--primary: #0f766e;
+	--primary-hover: #0d685f;
+	--primary-active: #0a5a52;
+	--primary-soft: #e3f0ee; /* tinted bg */
+	--primary-text: #0f766e; /* primary used AS text */
+	--primary-contrast: #ffffff; /* text on primary */
+
+	/* ---- brand: accent (coral = toes) ---- */
+	--accent: #e86a33;
+	--accent-hover: #f08653;
+	--accent-soft: #fce8d2; /* tinted bg */
+	--accent-text: #b4530a; /* AA-safe coral-toned text */
+	--accent-soft-text: #85340c; /* text on accent-soft */
+	--accent-contrast: #1f2a2a; /* ink text on accent (AA 4.6:1) */
+
+	/* ---- semantic states ---- */
+	--success: #1d6b4f;
+	--success-soft: #e4f2ec;
+	--success-text: #1d6b4f;
+	--warning: #8a5a00;
+	--warning-soft: #fbf3df;
+	--warning-text: #8a5a00;
+	--danger: #b4231f;
+	--danger-soft: #fbe9e7;
+	--danger-text: #b4231f;
+
+	/* ---- shape ---- */
+	--radius-sm: 6px;
+	--radius-md: 10px;
+	--radius-lg: 16px;
+	--radius-xl: 24px;
+	--radius-full: 9999px;
+
+	/* ---- spacing (4px grid) ---- */
+	--space-xs: 0.25rem; /* 4 */
+	--space-sm: 0.5rem; /* 8 */
+	--space-md: 1rem; /* 16 */
+	--space-lg: 1.5rem; /* 24 */
+	--space-xl: 2rem; /* 32 */
+	--space-2xl: 3rem; /* 48 */
+	--space-3xl: 4rem; /* 64 */
+
+	/* ---- elevation (warm-tinted) ---- */
+	--shadow-sm: 0 1px 2px rgba(31, 42, 42, 0.06);
+	--shadow-md: 0 2px 8px rgba(31, 42, 42, 0.08);
+	--shadow-lg: 0 8px 24px rgba(31, 42, 42, 0.1);
+
+	/* ---- motion ---- */
+	--ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+	--duration: 180ms;
+
+	/* ---- type ---- */
+	--font-display: "Baloo 2", ui-rounded, system-ui, sans-serif;
+	--font-sans: "Nunito Sans", system-ui, -apple-system, sans-serif;
+
+	/* ---- font weights ----
+	   Both families are VARIABLE, so any numeric weight in range
+	   renders (e.g. font-weight: 550) — these are named defaults. */
+	--font-weight-light: 300; /* Nunito only (Baloo starts at 400) */
+	--font-weight-normal: 400;
+	--font-weight-medium: 500;
+	--font-weight-semibold: 600;
+	--font-weight-bold: 700;
+	--font-weight-extrabold: 800;
+	--font-weight-black: 900; /* Nunito only (Baloo caps at 800) */
+}
+
+/* ============================ DARK ============================ */
+.dark {
+	color-scheme: dark;
+
+	/* surfaces: deep teal-black steps */
+	--background: #0b1514;
+	--surface: #12201e;
+	--surface-2: #182825;
+	--border: #243833;
+	--border-strong: #31473f;
+
+	/* text */
+	--foreground: #f2efe9;
+	--muted: #93a5a0;
+	--faint: #6b7a76;
+	--on-inverted: #0b1514;
+
+	/* brand — accents lighten to glow */
+	--primary: #2dd4bf;
+	--primary-hover: #14b8a6;
+	--primary-active: #0d9488;
+	--primary-soft: #12332f;
+	--primary-text: #2dd4bf;
+	--primary-contrast: #12201e; /* dark text on bright teal */
+
+	--accent: #f7b267;
+	--accent-hover: #f4a261;
+	--accent-soft: #3a2c1b;
+	--accent-text: #f7b267;
+	--accent-soft-text: #f7b267;
+	--accent-contrast: #12201e;
+
+	/* semantic states */
+	--success: #4ade80;
+	--success-soft: #12281c;
+	--success-text: #4ade80;
+	--warning: #facc15;
+	--warning-soft: #2a2410;
+	--warning-text: #facc15;
+	--danger: #f97066;
+	--danger-soft: #2e1714;
+	--danger-text: #f97066;
+
+	/* elevation — surface steps do the work; shadows stay subtle */
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+	--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
+	--shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* ====================== BASE COMPONENT STYLES ====================== */
+/* Minimal, framework-free components using the tokens above.
+   Drop into your app or adapt. */
+
+button,
+.button {
+	font-family: var(--font-sans);
+	font-size: 1rem;
+	font-weight: var(--font-weight-semibold);
+	border: 1px solid transparent;
+	border-radius: var(--radius-md);
+	padding: 12px 20px;
+	cursor: pointer;
+	transition:
+		background-color var(--duration) var(--ease),
+		border-color var(--duration) var(--ease),
+		transform 120ms var(--ease);
+}
+.button:active {
+	transform: translateY(1px);
+}
+.button:focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 2px;
+}
+
+.button-primary {
+	background: var(--primary);
+	color: var(--primary-contrast);
+}
+.button-primary:hover {
+	background: var(--primary-hover);
+}
+.button-primary:active {
+	background: var(--primary-active);
+}
+
+.button-accent {
+	background: var(--accent);
+	color: var(--accent-contrast);
+}
+.button-accent:hover {
+	background: var(--accent-hover);
+}
+
+.button-secondary {
+	background: var(--surface);
+	color: var(--foreground);
+	border-color: var(--border-strong);
+}
+.button-secondary:hover {
+	background: var(--surface-2);
+}
+
+.button-ghost {
+	background: transparent;
+	color: var(--foreground);
+}
+.button-ghost:hover {
+	background: var(--surface-2);
+}
+
+.card {
+	background: var(--surface);
+	color: var(--foreground);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	padding: var(--space-lg);
+	box-shadow: var(--shadow-sm);
+}
+
+.chip-accent {
+	display: inline-flex;
+	align-items: center;
+	background: var(--accent-soft);
+	color: var(--accent-soft-text);
+	border-radius: var(--radius-full);
+	padding: 4px 12px;
+	font-family: var(--font-sans);
+	font-size: 0.75rem;
+	font-weight: var(--font-weight-bold);
+	letter-spacing: 0.08em;
+}
+
+.input {
+	font-family: var(--font-sans);
+	font-size: 1rem;
+	color: var(--foreground);
+	background: var(--surface);
+	border: 1px solid var(--border-strong);
+	border-radius: var(--radius-sm);
+	padding: 10px 12px;
+}
+.input::placeholder {
+	color: var(--faint);
+}
+.input:focus {
+	outline: 2px solid var(--primary);
+	outline-offset: 1px;
+	border-color: transparent;
+}
+
+/* ============================================================= */

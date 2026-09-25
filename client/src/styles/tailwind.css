@@ -1,0 +1,135 @@
+/* =============================================================
+   Happy Paws Veterinary — Tailwind v4 theme
+   Usage: this file is your main CSS entry for Tailwind v4.
+
+     @import "./design-system/tailwind.css";
+
+   Everything below the @theme block is optional app glue
+   (class-based dark mode). Delete what you don't need.
+   ============================================================= */
+
+/* ---------- Fonts (variable, loaded here — no <link> needed) ----------
+   Baloo 2 (display): variable weight 400–800
+   Nunito Sans (body): variable weight 200–1000
+   @import must precede all other rules, so it sits above Tailwind. */
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Nunito+Sans:opsz,wght@6..12,200..1000&display=swap");
+
+@import "tailwindcss";
+
+/* Class-based dark mode toggle (add/remove .dark on <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- Light values = defaults ---------- */
+@theme {
+  /* surfaces */
+  --color-background: #FAF6EF;
+  --color-surface: #FFFFFF;
+  --color-surface-2: #F4EFE6;
+  --color-border: #E7E0D3;
+  --color-border-strong: #D8CFBE;
+
+  /* text */
+  --color-ink: #1F2A2A;
+  --color-muted: #5B6A69;
+  --color-faint: #8A8F8C;
+
+  /* brand primary (teal) */
+  --color-primary: #0F766E;
+  --color-primary-hover: #0D685F;
+  --color-primary-soft: #E3F0EE;
+  --color-primary-contrast: #FFFFFF;
+
+  /* brand accent (coral) */
+  --color-accent: #E86A33;
+  --color-accent-hover: #F08653;
+  --color-accent-soft: #FCE8D2;
+  --color-accent-text: #B4530A;
+  --color-accent-contrast: #1F2A2A;
+
+  /* semantic */
+  --color-success: #1D6B4F;
+  --color-success-soft: #E4F2EC;
+  --color-warning: #8A5A00;
+  --color-warning-soft: #FBF3DF;
+  --color-danger: #B4231F;
+  --color-danger-soft: #FBE9E7;
+
+  /* shape */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* type */
+  --font-display: "Baloo 2", ui-rounded, system-ui, sans-serif;
+  --font-sans: "Nunito Sans", system-ui, -apple-system, sans-serif;
+
+  /* font weights — both families are VARIABLE fonts, so any numeric
+     weight in range works (e.g. font-[550]); these map to the
+     font-thin … font-black utilities. */
+  --font-weight-thin: 100;       /* Nunito only */
+  --font-weight-extralight: 200; /* Nunito only */
+  --font-weight-light: 300;      /* Nunito only */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;      /* Nunito only */
+
+  /* elevation */
+  --shadow-sm: 0 1px 2px rgba(31, 42, 42, 0.06);
+  --shadow-md: 0 2px 8px rgba(31, 42, 42, 0.08);
+  --shadow-lg: 0 8px 24px rgba(31, 42, 42, 0.10);
+}
+
+/* ---------- Dark mode overrides (after @theme on purpose) ---------- */
+.dark {
+  --color-background: #0B1514;
+  --color-surface: #12201E;
+  --color-surface-2: #182825;
+  --color-border: #243833;
+  --color-border-strong: #31473F;
+
+  --color-ink: #F2EFE9;
+  --color-muted: #93A5A0;
+  --color-faint: #6B7A76;
+
+  --color-primary: #2DD4BF;
+  --color-primary-hover: #14B8A6;
+  --color-primary-soft: #12332F;
+  --color-primary-contrast: #12201E;
+
+  --color-accent: #F7B267;
+  --color-accent-hover: #F4A261;
+  --color-accent-soft: #3A2C1B;
+  --color-accent-text: #F7B267;
+  --color-accent-contrast: #12201E;
+
+  --color-success: #4ADE80;
+  --color-success-soft: #12281C;
+  --color-warning: #FACC15;
+  --color-warning-soft: #2A2410;
+  --color-danger: #F97066;
+  --color-danger-soft: #2E1714;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* ---------- App glue (optional) ---------- */
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background: var(--color-background);
+    color: var(--color-ink);
+  }
+  body {
+    background: var(--color-background);
+    color: var(--color-ink);
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+  }
+}
