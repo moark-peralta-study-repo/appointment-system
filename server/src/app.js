@@ -1,12 +1,16 @@
 import express from "express";
+import cors from "cors";
+import userRoutes from "./routes/userRoutes.js";
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 const app = express();
 
-app.get("/", (req, res) => {
-	res.send("Hello world");
-});
+app.use(cors({ origin: process.env.CLIENT_URL }));
+app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-	console.log(`Port running in Port:${PORT}`);
-});
+app.use("/api/auth", userRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
+
+export default app;
