@@ -1,4 +1,4 @@
-import { login, register } from "../services/userService";
+import { login, register } from "../services/userService.js";
 
 export async function registerUser(req, res, next) {
 	try {
@@ -18,6 +18,6 @@ export async function loginUser(req, res, next) {
 	}
 }
 
-export async function getuserProfile(req, res) {
+export async function getUserProfile(req, res) {
 	res.json({ user: req.user });
 }

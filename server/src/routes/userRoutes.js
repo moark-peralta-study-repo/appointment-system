@@ -10,6 +10,6 @@ const router = Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/profile", protectAuth(req, res, next), getUserProfile);
+router.get("/profile", protectAuth, getUserProfile);
 
 export default router;

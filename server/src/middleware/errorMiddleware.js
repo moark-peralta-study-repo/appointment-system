@@ -3,5 +3,7 @@ export const notFound = (_, res) => {
 };
 
 export const errorHandler = (err, req, res, next) => {
-	res.status(err.status || 500).json({ message: err.message });
+	let status = err.status || 500;
+	if (err.name === "ValidationError") status = 400;
+	res.status(status).json({ message: err.message });
 };
