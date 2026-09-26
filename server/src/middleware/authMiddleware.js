@@ -25,3 +25,13 @@ export async function protectAuth(req, res, next) {
 		res.status(401).json({ message: "Not authorized, no token" });
 	}
 }
+
+export function authorize(...roles) {
+	return (req, res, next) => {
+		if (roles.includes(req.user.role)) {
+			next();
+		} else {
+			res.status(403).json({ message: "Not authorized, role required" });
+		}
+	};
+}
