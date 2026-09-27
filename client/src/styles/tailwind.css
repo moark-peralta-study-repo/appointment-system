@@ -1,8 +1,8 @@
 /* ---------- Fonts (variable, loaded here — no <link> needed) ----------
-   Baloo 2 (display): variable weight 400–800
-   Nunito Sans (body): variable weight 200–1000
+   League Spartan (display): variable weight 100–900
+   Baloo Thambi 2 (body): variable weight 400–800
    @import must precede all other rules, so it sits above Tailwind. */
-@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Nunito+Sans:opsz,wght@6..12,200..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Thambi+2:wght@400..800&family=League+Spartan:wght@100..900&display=swap");
 
 @import "tailwindcss";
 
@@ -12,35 +12,35 @@
 /* ---------- Light values = defaults ---------- */
 @theme {
   /* surfaces */
-  --color-background: #FAF6EF;
+  --color-background: #FDFFF1;
   --color-surface: #FFFFFF;
-  --color-surface-2: #F4EFE6;
-  --color-border: #E7E0D3;
-  --color-border-strong: #D8CFBE;
+  --color-surface-2: #F4F9E8;
+  --color-border: #E4EED4;
+  --color-border-strong: #C9D6B6;
 
   /* text */
-  --color-ink: #1F2A2A;
-  --color-muted: #5B6A69;
-  --color-faint: #8A8F8C;
+  --color-ink: #00345B;
+  --color-muted: #4E6E85;
+  --color-faint: #85A8C0;
 
-  /* brand primary (teal) */
-  --color-primary: #0F766E;
-  --color-primary-hover: #0D685F;
-  --color-primary-soft: #E3F0EE;
+  /* brand primary (electric blue) */
+  --color-primary: #0091FD;
+  --color-primary-hover: #0070E0;
+  --color-primary-soft: #D6EFFF;
   --color-primary-contrast: #FFFFFF;
 
-  /* brand accent (coral) */
-  --color-accent: #E86A33;
-  --color-accent-hover: #F08653;
-  --color-accent-soft: #FCE8D2;
-  --color-accent-text: #B4530A;
-  --color-accent-contrast: #1F2A2A;
+  /* brand accent (sunshine yellow) */
+  --color-accent: #FFFEA1;
+  --color-accent-hover: #FDF489;
+  --color-accent-soft: #FFFEA1;
+  --color-accent-text: #6E6200;
+  --color-accent-contrast: #00345B;
 
   /* semantic */
-  --color-success: #1D6B4F;
-  --color-success-soft: #E4F2EC;
-  --color-warning: #8A5A00;
-  --color-warning-soft: #FBF3DF;
+  --color-success: #3E6B14;
+  --color-success-soft: #DCF2AA;
+  --color-warning: #6E6200;
+  --color-warning-soft: #FFFEA1;
   --color-danger: #B4231F;
   --color-danger-soft: #FBE9E7;
 
@@ -51,54 +51,57 @@
   --radius-xl: 24px;
 
   /* type */
-  --font-display: "Baloo 2", ui-rounded, system-ui, sans-serif;
-  --font-sans: "Nunito Sans", system-ui, -apple-system, sans-serif;
+  --font-display: "League Spartan", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Baloo Thambi 2", ui-rounded, system-ui, sans-serif;
 
   /* font weights — both families are VARIABLE fonts, so any numeric
      weight in range works (e.g. font-[550]); these map to the
-     font-thin … font-black utilities. */
-  --font-weight-thin: 100;       /* Nunito only */
-  --font-weight-extralight: 200; /* Nunito only */
-  --font-weight-light: 300;      /* Nunito only */
+     font-thin … font-black utilities. League Spartan 100–900,
+     Baloo Thambi 2 400–800. */
+  --font-weight-thin: 100;       /* League only */
+  --font-weight-extralight: 200; /* League only */
+  --font-weight-light: 300;      /* League only */
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
   --font-weight-extrabold: 800;
-  --font-weight-black: 900;      /* Nunito only */
+  --font-weight-black: 900;      /* League only */
 
-  /* elevation */
-  --shadow-sm: 0 1px 2px rgba(31, 42, 42, 0.06);
-  --shadow-md: 0 2px 8px rgba(31, 42, 42, 0.08);
-  --shadow-lg: 0 8px 24px rgba(31, 42, 42, 0.10);
+  /* elevation (navy-tinted) */
+  --shadow-sm: 0 1px 2px rgba(0, 52, 91, 0.06);
+  --shadow-md: 0 2px 8px rgba(0, 52, 91, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 52, 91, 0.10);
 }
 
 /* ---------- Dark mode overrides (after @theme on purpose) ---------- */
 .dark {
-  --color-background: #0B1514;
-  --color-surface: #12201E;
-  --color-surface-2: #182825;
-  --color-border: #243833;
-  --color-border-strong: #31473F;
+  --color-background: #041E30;
+  --color-surface: #0A2D47;
+  --color-surface-2: #103A5A;
+  --color-border: #1C466B;
+  --color-border-strong: #2C5B85;
 
-  --color-ink: #F2EFE9;
-  --color-muted: #93A5A0;
-  --color-faint: #6B7A76;
+  --color-ink: #F4FAFF;
+  --color-muted: #A8C4D8;
+  --color-faint: #6F8BA1;
 
-  --color-primary: #2DD4BF;
-  --color-primary-hover: #14B8A6;
-  --color-primary-soft: #12332F;
-  --color-primary-contrast: #12201E;
+  /* blue lightens to glow on dark navy */
+  --color-primary: #33AAFF;
+  --color-primary-hover: #0091FD;
+  --color-primary-soft: #12304A;
+  --color-primary-contrast: #041E30;
 
-  --color-accent: #F7B267;
-  --color-accent-hover: #F4A261;
+  /* yellow is already the lightest hue — stays as-is */
+  --color-accent: #FFFEA1;
+  --color-accent-hover: #FDF489;
   --color-accent-soft: #3A2C1B;
-  --color-accent-text: #F7B267;
-  --color-accent-contrast: #12201E;
+  --color-accent-text: #FFFEA1;
+  --color-accent-contrast: #00345B;
 
-  --color-success: #4ADE80;
-  --color-success-soft: #12281C;
-  --color-warning: #FACC15;
+  --color-success: #8FD14F;
+  --color-success-soft: #14301C;
+  --color-warning: #FFFEA1;
   --color-warning-soft: #2A2410;
   --color-danger: #F97066;
   --color-danger-soft: #2E1714;
