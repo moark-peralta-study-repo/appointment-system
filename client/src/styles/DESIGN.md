@@ -1,75 +1,76 @@
 ---
 version: alpha
 name: Happy Paws
-description: Warm, friendly veterinary identity — cream backgrounds, deep teal primary, coral accent.
+description: Bright, friendly veterinary identity — cream paper, navy ink, electric blue and sunshine yellow with sage green.
 colors:
-  background: "#FAF6EF"
-  foreground: "#1F2A2A"
-  muted: "#5B6A69"
-  primary: "#0F766E"
-  primary-hover: "#0D685F"
-  accent: "#E86A33"
-  accent-hover: "#F08653"
-  accent-soft: "#FCE8D2"
-  success: "#1D6B4F"
-  success-soft: "#E4F2EC"
-  warning: "#8A5A00"
-  warning-soft: "#FBF3DF"
+  background: "#FDFFF1"
+  foreground: "#00345B"
+  muted: "#4E6E85"
+  primary: "#0091FD"
+  primary-hover: "#0070E0"
+  primary-soft: "#D6EFFF"
+  accent: "#FFFEA1"
+  accent-hover: "#FDF489"
+  accent-soft: "#FFFEA1"
+  success: "#3E6B14"
+  success-soft: "#DCF2AA"
+  warning: "#6E6200"
+  warning-soft: "#FFFEA1"
   danger: "#B4231F"
   danger-soft: "#FBE9E7"
 typography:
   display-xl:
-    fontFamily: Baloo 2
+    fontFamily: League Spartan
     fontSize: 3rem
-    fontWeight: 800
+    fontWeight: 900
     lineHeight: 1.1
-    letterSpacing: "-0.02em"
+    letterSpacing: "-0.01em"
   display-lg:
-    fontFamily: Baloo 2
+    fontFamily: League Spartan
     fontSize: 2.25rem
-    fontWeight: 700
+    fontWeight: 800
     lineHeight: 1.15
     letterSpacing: "-0.01em"
   display-md:
-    fontFamily: Baloo 2
+    fontFamily: League Spartan
     fontSize: 1.5rem
     fontWeight: 700
     lineHeight: 1.2
   heading-lg:
-    fontFamily: Baloo 2
+    fontFamily: League Spartan
     fontSize: 1.25rem
     fontWeight: 700
     lineHeight: 1.3
   heading-md:
-    fontFamily: Baloo 2
+    fontFamily: League Spartan
     fontSize: 1.125rem
     fontWeight: 600
     lineHeight: 1.4
   body-lg:
-    fontFamily: Nunito Sans
+    fontFamily: Baloo Thambi 2
     fontSize: 1.125rem
-    fontWeight: 400
+    fontWeight: 500
     lineHeight: 1.6
   body:
-    fontFamily: Nunito Sans
+    fontFamily: Baloo Thambi 2
     fontSize: 1rem
-    fontWeight: 400
+    fontWeight: 500
     lineHeight: 1.6
   body-sm:
-    fontFamily: Nunito Sans
+    fontFamily: Baloo Thambi 2
     fontSize: 0.875rem
-    fontWeight: 400
+    fontWeight: 500
     lineHeight: 1.55
   label:
-    fontFamily: Nunito Sans
+    fontFamily: Baloo Thambi 2
     fontSize: 0.75rem
     fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "0.08em"
   caption:
-    fontFamily: Nunito Sans
+    fontFamily: Baloo Thambi 2
     fontSize: 0.75rem
-    fontWeight: 400
+    fontWeight: 500
     lineHeight: 1.4
 rounded:
   sm: 6px
@@ -113,7 +114,6 @@ components:
     textColor: "{colors.foreground}"
     rounded: "{rounded.md}"
     padding: "12px"
-    typography: "{typography.body}"
   button-ghost:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
@@ -126,7 +126,7 @@ components:
     padding: "{spacing.lg}"
   chip-accent:
     backgroundColor: "{colors.accent-soft}"
-    textColor: "#85340C"
+    textColor: "{colors.warning}"
     rounded: "{rounded.full}"
     padding: "4px 12px"
     typography: "{typography.label}"
@@ -156,31 +156,34 @@ components:
 
 ## Overview
 
-Happy Paws is a veterinary identity built around two feelings: **calm** (deep teal, cream) and **warm** (coral). The paw mark — coral toes, teal heart pad — is the brand's signature; the UI inherits its palette but is deliberately quieter, so content and patient information stay legible.
+Happy Paws is a veterinary identity built around **bright, confident, cheerful**: cream paper, navy ink, an electric blue that drives action, and a sunshine yellow that celebrates it. A sage green grounds "all clear" states. The mood is a sunny clinic — nothing muted, nothing dark, except the navy ink that holds it together.
 
 ## Colors
 
-- **Primary (#0F766E):** the teal of the paw's heart pad. Drives all core actions, links, focus rings, and active states.
-- **Accent (#E86A33 / soft #FCE8D2):** a deeper coral for emphasis moments (highlights, celebratory states, secondary CTAs). Never body text — coral is a decorative hue in the logo.
-- **Background (#FAF6EF):** soft cream, the brand's paper. Surfaces are white; the cream sits behind them.
-- **Foreground (#1F2A2A):** ink — a teal-tinted near-black, not pure black.
-- **Muted (#5B6A69):** secondary text, captions, disabled labels.
+- **Primary (#0091FD):** electric blue — the brand's action color. All core buttons, links, focus rings, and active states. Button text on it is white (AA on the hover/active shades: #0070E0 at 4.8:1, deeper on #005FC0); when blue is used *as text* on light backgrounds, step down to the ink-safe shade #0062C8 (5.8:1).
+- **Accent (#FFFEA1):** sunshine yellow — emphasis moments (highlights, celebratory states, secondary CTAs). It is already a pastel, so `accent-soft` **is** the accent; yellow-tinted callouts pair it with olive ink text (#6E6200, 5.9:1).
+- **Background (#FDFFF1):** soft cream, the brand's paper. Surfaces are white; the cream sits behind them.
+- **Foreground (#00345B):** navy ink — the design's dark hue. All body text, headings, and borders derive from it.
+- **Muted (#4E6E85):** slate — secondary text, captions, disabled labels (5.3:1 on cream).
+- **Success (#3E6B14 / soft #DCF2AA):** the design's sage green for "all clear" states (vaccinated, confirmed).
+- **Danger (#B4231F / soft #FBE9E7):** red is deliberately *outside* the brand palette — overdue/critical states need red, and it stays unmistakably separate from blue/yellow/green.
 
-Dark mode inverts the relationship: a deep teal-black background (#0B1514) with cream text, and the accents *lighten* (primary becomes #2DD4BF, accent #F7B267) so they glow instead of recede.
+Dark mode inverts on the navy axis: a deep navy-black background (#041E30) with near-white text (#F4FAFF). Blue lightens to #33AAFF so it glows on the dark navy; yellow stays #FFFEA1 (it is already the lightest hue in the brand); success greens up to #8FD14F.
 
 ## Typography
 
-**Baloo 2** (rounded, warm display) for headings and the wordmark — mirrors the paw's softness.
-**Nunito Sans** for everything body — humanist, friendly, highly legible at small sizes.
+**League Spartan** (condensed, confident) for headings and the wordmark — tall, bold, sporty; it carries the "confident" feeling of the brand.
+**Baloo Thambi 2** (rounded, warm) for everything body — friendly, highly legible, with a slightly heavier default (weight 500) so text sits up on the bright palette.
 All-caps labels use wide letter-spacing (0.08em), never tracking on body copy.
+Both families are variable fonts: League Spartan runs 100–900, Baloo Thambi 2 runs 400–800 — so weight 900 is League-only and weight 300 is League-only too.
 
 ## Layout
 
-4px base grid. Spacing scale: 4 / 8 / 16 / 24 / 32 / 48 / 64. Content max-width 1120px. Generous whitespace — the brand is warm, not dense.
+4px base grid. Spacing scale: 4 / 8 / 16 / 24 / 32 / 48 / 64. Content max-width 1120px. Generous whitespace — the brand is bright and open, not dense.
 
 ## Elevation & Depth
 
-Light mode: warm-tinted soft shadows (low alpha, large blur). Dark mode: elevation is expressed by border color + slightly lighter surface steps, not shadows (shadows are nearly invisible on dark).
+Light mode: navy-tinted soft shadows (low alpha, large blur) so depth reads against the cream. Dark mode: elevation is expressed by navy surface steps (#041E30 → #0A2D47 → #103A5A) and border color, not shadows.
 
 ## Shapes
 
@@ -188,17 +191,18 @@ Rounded is the brand default: sm 6px (inputs), md 10px (buttons), lg 16px (cards
 
 ## Components
 
-- `button-primary` is the default high-emphasis action (teal, white text — 5.47:1).
-- `button-accent` is reserved for one moment per screen (booking CTA, "approved" actions) — coral, white text (4.6:1, AA for large text; use 600+ weight).
+- `button-primary` is the default high-emphasis action (electric blue, white text — AA on the hover/active shades).
+- `button-accent` is reserved for one moment per screen (booking CTA, "approved" actions) — sunshine yellow, navy ink text (12.1:1).
 - `button-secondary` and `button-ghost` de-emphasize; ghost is for icon rows and table actions.
-- `card` is the base container (white on cream, lg radius, soft shadow).
-- `chip-accent` is the only place coral-tinted text is allowed (#85340C on #FCE8D2, 7.06:1).
+- `card` is the base container (white on cream, lg radius, soft navy-tinted shadow).
+- `chip-accent` is the only place olive text (#6E6200) sits on yellow — 5.9:1.
+- `chip-success` is the only place the sage green appears — #3E6B14 on #DCF2AA, 5.2:1.
 
 ## Do's and Don'ts
 
-- **Do** keep coral out of body copy; use `accent-soft` background + brown text for coral-tinted callouts.
-- **Don't** pair coral and teal at equal visual weight in the same component — one leads, the other punctuates.
-- **Do** use cream (#FAF6EF) as the app background so white cards float.
-- **Don't** introduce new hues (e.g., blue or purple) for state colors; success/warning/danger stay in the existing family.
-- **Do** mirror the badge's circular geometry for avatars, icons, and the logo chip.
-- **Don't** use pure black (#000) or pure white as text/border on cream — the brand's ink and borders are tinted.
+- **Do** keep yellow as emphasis, not body copy — yellow-tinted callouts use `accent-soft` + olive text (#6E6200).
+- **Don't** use white text on the electric blue *base* shade as body text — it sits at 3.3:1. White is fine on button hover/active (#0070E0, 4.8:1); for blue-as-text use #0062C8.
+- **Do** use cream (#FDFFF1) as the app background so white cards float; navy ink for all text.
+- **Don't** introduce new hues for brand moments — blue, yellow, sage green, navy are the brand; red is reserved for danger only.
+- **Do** pair League Spartan (headings) with Baloo Thambi 2 (body) — never swap them; the contrast between condensed-bold and rounded-warm is the brand's voice.
+- **Don't** use pure black (#000) or pure white as text on cream — the brand's ink is navy (#00345B) and its paper is cream (#FDFFF1).

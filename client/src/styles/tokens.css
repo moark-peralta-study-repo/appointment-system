@@ -1,48 +1,48 @@
 /* ---------- Fonts (variable, loaded here — no <link> needed) ----------
-   Baloo 2 (display): variable weight 400–800
-   Nunito Sans (body): variable weight 200–1000
+   League Spartan (display): variable weight 100–900
+   Baloo Thambi 2 (body): variable weight 400–800
 -----------------------------------------------------------------*/
-@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Nunito+Sans:opsz,wght@6..12,200..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Thambi+2:wght@400..800&family=League+Spartan:wght@100..900&display=swap");
 
 :root {
 	color-scheme: light;
 
 	/* ---- surfaces ---- */
-	--background: #faf6ef; /* app bg (cream) */
+	--background: #fdfff1; /* app bg (cream) */
 	--surface: #ffffff; /* cards, modals */
-	--surface-2: #f4efe6; /* inset panels, zebra rows */
-	--border: #e7e0d3; /* hairlines */
-	--border-strong: #d8cfbe; /* dividers, input focus ring base */
+	--surface-2: #f4f9e8; /* inset panels, zebra rows (green-tinted) */
+	--border: #e4eed4; /* hairlines */
+	--border-strong: #c9d6b6; /* dividers, input focus ring base */
 
 	/* ---- text ---- */
-	--foreground: #1f2a2a; /* ink */
-	--muted: #5b6a69; /* secondary text */
-	--faint: #8a8f8c; /* decorative only (meta, watermarks) */
+	--foreground: #00345b; /* navy ink */
+	--muted: #4e6e85; /* slate — secondary text */
+	--faint: #85a8c0; /* decorative only (meta, watermarks) */
 	--on-inverted: #ffffff;
 
-	/* ---- brand: primary (teal = paw's heart) ---- */
-	--primary: #0f766e;
-	--primary-hover: #0d685f;
-	--primary-active: #0a5a52;
-	--primary-soft: #e3f0ee; /* tinted bg */
-	--primary-text: #0f766e; /* primary used AS text */
-	--primary-contrast: #ffffff; /* text on primary */
+	/* ---- brand: primary (electric blue) ---- */
+	--primary: #0091fd;
+	--primary-hover: #0070e0;
+	--primary-active: #005fc0;
+	--primary-soft: #d6efff; /* tinted bg */
+	--primary-text: #0062c8; /* primary used AS text (AA on cream) */
+	--primary-contrast: #ffffff; /* white text on primary (AA on hover/active shades) */
 
-	/* ---- brand: accent (coral = toes) ---- */
-	--accent: #e86a33;
-	--accent-hover: #f08653;
-	--accent-soft: #fce8d2; /* tinted bg */
-	--accent-text: #b4530a; /* AA-safe coral-toned text */
-	--accent-soft-text: #85340c; /* text on accent-soft */
-	--accent-contrast: #1f2a2a; /* ink text on accent (AA 4.6:1) */
+	/* ---- brand: accent (sunshine yellow) ---- */
+	--accent: #fffea1; /* sunshine yellow */
+	--accent-hover: #fdf489;
+	--accent-soft: #fffea1; /* yellow IS the pastel — soft = accent */
+	--accent-text: #6e6200; /* olive ink (AA-safe yellow-toned text) */
+	--accent-soft-text: #6e6200; /* text on accent-soft */
+	--accent-contrast: #00345b; /* navy ink text on accent (12.1:1) */
 
 	/* ---- semantic states ---- */
-	--success: #1d6b4f;
-	--success-soft: #e4f2ec;
-	--success-text: #1d6b4f;
-	--warning: #8a5a00;
-	--warning-soft: #fbf3df;
-	--warning-text: #8a5a00;
+	--success: #3e6b14;
+	--success-soft: #dcf2aa; /* sage green */
+	--success-text: #3e6b14;
+	--warning: #6e6200;
+	--warning-soft: #fffea1; /* shares the yellow family */
+	--warning-text: #6e6200;
 	--danger: #b4231f;
 	--danger-soft: #fbe9e7;
 	--danger-text: #b4231f;
@@ -63,70 +63,74 @@
 	--space-2xl: 3rem; /* 48 */
 	--space-3xl: 4rem; /* 64 */
 
-	/* ---- elevation (warm-tinted) ---- */
-	--shadow-sm: 0 1px 2px rgba(31, 42, 42, 0.06);
-	--shadow-md: 0 2px 8px rgba(31, 42, 42, 0.08);
-	--shadow-lg: 0 8px 24px rgba(31, 42, 42, 0.1);
+	/* ---- elevation (navy-tinted) ---- */
+	--shadow-sm: 0 1px 2px rgba(0, 52, 91, 0.06);
+	--shadow-md: 0 2px 8px rgba(0, 52, 91, 0.08);
+	--shadow-lg: 0 8px 24px rgba(0, 52, 91, 0.1);
 
 	/* ---- motion ---- */
 	--ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 	--duration: 180ms;
 
 	/* ---- type ---- */
-	--font-display: "Baloo 2", ui-rounded, system-ui, sans-serif;
-	--font-sans: "Nunito Sans", system-ui, -apple-system, sans-serif;
+	--font-display: "League Spartan", ui-sans-serif, system-ui, sans-serif;
+	--font-sans: "Baloo Thambi 2", ui-rounded, system-ui, sans-serif;
 
 	/* ---- font weights ----
-	   Both families are VARIABLE, so any numeric weight in range
-	   renders (e.g. font-weight: 550) — these are named defaults. */
-	--font-weight-light: 300; /* Nunito only (Baloo starts at 400) */
+	   Both families are VARIABLE: League Spartan 100–900,
+	   Baloo Thambi 2 400–800. Any numeric weight in range renders
+	   (e.g. font-weight: 550) — these are named defaults. */
+	--font-weight-thin: 100; /* League only */
+	--font-weight-extralight: 200; /* League only */
+	--font-weight-light: 300; /* League only */
 	--font-weight-normal: 400;
 	--font-weight-medium: 500;
 	--font-weight-semibold: 600;
 	--font-weight-bold: 700;
 	--font-weight-extrabold: 800;
-	--font-weight-black: 900; /* Nunito only (Baloo caps at 800) */
+	--font-weight-black: 900; /* League only */
 }
 
 /* ============================ DARK ============================ */
 .dark {
 	color-scheme: dark;
 
-	/* surfaces: deep teal-black steps */
-	--background: #0b1514;
-	--surface: #12201e;
-	--surface-2: #182825;
-	--border: #243833;
-	--border-strong: #31473f;
+	/* surfaces: deep navy steps */
+	--background: #041e30;
+	--surface: #0a2d47;
+	--surface-2: #103a5a;
+	--border: #1c466b;
+	--border-strong: #2c5b85;
 
 	/* text */
-	--foreground: #f2efe9;
-	--muted: #93a5a0;
-	--faint: #6b7a76;
-	--on-inverted: #0b1514;
+	--foreground: #f4faff;
+	--muted: #a8c4d8;
+	--faint: #6f8ba1;
+	--on-inverted: #041e30;
 
-	/* brand — accents lighten to glow */
-	--primary: #2dd4bf;
-	--primary-hover: #14b8a6;
-	--primary-active: #0d9488;
-	--primary-soft: #12332f;
-	--primary-text: #2dd4bf;
-	--primary-contrast: #12201e; /* dark text on bright teal */
+	/* brand — blue lightens to glow on dark navy */
+	--primary: #33aaff;
+	--primary-hover: #0091fd;
+	--primary-active: #0070e0;
+	--primary-soft: #12304a;
+	--primary-text: #33aaff;
+	--primary-contrast: #041e30; /* dark text on bright blue */
 
-	--accent: #f7b267;
-	--accent-hover: #f4a261;
+	/* yellow is already the lightest hue — stays as-is */
+	--accent: #fffea1;
+	--accent-hover: #fdf489;
 	--accent-soft: #3a2c1b;
-	--accent-text: #f7b267;
-	--accent-soft-text: #f7b267;
-	--accent-contrast: #12201e;
+	--accent-text: #fffea1;
+	--accent-soft-text: #fffea1;
+	--accent-contrast: #00345b;
 
 	/* semantic states */
-	--success: #4ade80;
-	--success-soft: #12281c;
-	--success-text: #4ade80;
-	--warning: #facc15;
+	--success: #8fd14f;
+	--success-soft: #14301c;
+	--success-text: #8fd14f;
+	--warning: #fffea1;
 	--warning-soft: #2a2410;
-	--warning-text: #facc15;
+	--warning-text: #fffea1;
 	--danger: #f97066;
 	--danger-soft: #2e1714;
 	--danger-text: #f97066;
