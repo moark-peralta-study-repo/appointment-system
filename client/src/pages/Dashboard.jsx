@@ -1,433 +1,345 @@
+import { useState } from "react";
 
-import Sidebar from "../components/Sidebar";
-import logoSecondary from "../assets/logo/happy-paws-logo-2.png";
+import {
+	ArrowIcon,
+	BellIcon,
+	CalendarIcon,
+	FileIcon,
+	HomeIcon,
+	PawIcon,
+	PetsIcon,
+	UserIcon,
+} from "../components/client/Icons";
+
+import mochi from "../assets/images/pets/mochi.jpeg";
+import luna from "../assets/images/pets/luna.jpeg";
 
 function Dashboard() {
-  return (
-    <div className="app-layout">
-      <Sidebar />
-
-      <main className="main-content">
-        <header className="topbar">
-          <div className="breadcrumb">
-            <span>Workspace</span>
-            <span className="breadcrumb-divider">/</span>
-            <strong>Dashboard</strong>
-          </div>
-
-          <div className="topbar-right">
-            <button className="notification-button" type="button">
-              <span className="notification-icon">♢</span>
-              <span className="notification-dot"></span>
-            </button>
-
-            <div className="topbar-user">
-              <div className="topbar-avatar">A</div>
-
-              <div>
-                <strong>Admin</strong>
-                <span>Administrator</span>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        <div className="dashboard-container">
-          <section className="page-header">
-            <div>
-              <p className="date-label">
-                SUNDAY, SEPTEMBER 27, 2026
-              </p>
-
-              <h1>Good evening, Admin.</h1>
-
-              <p className="page-description">
-                Here's what's happening at Mutuals Paws today.
-              </p>
-            </div>
-
-            <button
-              className="new-appointment-button"
-              type="button"
-            >
-              <span>＋</span>
-              New Appointment
-            </button>
-          </section>
-
-          <section className="overview-grid">
-            <div className="appointments-card dashboard-card">
-              <div className="card-header">
-                <div>
-                  <p className="eyebrow">TODAY</p>
-                  <h2>Appointments</h2>
-                </div>
-
-                <a href="#" className="view-link">
-                  View all →
-                </a>
-              </div>
-
-              <div className="appointment-list">
-                <div className="appointment-item">
-                  <div className="appointment-time">
-                    <strong>09:00</strong>
-                    <span>AM</span>
-                  </div>
-
-                  <div className="appointment-pet">
-                    <div className="pet-avatar dog-avatar">M</div>
-
-                    <div>
-                      <strong>Mochi</strong>
-                      <span>Golden Retriever · 3 yrs</span>
-                    </div>
-                  </div>
-
-                  <div className="appointment-service">
-                    <strong>General Check-up</strong>
-                    <span>Dr. Santos</span>
-                  </div>
-
-                  <span className="status status-confirmed">
-                    Confirmed
-                  </span>
-                </div>
-
-                <div className="appointment-item">
-                  <div className="appointment-time">
-                    <strong>10:30</strong>
-                    <span>AM</span>
-                  </div>
-
-                  <div className="appointment-pet">
-                    <div className="pet-avatar cat-avatar">L</div>
-
-                    <div>
-                      <strong>Luna</strong>
-                      <span>Persian Cat · 2 yrs</span>
-                    </div>
-                  </div>
-
-                  <div className="appointment-service">
-                    <strong>Vaccination</strong>
-                    <span>Dr. Reyes</span>
-                  </div>
-
-                  <span className="status status-upcoming">
-                    Upcoming
-                  </span>
-                </div>
-
-                <div className="appointment-item">
-                  <div className="appointment-time">
-                    <strong>01:00</strong>
-                    <span>PM</span>
-                  </div>
-
-                  <div className="appointment-pet">
-                    <div className="pet-avatar brown-avatar">B</div>
-
-                    <div>
-                      <strong>Bruno</strong>
-                      <span>Shih Tzu · 5 yrs</span>
-                    </div>
-                  </div>
-
-                  <div className="appointment-service">
-                    <strong>Dental Cleaning</strong>
-                    <span>Dr. Santos</span>
-                  </div>
-
-                  <span className="status status-pending">
-                    Pending
-                  </span>
-                </div>
-
-                <div className="appointment-item">
-                  <div className="appointment-time">
-                    <strong>03:30</strong>
-                    <span>PM</span>
-                  </div>
-
-                  <div className="appointment-pet">
-                    <div className="pet-avatar cream-avatar">C</div>
-
-                    <div>
-                      <strong>Cookie</strong>
-                      <span>Beagle · 1 yr</span>
-                    </div>
-                  </div>
-
-                  <div className="appointment-service">
-                    <strong>Follow-up</strong>
-                    <span>Dr. Reyes</span>
-                  </div>
-
-                  <span className="status status-confirmed">
-                    Confirmed
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <aside className="clinic-overview dashboard-card">
-              <div className="clinic-logo-wrapper">
-                <img
-                  src={logoSecondary}
-                  alt="Mutuals Paws"
-                  className="dashboard-logo"
-                />
-              </div>
-
-              <p className="eyebrow">CLINIC OVERVIEW</p>
-              <h2>Today's activity</h2>
-
-              <div className="clinic-stat-list">
-                <div className="clinic-stat">
-                  <div>
-                    <span>Appointments</span>
-                    <strong>12</strong>
-                  </div>
-
-                  <span className="stat-mini-icon blue-icon">
-                    01
-                  </span>
-                </div>
-
-                <div className="clinic-stat">
-                  <div>
-                    <span>Registered Patients</span>
-                    <strong>86</strong>
-                  </div>
-
-                  <span className="stat-mini-icon yellow-icon">
-                    02
-                  </span>
-                </div>
-
-                <div className="clinic-stat">
-                  <div>
-                    <span>Veterinarians</span>
-                    <strong>4</strong>
-                  </div>
-
-                  <span className="stat-mini-icon green-icon">
-                    03
-                  </span>
-                </div>
-              </div>
-
-              <div className="daily-progress">
-                <div className="progress-header">
-                  <span>Appointments completed</span>
-                  <strong>7 / 12</strong>
-                </div>
-
-                <div className="progress-track">
-                  <div
-                    className="progress-bar"
-                    style={{ width: "58%" }}
-                  ></div>
-                </div>
-
-                <p>5 appointments remaining today</p>
-              </div>
-            </aside>
-          </section>
-
-          <section className="quick-actions-section">
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">SHORTCUTS</p>
-                <h2>Quick actions</h2>
-              </div>
-            </div>
-
-            <div className="quick-actions">
-              <button className="quick-action" type="button">
-                <span className="quick-action-icon blue-action">
-                  ＋
-                </span>
-
-                <span>
-                  <strong>New appointment</strong>
-                  <small>Schedule a visit</small>
-                </span>
-
-                <span className="action-arrow">→</span>
-              </button>
-
-              <button className="quick-action" type="button">
-                <span className="quick-action-icon yellow-action">
-                  +
-                </span>
-
-                <span>
-                  <strong>Add patient</strong>
-                  <small>Register a new pet</small>
-                </span>
-
-                <span className="action-arrow">→</span>
-              </button>
-
-              <button className="quick-action" type="button">
-                <span className="quick-action-icon green-action">
-                  □
-                </span>
-
-                <span>
-                  <strong>Medical records</strong>
-                  <small>View patient records</small>
-                </span>
-
-                <span className="action-arrow">→</span>
-              </button>
-            </div>
-          </section>
-
-          <section className="lower-grid">
-            <div className="recent-patients dashboard-card">
-              <div className="card-header">
-                <div>
-                  <p className="eyebrow">PATIENTS</p>
-                  <h2>Recent patients</h2>
-                </div>
-
-                <a href="#" className="view-link">
-                  View all →
-                </a>
-              </div>
-
-              <div className="patient-table">
-                <div className="table-head">
-                  <span>Patient</span>
-                  <span>Owner</span>
-                  <span>Last visit</span>
-                  <span>Status</span>
-                </div>
-
-                <div className="patient-row">
-                  <div className="patient-name">
-                    <div className="small-pet-avatar">M</div>
-
-                    <div>
-                      <strong>Milo</strong>
-                      <span>Shih Tzu</span>
-                    </div>
-                  </div>
-
-                  <span>Jamie Cruz</span>
-                  <span>Sep 26, 2026</span>
-
-                  <span className="table-status active-status">
-                    Active
-                  </span>
-                </div>
-
-                <div className="patient-row">
-                  <div className="patient-name">
-                    <div className="small-pet-avatar">N</div>
-
-                    <div>
-                      <strong>Nala</strong>
-                      <span>Domestic Cat</span>
-                    </div>
-                  </div>
-
-                  <span>Sofia Tan</span>
-                  <span>Sep 25, 2026</span>
-
-                  <span className="table-status active-status">
-                    Active
-                  </span>
-                </div>
-
-                <div className="patient-row">
-                  <div className="patient-name">
-                    <div className="small-pet-avatar">M</div>
-
-                    <div>
-                      <strong>Max</strong>
-                      <span>Labrador</span>
-                    </div>
-                  </div>
-
-                  <span>Daniel Reyes</span>
-                  <span>Sep 24, 2026</span>
-
-                  <span className="table-status followup-status">
-                    Follow-up
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="staff-card dashboard-card">
-              <div className="card-header">
-                <div>
-                  <p className="eyebrow">STAFF</p>
-                  <h2>Veterinarians</h2>
-                </div>
-
-                <a href="#" className="view-link">
-                  Manage →
-                </a>
-              </div>
-
-              <div className="vet-list">
-                <div className="vet-item">
-                  <div className="vet-avatar">JS</div>
-
-                  <div>
-                    <strong>Dr. Santos</strong>
-                    <span>General Practice</span>
-                  </div>
-
-                  <span className="on-duty">
-                    <i></i>
-                    On duty
-                  </span>
-                </div>
-
-                <div className="vet-item">
-                  <div className="vet-avatar">AR</div>
-
-                  <div>
-                    <strong>Dr. Reyes</strong>
-                    <span>Internal Medicine</span>
-                  </div>
-
-                  <span className="on-duty">
-                    <i></i>
-                    On duty
-                  </span>
-                </div>
-
-                <div className="vet-item">
-                  <div className="vet-avatar">MC</div>
-
-                  <div>
-                    <strong>Dr. Cruz</strong>
-                    <span>Surgery</span>
-                  </div>
-
-                  <span className="off-duty">
-                    Off duty
-                  </span>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <footer className="dashboard-footer">
-            <span>Mutuals Paws Veterinary Clinic</span>
-            <span>Clinic Management System</span>
-          </footer>
-        </div>
-      </main>
-    </div>
-  );
+	const [activePage, setActivePage] = useState("Dashboard");
+	const [showNotifications, setShowNotifications] = useState(false);
+
+	const navigation = [
+		{ name: "Dashboard", icon: <HomeIcon /> },
+		{ name: "My Pets", icon: <PetsIcon /> },
+		{ name: "Appointments", icon: <CalendarIcon /> },
+		{ name: "Medical Records", icon: <FileIcon /> },
+		{ name: "Profile", icon: <UserIcon /> },
+	];
+
+	return (
+		<div className="client-app">
+			{/* SIDEBAR */}
+			<aside className="client-sidebar">
+				<div className="brand">
+					<div className="brand-icon">
+						<PawIcon />
+					</div>
+
+					<div>
+						<h2>Happy Paws</h2>
+						<span>Veterinary Clinic</span>
+					</div>
+				</div>
+
+				<nav className="client-navigation">
+					<p className="nav-label">MENU</p>
+
+					{navigation.map((item) => (
+						<button
+							key={item.name}
+							className={`nav-item ${activePage === item.name ? "active" : ""}`}
+							onClick={() => setActivePage(item.name)}
+						>
+							<span className="nav-icon">{item.icon}</span>
+							<span>{item.name}</span>
+						</button>
+					))}
+				</nav>
+
+				<div className="sidebar-help">
+					<div className="help-icon">?</div>
+
+					<div>
+						<strong>Need help?</strong>
+						<span>Contact our clinic</span>
+					</div>
+				</div>
+
+				<div className="sidebar-user">
+					<div className="user-avatar">JC</div>
+
+					<div>
+						<strong>Jamie Cruz</strong>
+						<span>Pet Owner</span>
+					</div>
+				</div>
+			</aside>
+
+			{/* MAIN CONTENT */}
+			<main className="client-main">
+				{/* TOP BAR */}
+				<header className="client-topbar">
+					<div className="mobile-brand">
+						<strong>Happy Paws</strong>
+					</div>
+
+					<div className="topbar-actions">
+						<button
+							className="client-notification"
+							onClick={() => setShowNotifications(!showNotifications)}
+							aria-label="Notifications"
+						>
+							<BellIcon />
+							<span></span>
+						</button>
+
+						<div className="profile-mini">
+							<div className="user-avatar">JC</div>
+
+							<div>
+								<strong>Jamie Cruz</strong>
+								<span>Pet Owner</span>
+							</div>
+						</div>
+					</div>
+
+					{showNotifications && (
+						<div className="client-notifications">
+							<div className="notification-title">
+								<strong>Notifications</strong>
+								<span>2 new</span>
+							</div>
+
+							<div className="client-notification-item">
+								<div className="notification-dot"></div>
+
+								<div>
+									<strong>Appointment reminder</strong>
+									<span>Mochi · Tomorrow at 9:00 AM</span>
+								</div>
+							</div>
+
+							<div className="client-notification-item">
+								<div className="notification-dot"></div>
+
+								<div>
+									<strong>Vaccination reminder</strong>
+									<span>Luna · Due this week</span>
+								</div>
+							</div>
+						</div>
+					)}
+				</header>
+
+				<div className="client-content">
+					{/* WELCOME */}
+					<section className="client-welcome">
+						<div>
+							<p className="client-eyebrow">SUNDAY, SEPTEMBER 27, 2026</p>
+
+							<h1>
+								Good evening, Jamie! <span>🐾</span>
+							</h1>
+
+							<p>Welcome back! Here's what's happening with your pets today.</p>
+						</div>
+
+						<button className="book-button">
+							<span>＋</span>
+							Book an appointment
+						</button>
+					</section>
+
+					{/* PETS */}
+					<section>
+						<div className="section-title">
+							<div>
+								<p className="client-eyebrow">YOUR PETS</p>
+								<h2>My furry friends</h2>
+							</div>
+
+							<button className="text-button">View all →</button>
+						</div>
+
+						<div className="pet-cards">
+							<div className="pet-card">
+								<img src={mochi} alt="Mochi" />
+
+								<div className="pet-card-info">
+									<div>
+										<h3>Mochi</h3>
+										<p>Golden Retriever · 3 yrs</p>
+									</div>
+
+									<span className="health-chip">Healthy</span>
+								</div>
+
+								<div className="pet-card-bottom">
+									<span>Last visit</span>
+									<strong>Sep 12, 2026</strong>
+								</div>
+							</div>
+
+							<div className="pet-card">
+								<img src={luna} alt="Luna" />
+
+								<div className="pet-card-info">
+									<div>
+										<h3>Luna</h3>
+										<p>Persian Cat · 2 yrs</p>
+									</div>
+
+									<span className="health-chip">Healthy</span>
+								</div>
+
+								<div className="pet-card-bottom">
+									<span>Last visit</span>
+									<strong>Aug 28, 2026</strong>
+								</div>
+							</div>
+
+							<button className="add-pet-card">
+								<div className="add-pet-icon">＋</div>
+
+								<strong>Add a pet</strong>
+								<span>Register another furry friend</span>
+							</button>
+						</div>
+					</section>
+
+					{/* APPOINTMENT + QUICK ACTIONS */}
+					<section className="client-main-grid">
+						<div className="next-appointment">
+							<div className="section-title">
+								<div>
+									<p className="client-eyebrow">NEXT APPOINTMENT</p>
+
+									<h2>Upcoming visit</h2>
+								</div>
+
+								<span className="confirmed-chip">Confirmed</span>
+							</div>
+
+							<div className="appointment-highlight">
+								<div className="appointment-date">
+									<span>OCT</span>
+									<strong>02</strong>
+									<small>FRI</small>
+								</div>
+
+								<div className="appointment-details">
+									<div className="appointment-pet">
+										<img src={mochi} alt="Mochi" />
+
+										<div>
+											<h3>Mochi</h3>
+											<span>Golden Retriever</span>
+										</div>
+									</div>
+
+									<div className="appointment-info">
+										<div>
+											<CalendarIcon />
+											<span>09:00 AM</span>
+										</div>
+
+										<div>
+											<PawIcon />
+											<span>General Check-up</span>
+										</div>
+
+										<div>
+											<span className="doctor-icon">DR</span>
+											<span>Dr. Santos</span>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<button className="appointment-link">
+								View appointment details
+								<ArrowIcon />
+							</button>
+						</div>
+
+						{/* QUICK ACTIONS */}
+						<div className="quick-actions-card">
+							<div className="section-title">
+								<div>
+									<p className="client-eyebrow">SHORTCUTS</p>
+									<h2>Quick actions</h2>
+								</div>
+							</div>
+
+							<button className="client-action">
+								<span className="action-icon blue-action">
+									<CalendarIcon />
+								</span>
+
+								<span>
+									<strong>Book appointment</strong>
+									<small>Schedule a clinic visit</small>
+								</span>
+
+								<ArrowIcon />
+							</button>
+
+							<button className="client-action">
+								<span className="action-icon yellow-action">
+									<PetsIcon />
+								</span>
+
+								<span>
+									<strong>Manage my pets</strong>
+									<small>View your pet profiles</small>
+								</span>
+
+								<ArrowIcon />
+							</button>
+
+							<button className="client-action">
+								<span className="action-icon green-action">
+									<FileIcon />
+								</span>
+
+								<span>
+									<strong>Medical records</strong>
+									<small>View health history</small>
+								</span>
+
+								<ArrowIcon />
+							</button>
+						</div>
+					</section>
+
+					{/* HEALTH REMINDER */}
+					<section className="health-reminder">
+						<div className="reminder-icon">
+							<PawIcon />
+						</div>
+
+						<div>
+							<p className="client-eyebrow">PET HEALTH REMINDER</p>
+
+							<h3>Luna's vaccination is coming up!</h3>
+
+							<p>
+								Luna is due for her next vaccination this month. Keep her
+								protected and healthy.
+							</p>
+						</div>
+
+						<button>Schedule visit →</button>
+					</section>
+
+					<footer className="client-footer">
+						<span>Happy Paws Veterinary Clinic</span>
+						<span>Care for every paw, every day. 🐾</span>
+					</footer>
+				</div>
+			</main>
+		</div>
+	);
 }
 
 export default Dashboard;
