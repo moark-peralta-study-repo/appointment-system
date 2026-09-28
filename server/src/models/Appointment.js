@@ -14,7 +14,6 @@ const appointmentSchema = new mongoose.Schema(
 		time: {
 			type: String,
 			required: true,
-			match: { value: TIME_REGEX, message: "time must be HH:MM (24h)" },
 		},
 		duration: { type: Number },
 		reason: { type: String },
@@ -26,6 +25,8 @@ const appointmentSchema = new mongoose.Schema(
 	},
 	{ timestamps: true },
 );
+
+appointmentSchema.path("time").match(TIME_REGEX, "time must be HH:MM (24h)");
 
 const Appointment = mongoose.model("Appointment", appointmentSchema);
 export default Appointment;
