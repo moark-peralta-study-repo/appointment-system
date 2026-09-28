@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {TIME_REGEX} from "../utils/constants.js";
+import { TIME_REGEX } from "../utils/constants.js";
 
 const scheduleSchema = new mongoose.Schema(
 	{
@@ -25,6 +25,7 @@ const vetSchema = new mongoose.Schema(
 		specialty: { type: String },
 		bio: { type: String },
 		schedule: { type: [scheduleSchema], default: [] },
+		active: { type: Boolean },
 	},
 	{ timestamps: true },
 );
