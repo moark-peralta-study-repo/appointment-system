@@ -2,6 +2,8 @@ import { RxDashboard, RxPeople, RxPerson } from "react-icons/rx";
 import logo from "../assets/logo/happy-paws-logo.png";
 import { FaRegClock } from "react-icons/fa";
 import { CiMedicalCase, CiMedicalClipboard } from "react-icons/ci";
+import { PiGearLight } from "react-icons/pi";
+import { HiOutlineDocument } from "react-icons/hi";
 
 function Sidebar() {
 	return (
@@ -74,7 +76,9 @@ function Sidebar() {
 					</a>
 
 					<a href="#" className="nav-link">
-						<span className="nav-icon">▥</span>
+						<span className="nav-icon">
+							<HiOutlineDocument />
+						</span>
 						<span>Reports</span>
 					</a>
 				</div>
@@ -82,7 +86,9 @@ function Sidebar() {
 
 			<div className="sidebar-bottom">
 				<a href="#" className="nav-link settings-link">
-					<span className="nav-icon">⚙</span>
+					<span className="nav-icon">
+						<PiGearLight />
+					</span>
 					<span>Settings</span>
 				</a>
 
