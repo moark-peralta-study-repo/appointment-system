@@ -4,7 +4,7 @@ import {
 	loginUser,
 	registerUser,
 } from "../controllers/userController.js";
-import { authorize, protectAuth } from "../middleware/authMiddleware.js";
+import { protectAuth } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
