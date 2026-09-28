@@ -1096,3 +1096,4 @@ function Review({
   );
 }
 
+export default Home;

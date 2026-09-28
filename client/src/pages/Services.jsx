@@ -32,3 +32,4 @@ function Service({ icon, title, text, price }) {
   );
 }
 
+export default Services;
