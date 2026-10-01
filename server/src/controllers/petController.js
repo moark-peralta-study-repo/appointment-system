@@ -22,7 +22,7 @@ export async function updatePet(req, res, next) {
 	try {
 		const pet = await petService.updatePet(
 			req.user,
-			req.params.petId,
+			req.params.id,
 			req.body,
 		);
 		res.json(pet);
@@ -33,7 +33,7 @@ export async function updatePet(req, res, next) {
 
 export async function deletePet(req, res, next) {
 	try {
-		const result = await petService.deletePet(req.user, req.params.petId);
+		const result = await petService.deletePet(req.user, req.params.id);
 		res.json(result);
 	} catch (err) {
 		next(err);

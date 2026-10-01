@@ -1,6 +1,8 @@
-import Vet from "../models/Vet.js";
-import Appointment from "../models/Appointment.js";
 import mongoose from "mongoose";
+import Vet from "../models/Vet.js";
+import User from "../models/User.js";
+import Pet from "../models/Pet.js";
+import Appointment from "../models/Appointment.js";
 import ApiError from "../utils/ApiError.js";
 import { getFreeSlots } from "../utils/slots.js";
 
@@ -66,5 +68,107 @@ export async function getVetDetails(vetId, dateParam) {
 		specialty: vet.specialty,
 		schedule: vet.schedule,
 		freeSlots,
+	};
+}
+
+export async function createVet(
+	actor,
+	{ name, email, password, specialty, bio, schedule },
+) {
+	if (await User.findOne({ email })) {
+		throw new ApiError(409, "A user with this email already exists");
+	}
+
+	const user = await User.create({ name, email, password, role: "vet" });
+
+	const vet = await Vet.create({
+		user: user._id,
+		specialty,
+		bio,
+		schedule: schedule ?? [],
+	});
+
+	const safeUser = await User.findById(user._id);
+
+	return {
+		_id: vet._id,
+		user: safeUser,
+		specialty: vet.specialty,
+		bio: vet.bio,
+		schedule: vet.schedule,
+	};
+}
+
+export async function updateVet(
+	actor,
+	vetId,
+	{ specialty, bio, schedule, active },
+) {
+	if (!mongoose.isValidObjectId(vetId)) {
+		throw new ApiError(404, "Vet not found");
+	}
+
+	const vet = await Vet.findById(vetId);
+	if (!vet) throw new ApiError(404, "Vet not found");
+
+	if (specialty !== undefined) vet.specialty = specialty;
+	if (bio !== undefined) vet.bio = bio;
+	if (schedule !== undefined) vet.schedule = schedule;
+	if (active !== undefined) vet.active = active;
+
+	await vet.save();
+	return vet;
+}
+
+export async function deactivateVet(actor, vetId) {
+	if (!mongoose.isValidObjectId(vetId)) {
+		throw new ApiError(404, "Vet not found");
+	}
+
+	const vet = await Vet.findById(vetId);
+	if (!vet) throw new ApiError(404, "Vet not found");
+
+	vet.active = false;
+	await vet.save();
+
+	return { message: "Vet deactivated", vet };
+}
+
+export async function listUsers() {
+	return await User.find({}, "name email phone role createdAt");
+}
+
+export async function getStats() {
+	// Dates are stored as local-midnight instants, so label the byDay
+	// buckets with the server's local timezone too (UTC would show D-1).
+	const off = -new Date().getTimezoneOffset();
+	const sign = off >= 0 ? "+" : "-";
+	const tz = `${sign}${String(Math.floor(Math.abs(off) / 60)).padStart(2, "0")}:${String(Math.abs(off) % 60).padStart(2, "0")}`;
+
+	const [users, vets, pets, appointments, byStatus, byDay] = await Promise.all([
+		User.countDocuments(),
+		Vet.countDocuments({ active: true }),
+		Pet.countDocuments(),
+		Appointment.countDocuments(),
+		Appointment.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
+		Appointment.aggregate([
+			{
+				$group: {
+					_id: { $dateToString: { format: "%Y-%m-%d", date: "$date", timezone: tz } },
+					count: { $sum: 1 },
+				},
+			},
+			{ $sort: { _id: -1 } },
+			{ $limit: 14 },
+		]),
+	]);
+
+	return {
+		users,
+		vets,
+		pets,
+		appointments,
+		byStatus: Object.fromEntries(byStatus.map((s) => [s._id, s.count])),
+		byDay: Object.fromEntries(byDay.map((d) => [d._id, d.count])),
 	};
 }

@@ -22,6 +22,7 @@ const appointmentSchema = new mongoose.Schema(
 			enum: ["pending", "confirmed", "completed", "cancelled"],
 			default: "pending",
 		},
+		vetNotes: { type: String },
 	},
 	{ timestamps: true },
 );
