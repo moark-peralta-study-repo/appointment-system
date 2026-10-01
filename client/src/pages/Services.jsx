@@ -1,10 +1,14 @@
+import { MdOutlineArrowOutward } from "react-icons/md";
+
 function Services({ icon, title, text, price }) {
 	return (
 		<div className="service-card-new">
 			<div className="service-top-new">
 				<div className="service-icon-new">{icon}</div>
 
-				<span className="service-arrow-new">↗</span>
+				<span className="service-arrow-new">
+					<MdOutlineArrowOutward />
+				</span>
 			</div>
 
 			<div className="service-content-new">

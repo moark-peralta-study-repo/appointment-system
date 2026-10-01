@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import bruno from "../../assets/images/pets/bruno.jpeg";
+import { FaArrowRight } from "react-icons/fa";
 
 function Hero() {
 	return (
@@ -23,7 +24,9 @@ function Hero() {
 					<div className="hero-buttons">
 						<Link to="/book-appointment" className="primary-button">
 							Book an Appointment
-							<span>→</span>
+							<span>
+								<FaArrowRight />
+							</span>
 						</Link>
 
 						<button type="button" className="secondary-button">

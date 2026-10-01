@@ -1,3 +1,5 @@
+import { MdOutlineArrowOutward } from "react-icons/md";
+
 function VetCard({ image, name, specialty }) {
 	return (
 		<div className="vet-card">
@@ -20,7 +22,9 @@ function VetCard({ image, name, specialty }) {
 				<div className="vet-footer">
 					<span>Meet your veterinarian</span>
 
-					<span className="vet-arrow">↗</span>
+					<span className="vet-arrow">
+						<MdOutlineArrowOutward />
+					</span>
 				</div>
 			</div>
 		</div>

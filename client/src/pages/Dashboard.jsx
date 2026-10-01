@@ -1,29 +1,23 @@
 import { useState } from "react";
 
-import {
-	ArrowIcon,
-	BellIcon,
-	CalendarIcon,
-	FileIcon,
-	HomeIcon,
-	PawIcon,
-	PetsIcon,
-	UserIcon,
-} from "../components/client/Icons";
-
 import mochi from "../assets/images/pets/mochi.jpeg";
 import luna from "../assets/images/pets/luna.jpeg";
+import { PiBellSimple, PiPawPrint } from "react-icons/pi";
+import { GrHomeRounded } from "react-icons/gr";
+import { CiCalendarDate, CiFileOn, CiUser } from "react-icons/ci";
+import { IoAdd } from "react-icons/io5";
+import { FaArrowRight } from "react-icons/fa";
 
 function Dashboard() {
 	const [activePage, setActivePage] = useState("Dashboard");
 	const [showNotifications, setShowNotifications] = useState(false);
 
 	const navigation = [
-		{ name: "Dashboard", icon: <HomeIcon /> },
-		{ name: "My Pets", icon: <PetsIcon /> },
-		{ name: "Appointments", icon: <CalendarIcon /> },
-		{ name: "Medical Records", icon: <FileIcon /> },
-		{ name: "Profile", icon: <UserIcon /> },
+		{ name: "Dashboard", icon: <GrHomeRounded /> },
+		{ name: "My Pets", icon: <PiPawPrint /> },
+		{ name: "Appointments", icon: <CiCalendarDate /> },
+		{ name: "Medical Records", icon: <CiFileOn /> },
+		{ name: "Profile", icon: <CiUser /> },
 	];
 
 	return (
@@ -32,7 +26,7 @@ function Dashboard() {
 			<aside className="client-sidebar">
 				<div className="brand">
 					<div className="brand-icon">
-						<PawIcon />
+						<PiPawPrint />
 					</div>
 
 					<div>
@@ -89,7 +83,7 @@ function Dashboard() {
 							onClick={() => setShowNotifications(!showNotifications)}
 							aria-label="Notifications"
 						>
-							<BellIcon />
+							<PiBellSimple />
 							<span></span>
 						</button>
 
@@ -145,7 +139,9 @@ function Dashboard() {
 						</div>
 
 						<button className="book-button">
-							<span>＋</span>
+							<span>
+								<IoAdd />
+							</span>
 							Book an appointment
 						</button>
 					</section>
@@ -239,12 +235,12 @@ function Dashboard() {
 
 									<div className="appointment-info">
 										<div>
-											<CalendarIcon />
+											<CiCalendarDate />
 											<span>09:00 AM</span>
 										</div>
 
 										<div>
-											<PawIcon />
+											<PiPawPrint />
 											<span>General Check-up</span>
 										</div>
 
@@ -258,7 +254,7 @@ function Dashboard() {
 
 							<button className="appointment-link">
 								View appointment details
-								<ArrowIcon />
+								<FaArrowRight />
 							</button>
 						</div>
 
@@ -273,7 +269,7 @@ function Dashboard() {
 
 							<button className="client-action">
 								<span className="action-icon blue-action">
-									<CalendarIcon />
+									<CiCalendarDate />
 								</span>
 
 								<span>
@@ -281,12 +277,12 @@ function Dashboard() {
 									<small>Schedule a clinic visit</small>
 								</span>
 
-								<ArrowIcon />
+								<FaArrowRight />
 							</button>
 
 							<button className="client-action">
 								<span className="action-icon yellow-action">
-									<PetsIcon />
+									<PiPawPrint />
 								</span>
 
 								<span>
@@ -294,12 +290,12 @@ function Dashboard() {
 									<small>View your pet profiles</small>
 								</span>
 
-								<ArrowIcon />
+								<FaArrowRight />
 							</button>
 
 							<button className="client-action">
 								<span className="action-icon green-action">
-									<FileIcon />
+									<CiFileOn />
 								</span>
 
 								<span>
@@ -307,7 +303,7 @@ function Dashboard() {
 									<small>View health history</small>
 								</span>
 
-								<ArrowIcon />
+								<FaArrowRight />
 							</button>
 						</div>
 					</section>
@@ -315,7 +311,7 @@ function Dashboard() {
 					{/* HEALTH REMINDER */}
 					<section className="health-reminder">
 						<div className="reminder-icon">
-							<PawIcon />
+							<PiPawPrint />
 						</div>
 
 						<div>

@@ -1,3 +1,5 @@
+import { FaArrowRight } from "react-icons/fa";
+
 function ServiceCard({ icon, title, text, price }) {
 	return (
 		<div className="service-card-new">
@@ -11,7 +13,9 @@ function ServiceCard({ icon, title, text, price }) {
 				<div className="service-bottom-new">
 					<span>{price}</span>
 
-					<span className="service-arrow-new">→</span>
+					<span className="service-arrow-new">
+						<FaArrowRight />
+					</span>
 				</div>
 			</div>
 		</div>
