@@ -26,28 +26,40 @@ function Home() {
             <a href="#visit">Visit Us</a>
           </nav>
 
-          <div className="nav-right">
-            <span className="phone">
-              ☎ 0917 123 4567
-            </span>
+         
 
-            <button
-              type="button"
-              className="login-button"
-            >
-              Client Login
-            </button>
+        <div className="nav-right">
+        <Link
+            to="/admin/login"
+            className="staff-login-button"
+        >
+            Staff Login
+        </Link>
 
-            <Link
+        <span className="phone">
+            ☎ 0917 123 4567
+        </span>
+
+        <button
+            type="button"
+            className="login-button"
+        >
+            Login
+        </button>
+
+        <Link
             to="/book-appointment"
             className="book-button"
-            >
+        >
             Book Appointment
-            </Link>
-          </div>
+        </Link>
+        </div>
+
 
         </div>
-      </header>
+
+
+            </header>
 
 
       {/* ================= HERO ================= */}
