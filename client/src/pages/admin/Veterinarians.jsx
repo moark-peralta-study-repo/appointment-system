@@ -1,5 +1,4 @@
-
-import AdminSidebar from "../../components/AdminSidebar";
+import AdminPageHeader from "../../components/admin/AdminPageHeader";
 
 function Veterinarians() {
   const veterinarians = [
@@ -54,180 +53,171 @@ function Veterinarians() {
   ];
 
   return (
-    <div className="admin-layout">
-      <AdminSidebar />
+    <>
+        <AdminPageHeader
+      eyebrow="CLINIC MANAGEMENT"
+      title="Veterinarians"
+      description="Manage the veterinary team and monitor their availability."
+      actions={
+        <button className="admin-primary-button" type="button">
+          + Add Veterinarian
+        </button>
+      }
+    />
 
-      <main className="admin-main">
-        <header className="admin-page-header">
-          <div>
-            <p className="admin-eyebrow">CLINIC MANAGEMENT</p>
 
-            <h1>Veterinarians</h1>
+    {/* SUMMARY */}
 
-            <p>
-              Manage the veterinary team and monitor their availability.
-            </p>
-          </div>
+    <section className="vet-summary">
+      <div className="vet-summary-card">
+        <div className="vet-summary-icon blue">
+          🩺
+        </div>
 
-          <button className="admin-primary-button" type="button">
-            + Add Veterinarian
-          </button>
-        </header>
+        <div>
+          <span>Total Veterinarians</span>
+          <strong>12</strong>
+        </div>
+      </div>
 
-        {/* SUMMARY */}
+      <div className="vet-summary-card">
+        <div className="vet-summary-icon green">
+          ✓
+        </div>
 
-        <section className="vet-summary">
-          <div className="vet-summary-card">
-            <div className="vet-summary-icon blue">
-              🩺
-            </div>
+        <div>
+          <span>Available Now</span>
+          <strong>8</strong>
+        </div>
+      </div>
 
-            <div>
-              <span>Total Veterinarians</span>
-              <strong>12</strong>
-            </div>
-          </div>
+      <div className="vet-summary-card">
+        <div className="vet-summary-icon yellow">
+          📅
+        </div>
 
-          <div className="vet-summary-card">
-            <div className="vet-summary-icon green">
-              ✓
-            </div>
+        <div>
+          <span>Appointments Today</span>
+          <strong>24</strong>
+        </div>
+      </div>
 
-            <div>
-              <span>Available Now</span>
-              <strong>8</strong>
-            </div>
-          </div>
+      <div className="vet-summary-card">
+        <div className="vet-summary-icon soft-blue">
+          ✦
+        </div>
 
-          <div className="vet-summary-card">
-            <div className="vet-summary-icon yellow">
-              📅
-            </div>
+        <div>
+          <span>Specialties</span>
+          <strong>7</strong>
+        </div>
+      </div>
+    </section>
 
-            <div>
-              <span>Appointments Today</span>
-              <strong>24</strong>
-            </div>
-          </div>
+    {/* TOOLBAR */}
 
-          <div className="vet-summary-card">
-            <div className="vet-summary-icon soft-blue">
-              ✦
-            </div>
+    <section className="admin-panel veterinarians-panel">
+      <div className="veterinarians-toolbar">
+        <div className="vet-search">
+          <span>⌕</span>
 
-            <div>
-              <span>Specialties</span>
-              <strong>7</strong>
-            </div>
-          </div>
-        </section>
+          <input
+            type="text"
+            placeholder="Search veterinarian or specialty..."
+          />
+        </div>
 
-        {/* TOOLBAR */}
+        <div className="vet-filters">
+          <select defaultValue="all">
+            <option value="all">All Specialties</option>
+            <option value="general">General Practice</option>
+            <option value="surgery">
+              Surgery & Diagnostics
+            </option>
+            <option value="internal">
+              Internal Medicine
+            </option>
+            <option value="dermatology">Dermatology</option>
+            <option value="emergency">Emergency Care</option>
+            <option value="preventive">Preventive Care</option>
+          </select>
 
-        <section className="admin-panel veterinarians-panel">
-          <div className="veterinarians-toolbar">
-            <div className="vet-search">
-              <span>⌕</span>
+          <select defaultValue="all">
+            <option value="all">All Availability</option>
+            <option value="available">Available</option>
+            <option value="consultation">
+              In Consultation
+            </option>
+            <option value="break">On Break</option>
+          </select>
+        </div>
+      </div>
 
-              <input
-                type="text"
-                placeholder="Search veterinarian or specialty..."
-              />
-            </div>
+      {/* VETERINARIAN CARDS */}
 
-            <div className="vet-filters">
-              <select defaultValue="all">
-                <option value="all">All Specialties</option>
-                <option value="general">General Practice</option>
-                <option value="surgery">
-                  Surgery & Diagnostics
-                </option>
-                <option value="internal">
-                  Internal Medicine
-                </option>
-                <option value="dermatology">Dermatology</option>
-                <option value="emergency">Emergency Care</option>
-                <option value="preventive">Preventive Care</option>
-              </select>
-
-              <select defaultValue="all">
-                <option value="all">All Availability</option>
-                <option value="available">Available</option>
-                <option value="consultation">
-                  In Consultation
-                </option>
-                <option value="break">On Break</option>
-              </select>
-            </div>
-          </div>
-
-          {/* VETERINARIAN CARDS */}
-
-          <div className="veterinarian-grid">
-            {veterinarians.map((vet, index) => (
-              <div className="veterinarian-card" key={index}>
-                <div className="vet-card-top">
-                  <div className="vet-avatar">
-                    {vet.initials}
-                  </div>
-
-                  <button
-                    className="vet-more-button"
-                    type="button"
-                    aria-label={`More options for ${vet.name}`}
-                  >
-                    •••
-                  </button>
-                </div>
-
-                <div className="vet-card-info">
-                  <h3>{vet.name}</h3>
-
-                  <p className="vet-specialty">
-                    {vet.specialty}
-                  </p>
-
-                  <p className="vet-experience">
-                    {vet.experience}
-                  </p>
-                </div>
-
-                <div className="vet-card-divider"></div>
-
-                <div className="vet-card-bottom">
-                  <div>
-                    <span>Today's Appointments</span>
-                    <strong>{vet.appointments}</strong>
-                  </div>
-
-                  <span
-                    className={`vet-status ${
-                      vet.status === "Available"
-                        ? "available"
-                        : vet.status === "In Consultation"
-                        ? "consultation"
-                        : "break"
-                    }`}
-                  >
-                    <span className="vet-status-dot"></span>
-                    {vet.status}
-                  </span>
-                </div>
-
-                <button
-                  className="vet-view-button"
-                  type="button"
-                >
-                  View Profile
-                </button>
+      <div className="veterinarian-grid">
+        {veterinarians.map((vet, index) => (
+          <div className="veterinarian-card" key={index}>
+            <div className="vet-card-top">
+              <div className="vet-avatar">
+                {vet.initials}
               </div>
-            ))}
+
+              <button
+                className="vet-more-button"
+                type="button"
+                aria-label={`More options for ${vet.name}`}
+              >
+                •••
+              </button>
+            </div>
+
+            <div className="vet-card-info">
+              <h3>{vet.name}</h3>
+
+              <p className="vet-specialty">
+                {vet.specialty}
+              </p>
+
+              <p className="vet-experience">
+                {vet.experience}
+              </p>
+            </div>
+
+            <div className="vet-card-divider"></div>
+
+            <div className="vet-card-bottom">
+              <div>
+                <span>Today's Appointments</span>
+                <strong>{vet.appointments}</strong>
+              </div>
+
+              <span
+                className={`vet-status ${
+                  vet.status === "Available"
+                    ? "available"
+                    : vet.status === "In Consultation"
+                    ? "consultation"
+                    : "break"
+                }`}
+              >
+                <span className="vet-status-dot"></span>
+                {vet.status}
+              </span>
+            </div>
+
+            <button
+              className="vet-view-button"
+              type="button"
+            >
+              View Profile
+            </button>
           </div>
-        </section>
-      </main>
-    </div>
+        ))}
+      </div>
+    </section>
+    </>
   );
 }
 
 export default Veterinarians;
-

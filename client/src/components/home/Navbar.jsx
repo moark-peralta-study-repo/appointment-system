@@ -18,6 +18,10 @@ function Navbar() {
 				</nav>
 
 				<div className="nav-right">
+					<Link to="/admin/login" className="staff-login-button">
+						Staff Login
+					</Link>
+
 					<span className="phone">☎ 0917 123 4567</span>
 
 					<button type="button" className="login-button">
