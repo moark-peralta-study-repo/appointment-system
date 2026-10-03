@@ -1,3 +1,4 @@
+import { FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 function QuickBooking() {
@@ -54,7 +55,7 @@ function QuickBooking() {
 					</div>
 
 					<Link to="/book-appointment" className="find-button">
-						Find Times →
+						Find Times <FaArrowRight />
 					</Link>
 				</div>
 			</div>

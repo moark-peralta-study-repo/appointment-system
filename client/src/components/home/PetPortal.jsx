@@ -1,4 +1,5 @@
 import mochi from "../../assets/images/pets/mochi.jpeg";
+import { FaArrowRight } from "react-icons/fa";
 
 function PetPortal() {
 	return (
@@ -29,7 +30,7 @@ function PetPortal() {
 					</ul>
 
 					<button type="button" className="primary-button">
-						View Pet Records →
+						View Pet Records <FaArrowRight />
 					</button>
 				</div>
 

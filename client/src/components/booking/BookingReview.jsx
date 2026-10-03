@@ -1,3 +1,4 @@
+import { FaArrowRight } from "react-icons/fa";
 import BookingHeader from "./BookingHeader";
 
 function BookingReview({ form, onBack, onConfirm }) {
@@ -66,7 +67,7 @@ function BookingReview({ form, onBack, onConfirm }) {
 							className="continue-button"
 							onClick={onConfirm}
 						>
-							Confirm Appointment →
+							Confirm Appointment <FaArrowRight />
 						</button>
 					</div>
 				</div>

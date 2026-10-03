@@ -1,3 +1,4 @@
+import { FaArrowRight } from "react-icons/fa";
 import BookingHeader from "./BookingHeader";
 
 function BookingForm({ form, handleChange, handleContinue }) {
@@ -186,7 +187,7 @@ function BookingForm({ form, handleChange, handleContinue }) {
 						</a>
 
 						<button type="submit" className="continue-button">
-							Continue →
+							Continue <FaArrowRight />
 						</button>
 					</div>
 				</form>
