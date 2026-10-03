@@ -1,71 +1,42 @@
+import { useState } from "react";
 import { PiCat, PiDog } from "react-icons/pi";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import { FiPlus } from "react-icons/fi";
 import { IoIosArrowForward } from "react-icons/io";
+import { usePets, useUsers, useAppointments } from "../../hooks/useAdminData";
+import { formatDate } from "../../utils/admin";
 
 function Patients() {
-	const patients = [
-		{
-			name: "Mochi",
-			species: "Dog",
-			breed: "Golden Retriever",
-			owner: "Maria Lopez",
-			age: "3 years",
-			lastVisit: "Oct 2, 2026",
-			status: "Healthy",
-			emoji: "🐶",
-		},
-		{
-			name: "Luna",
-			species: "Cat",
-			breed: "Persian",
-			owner: "James Reyes",
-			age: "2 years",
-			lastVisit: "Oct 1, 2026",
-			status: "Healthy",
-			emoji: "🐱",
-		},
-		{
-			name: "Bruno",
-			species: "Dog",
-			breed: "Labrador Retriever",
-			owner: "Sofia Cruz",
-			age: "5 years",
-			lastVisit: "Sep 29, 2026",
-			status: "Under Observation",
-			emoji: "🐶",
-		},
-		{
-			name: "Cookie",
-			species: "Dog",
-			breed: "Shih Tzu",
-			owner: "Anna Garcia",
-			age: "4 years",
-			lastVisit: "Sep 27, 2026",
-			status: "Healthy",
-			emoji: "🐶",
-		},
-		{
-			name: "Milo",
-			species: "Dog",
-			breed: "Beagle",
-			owner: "Daniel Santos",
-			age: "6 years",
-			lastVisit: "Sep 25, 2026",
-			status: "Under Observation",
-			emoji: "🐶",
-		},
-		{
-			name: "Nala",
-			species: "Cat",
-			breed: "Siamese",
-			owner: "Rachel Tan",
-			age: "1 year",
-			lastVisit: "Sep 22, 2026",
-			status: "Healthy",
-			emoji: "🐱",
-		},
-	];
+	const { data: pets = [], isPending } = usePets();
+	const { data: users = [] } = useUsers();
+	const { data: appointments = [] } = useAppointments();
+
+	const [speciesFilter, setSpeciesFilter] = useState("all");
+
+	const ownersById = Object.fromEntries(users.map((u) => [u._id, u]));
+
+	// Last completed/appointment date per pet.
+	const lastVisit = {};
+	for (const a of appointments) {
+		if (!a.pet?._id) continue;
+		const d = new Date(a.date).getTime();
+		if (!lastVisit[a.pet._id] || d > lastVisit[a.pet._id]) {
+			lastVisit[a.pet._id] = d;
+		}
+	}
+
+	const rows = pets
+		.filter((p) => speciesFilter === "all" || p.species === speciesFilter)
+		.map((p) => ({
+			...p,
+			ownerName: ownersById[p.owner]?.name ?? "—",
+			lastVisit: lastVisit[p._id] ? formatDate(lastVisit[p._id]) : "No visits yet",
+			status: p.notes ? "Under Observation" : "Healthy",
+			emoji: p.species === "cat" ? "🐱" : "🐶",
+		}));
+
+	const dogs = pets.filter((p) => p.species === "dog").length;
+	const cats = pets.filter((p) => p.species === "cat").length;
 
 	return (
 		<>
@@ -88,7 +59,7 @@ function Patients() {
 
 					<div>
 						<span>Total Patients</span>
-						<strong>186</strong>
+						<strong>{isPending ? "…" : pets.length}</strong>
 					</div>
 				</div>
 
@@ -99,7 +70,7 @@ function Patients() {
 
 					<div>
 						<span>Dogs</span>
-						<strong>124</strong>
+						<strong>{dogs}</strong>
 					</div>
 				</div>
 
@@ -110,7 +81,7 @@ function Patients() {
 
 					<div>
 						<span>Cats</span>
-						<strong>62</strong>
+						<strong>{cats}</strong>
 					</div>
 				</div>
 
@@ -120,8 +91,8 @@ function Patients() {
 					</div>
 
 					<div>
-						<span>New This Month</span>
-						<strong>12</strong>
+						<span>Under Observation</span>
+						<strong>{rows.filter((r) => r.status === "Under Observation").length}</strong>
 					</div>
 				</div>
 			</section>
@@ -137,7 +108,7 @@ function Patients() {
 					</div>
 
 					<div className="patient-filters">
-						<select defaultValue="all">
+						<select value={speciesFilter} onChange={(e) => setSpeciesFilter(e.target.value)}>
 							<option value="all">All Species</option>
 							<option value="dog">Dogs</option>
 							<option value="cat">Cats</option>
@@ -165,8 +136,16 @@ function Patients() {
 						</thead>
 
 						<tbody>
-							{patients.map((patient, index) => (
-								<tr key={index}>
+							{isPending && (
+								<tr>
+									<td colSpan={6} className="admin-panel-empty">
+										Loading patients…
+									</td>
+								</tr>
+							)}
+
+							{rows.map((patient) => (
+								<tr key={patient._id}>
 									<td>
 										<div className="patient-table-info">
 											<div className="patient-table-avatar">
@@ -177,17 +156,17 @@ function Patients() {
 												<strong>{patient.name}</strong>
 
 												<span>
-													{patient.species} • {patient.breed}
+													{patient.species ?? "—"} • {patient.breed ?? "—"}
 												</span>
 											</div>
 										</div>
 									</td>
 
 									<td>
-										<span className="patient-owner">{patient.owner}</span>
+										<span className="patient-owner">{patient.ownerName}</span>
 									</td>
 
-									<td>{patient.age}</td>
+									<td>{patient.age != null ? `${patient.age} years` : "—"}</td>
 
 									<td>{patient.lastVisit}</td>
 
@@ -208,6 +187,14 @@ function Patients() {
 									</td>
 								</tr>
 							))}
+
+							{rows.length === 0 && !isPending && (
+								<tr>
+									<td colSpan={6} className="admin-panel-empty">
+										No patients found.
+									</td>
+								</tr>
+							)}
 						</tbody>
 					</table>
 				</div>
@@ -215,16 +202,13 @@ function Patients() {
 				{/* TABLE FOOTER */}
 
 				<div className="patients-table-footer">
-					<span>Showing 6 of 186 patients</span>
+					<span>Showing {rows.length} of {pets.length} patients</span>
 
 					<div className="patient-pagination">
 						<button type="button">‹</button>
 						<button className="active" type="button">
 							1
 						</button>
-						<button type="button">2</button>
-						<button type="button">3</button>
-						<button type="button">4</button>
 						<button type="button">
 							<IoIosArrowForward />
 						</button>

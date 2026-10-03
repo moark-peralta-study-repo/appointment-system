@@ -1,348 +1,256 @@
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
+import { useStats, useAppointments, usePets } from "../../hooks/useAdminData";
+import { formatDate, initials } from "../../utils/admin";
 
 function Reports() {
-  return (
-    <>
-        <AdminPageHeader
-      eyebrow="CLINIC ANALYTICS"
-      title="Reports"
-      description="Monitor clinic activity, appointments, patients, and veterinarian performance."
-      actions={
-        <div className="reports-header-actions">
-                <select className="reports-date-select" defaultValue="month">
-                  <option value="week">This Week</option>
-                  <option value="month">This Month</option>
-                  <option value="quarter">This Quarter</option>
-                  <option value="year">This Year</option>
-                </select>
+	const { data: stats, isPending: statsPending } = useStats();
+	const { data: appointments = [] } = useAppointments();
+	const { data: pets = [] } = usePets();
 
-                <button className="admin-primary-button" type="button">
-                  Export Report
-                </button>
-              </div>
-      }
-    />
+	const byStatus = stats?.byStatus ?? {};
+	const total = stats?.appointments ?? appointments.length;
+	const completed = byStatus.completed ?? 0;
+	const completionRate = total ? Math.round((completed / total) * 100) : 0;
 
+	// byDay: { "YYYY-MM-DD": count } over the last 14 days, newest first.
+	const byDay = Object.entries(stats?.byDay ?? {})
+		.sort((a, b) => (a[0] < b[0] ? 1 : -1))
+		.slice(0, 14);
+	const maxDay = Math.max(...byDay.map(([, n]) => n), 1);
 
-    {/* Summary */}
-    <section className="reports-summary">
-      <div className="reports-summary-card">
-        <div className="reports-summary-icon blue">▣</div>
+	// New patients this month (pets created in the current month).
+	const now = new Date();
+	const newThisMonth = pets.filter((p) => {
+		const d = new Date(p.createdAt);
+		return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+	}).length;
 
-        <div>
-          <span>Total Appointments</span>
-          <strong>186</strong>
-          <small>+12.5% from last month</small>
-        </div>
-      </div>
+	// Vet workload — appointments return `vet` as a name string.
+	const byVet = {};
+	for (const a of appointments) {
+		if (a.vet) byVet[a.vet] = (byVet[a.vet] || 0) + 1;
+	}
+	const vetRows = Object.entries(byVet).sort((a, b) => b[1] - a[1]);
+	const maxVet = Math.max(...vetRows.map(([, n]) => n), 1);
 
-      <div className="reports-summary-card">
-        <div className="reports-summary-icon green">✓</div>
+	// Popular services — count by `reason`.
+	const byService = {};
+	for (const a of appointments) {
+		if (a.reason) byService[a.reason] = (byService[a.reason] || 0) + 1;
+	}
+	const serviceRows = Object.entries(byService)
+		.sort((a, b) => b[1] - a[1])
+		.slice(0, 4);
+	const maxService = Math.max(...serviceRows.map(([, n]) => n), 1);
 
-        <div>
-          <span>Completed Visits</span>
-          <strong>152</strong>
-          <small>81.7% completion rate</small>
-        </div>
-      </div>
+	const monthLabel = now.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
-      <div className="reports-summary-card">
-        <div className="reports-summary-icon yellow">◷</div>
+	return (
+		<>
+			<AdminPageHeader
+				eyebrow="CLINIC ANALYTICS"
+				title="Reports"
+				description="Monitor clinic activity, appointments, patients, and veterinarian performance."
+				actions={
+					<div className="reports-header-actions">
+						<select className="reports-date-select" defaultValue="month">
+							<option value="week">This Week</option>
+							<option value="month">This Month</option>
+							<option value="quarter">This Quarter</option>
+							<option value="year">This Year</option>
+						</select>
 
-        <div>
-          <span>New Patients</span>
-          <strong>24</strong>
-          <small>+8.3% from last month</small>
-        </div>
-      </div>
+						<button className="admin-primary-button" type="button">
+							Export Report
+						</button>
+					</div>
+				}
+			/>
 
-      <div className="reports-summary-card">
-        <div className="reports-summary-icon soft-blue">₱</div>
+			{/* Summary */}
+			<section className="reports-summary">
+				<div className="reports-summary-card">
+					<div className="reports-summary-icon blue">▣</div>
 
-        <div>
-          <span>Clinic Revenue</span>
-          <strong>₱184,500</strong>
-          <small>This month's total</small>
-        </div>
-      </div>
-    </section>
+					<div>
+						<span>Total Appointments</span>
+						<strong>{statsPending ? "…" : total}</strong>
+						<small>all time at the clinic</small>
+					</div>
+				</div>
 
-    {/* Main Reports */}
-    <section className="reports-grid">
-      {/* Appointment Overview */}
-      <div className="admin-panel reports-panel">
-        <div className="reports-panel-header">
-          <div>
-            <h2>Appointment Overview</h2>
-            <p>Appointments recorded throughout the month.</p>
-          </div>
+				<div className="reports-summary-card">
+					<div className="reports-summary-icon green">✓</div>
 
-          <span className="reports-panel-label">October 2026</span>
-        </div>
+					<div>
+						<span>Completed Visits</span>
+						<strong>{completed}</strong>
+						<small>{completionRate}% completion rate</small>
+					</div>
+				</div>
 
-        <div className="reports-chart">
-          <div className="reports-chart-row">
-            <span>Week 1</span>
+				<div className="reports-summary-card">
+					<div className="reports-summary-icon yellow">◷</div>
 
-            <div className="reports-bar-track">
-              <div
-                className="reports-bar"
-                style={{ width: "72%" }}
-              ></div>
-            </div>
+					<div>
+						<span>New Patients</span>
+						<strong>{newThisMonth}</strong>
+						<small>registered this month</small>
+					</div>
+				</div>
 
-            <strong>42</strong>
-          </div>
+				<div className="reports-summary-card">
+					<div className="reports-summary-icon soft-blue">₱</div>
 
-          <div className="reports-chart-row">
-            <span>Week 2</span>
+					<div>
+						<span>Active Patients</span>
+						<strong>{pets.length}</strong>
+						<small>pets on file</small>
+					</div>
+				</div>
+			</section>
 
-            <div className="reports-bar-track">
-              <div
-                className="reports-bar"
-                style={{ width: "88%" }}
-              ></div>
-            </div>
+			{/* Main Reports */}
+			<section className="reports-grid">
+				{/* Appointment Overview */}
+				<div className="admin-panel reports-panel">
+					<div className="reports-panel-header">
+						<div>
+							<h2>Appointment Overview</h2>
+							<p>Appointments recorded in the last 14 days.</p>
+						</div>
 
-            <strong>51</strong>
-          </div>
+						<span className="reports-panel-label">{monthLabel}</span>
+					</div>
 
-          <div className="reports-chart-row">
-            <span>Week 3</span>
+					<div className="reports-chart">
+						{byDay.length === 0 && (
+							<div className="admin-panel-empty">No appointment data yet.</div>
+						)}
 
-            <div className="reports-bar-track">
-              <div
-                className="reports-bar"
-                style={{ width: "65%" }}
-              ></div>
-            </div>
+						{byDay.map(([day, count]) => (
+							<div className="reports-chart-row" key={day}>
+								<span>{formatDate(day)}</span>
 
-            <strong>38</strong>
-          </div>
+								<div className="reports-bar-track">
+									<div
+										className="reports-bar"
+										style={{ width: `${Math.round((count / maxDay) * 100)}%` }}
+									/>
+								</div>
 
-          <div className="reports-chart-row">
-            <span>Week 4</span>
+								<strong>{count}</strong>
+							</div>
+						))}
+					</div>
 
-            <div className="reports-bar-track">
-              <div
-                className="reports-bar"
-                style={{ width: "94%" }}
-              ></div>
-            </div>
+					<div className="reports-chart-footer">
+						<span>Total appointments</span>
+						<strong>{total}</strong>
+					</div>
+				</div>
 
-            <strong>55</strong>
-          </div>
-        </div>
+				{/* Appointment Status */}
+				<div className="admin-panel reports-panel">
+					<div className="reports-panel-header">
+						<div>
+							<h2>Appointment Status</h2>
+							<p>Current appointment distribution.</p>
+						</div>
+					</div>
 
-        <div className="reports-chart-footer">
-          <span>Total appointments</span>
-          <strong>186</strong>
-        </div>
-      </div>
+					<div className="reports-status-list">
+						{["confirmed", "pending", "completed", "cancelled"].map((s) => (
+							<div className="reports-status-item" key={s}>
+								<div className="reports-status-name">
+									<span className={`reports-status-dot ${s}`}></span>
+									<span>{s.charAt(0).toUpperCase() + s.slice(1)}</span>
+								</div>
 
-      {/* Appointment Status */}
-      <div className="admin-panel reports-panel">
-        <div className="reports-panel-header">
-          <div>
-            <h2>Appointment Status</h2>
-            <p>Current appointment distribution.</p>
-          </div>
-        </div>
+								<strong>{byStatus[s] ?? 0}</strong>
+							</div>
+						))}
+					</div>
 
-        <div className="reports-status-list">
-          <div className="reports-status-item">
-            <div className="reports-status-name">
-              <span className="reports-status-dot confirmed"></span>
-              <span>Confirmed</span>
-            </div>
+					<div className="reports-status-total">
+						<span>Total</span>
+						<strong>{total} appointments</strong>
+					</div>
+				</div>
+			</section>
 
-            <strong>86</strong>
-          </div>
+			{/* Veterinarian Workload */}
+			<section className="admin-panel reports-panel reports-vet-panel">
+				<div className="reports-panel-header">
+					<div>
+						<h2>Veterinarian Workload</h2>
+						<p>Appointments handled by each veterinarian.</p>
+					</div>
+				</div>
 
-          <div className="reports-status-item">
-            <div className="reports-status-name">
-              <span className="reports-status-dot pending"></span>
-              <span>Pending</span>
-            </div>
+				<div className="reports-vet-list">
+					{vetRows.length === 0 && (
+						<div className="admin-panel-empty">No appointments yet.</div>
+					)}
 
-            <strong>24</strong>
-          </div>
+					{vetRows.map(([name, count]) => (
+						<div className="reports-vet-row" key={name}>
+							<div className="reports-vet-info">
+								<div className="reports-vet-avatar">{initials(name)}</div>
 
-          <div className="reports-status-item">
-            <div className="reports-status-name">
-              <span className="reports-status-dot completed"></span>
-              <span>Completed</span>
-            </div>
+								<div>
+									<strong>{name}</strong>
+									<span>
+										{count} appointment{count === 1 ? "" : "s"}
+									</span>
+								</div>
+							</div>
 
-            <strong>64</strong>
-          </div>
+							<div className="reports-vet-progress">
+								<div className="reports-progress-track">
+									<div
+										className="reports-progress-bar"
+										style={{ width: `${Math.round((count / maxVet) * 100)}%` }}
+									/>
+								</div>
 
-          <div className="reports-status-item">
-            <div className="reports-status-name">
-              <span className="reports-status-dot cancelled"></span>
-              <span>Cancelled</span>
-            </div>
+								<strong>{count}</strong>
+							</div>
+						</div>
+					))}
+				</div>
+			</section>
 
-            <strong>12</strong>
-          </div>
-        </div>
+			{/* Popular Services */}
+			<section className="admin-panel reports-panel">
+				<div className="reports-panel-header">
+					<div>
+						<h2>Popular Services</h2>
+						<p>Most requested services across all appointments.</p>
+					</div>
+				</div>
 
-        <div className="reports-status-total">
-          <span>Total</span>
-          <strong>186 appointments</strong>
-        </div>
-      </div>
-    </section>
+				<div className="reports-services-grid">
+					{serviceRows.length === 0 && (
+						<div className="admin-panel-empty">No service data yet.</div>
+					)}
 
-    {/* Veterinarian Workload */}
-    <section className="admin-panel reports-panel reports-vet-panel">
-      <div className="reports-panel-header">
-        <div>
-          <h2>Veterinarian Workload</h2>
-          <p>Appointments handled by each veterinarian this month.</p>
-        </div>
-      </div>
+					{serviceRows.map(([service, count]) => (
+						<div className="reports-service-item" key={service}>
+							<div>
+								<strong>{service}</strong>
+								<span>
+									{count} appointment{count === 1 ? "" : "s"}
+								</span>
+							</div>
 
-      <div className="reports-vet-list">
-        <div className="reports-vet-row">
-          <div className="reports-vet-info">
-            <div className="reports-vet-avatar">ED</div>
-
-            <div>
-              <strong>Dr. Evelyn Dane</strong>
-              <span>General Practice</span>
-            </div>
-          </div>
-
-          <div className="reports-vet-progress">
-            <div className="reports-progress-track">
-              <div
-                className="reports-progress-bar"
-                style={{ width: "90%" }}
-              ></div>
-            </div>
-
-            <strong>45</strong>
-          </div>
-        </div>
-
-        <div className="reports-vet-row">
-          <div className="reports-vet-info">
-            <div className="reports-vet-avatar">AM</div>
-
-            <div>
-              <strong>Dr. Alex Mercer</strong>
-              <span>Surgery & Diagnostics</span>
-            </div>
-          </div>
-
-          <div className="reports-vet-progress">
-            <div className="reports-progress-track">
-              <div
-                className="reports-progress-bar"
-                style={{ width: "78%" }}
-              ></div>
-            </div>
-
-            <strong>39</strong>
-          </div>
-        </div>
-
-        <div className="reports-vet-row">
-          <div className="reports-vet-info">
-            <div className="reports-vet-avatar">ER</div>
-
-            <div>
-              <strong>Dr. Elena Rostova</strong>
-              <span>Internal Medicine</span>
-            </div>
-          </div>
-
-          <div className="reports-vet-progress">
-            <div className="reports-progress-track">
-              <div
-                className="reports-progress-bar"
-                style={{ width: "68%" }}
-              ></div>
-            </div>
-
-            <strong>34</strong>
-          </div>
-        </div>
-
-        <div className="reports-vet-row">
-          <div className="reports-vet-info">
-            <div className="reports-vet-avatar">MB</div>
-
-            <div>
-              <strong>Dr. Marcus Bennett</strong>
-              <span>Dermatology</span>
-            </div>
-          </div>
-
-          <div className="reports-vet-progress">
-            <div className="reports-progress-track">
-              <div
-                className="reports-progress-bar"
-                style={{ width: "55%" }}
-              ></div>
-            </div>
-
-            <strong>27</strong>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {/* Popular Services */}
-    <section className="admin-panel reports-panel">
-      <div className="reports-panel-header">
-        <div>
-          <h2>Popular Services</h2>
-          <p>Most requested veterinary services this month.</p>
-        </div>
-      </div>
-
-      <div className="reports-services-grid">
-        <div className="reports-service-item">
-          <div>
-            <strong>General Check-up</strong>
-            <span>64 appointments</span>
-          </div>
-
-          <b>34%</b>
-        </div>
-
-        <div className="reports-service-item">
-          <div>
-            <strong>Vaccination</strong>
-            <span>42 appointments</span>
-          </div>
-
-          <b>23%</b>
-        </div>
-
-        <div className="reports-service-item">
-          <div>
-            <strong>Consultation</strong>
-            <span>31 appointments</span>
-          </div>
-
-          <b>17%</b>
-        </div>
-
-        <div className="reports-service-item">
-          <div>
-            <strong>Dental Cleaning</strong>
-            <span>24 appointments</span>
-          </div>
-
-          <b>13%</b>
-        </div>
-      </div>
-    </section>
-    </>
-  );
+							<b>{Math.round((count / maxService) * 100)}%</b>
+						</div>
+					))}
+				</div>
+			</section>
+		</>
+	);
 }
 
 export default Reports;

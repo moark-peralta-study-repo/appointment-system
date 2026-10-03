@@ -1,278 +1,205 @@
+import { useAppointments, usePets, useUsers, useStats } from "../../hooks/useAdminData";
+import { isToday, format12h } from "../../utils/admin";
+
 function AdminDashboard() {
-  return (
-    <>
-    <header className="admin-header">
-      <div>
-        <p className="admin-eyebrow">MUTUALS PAWS VETERINARY CLINIC</p>
-        <h1>Good morning, Admin!</h1>
-        <p className="admin-header-text">
-          Here's what's happening at the clinic today.
-        </p>
-      </div>
+	const { data: appointments = [], isPending: apptsLoading } = useAppointments();
+	const { data: pets = [], isPending: petsLoading } = usePets();
+	const { data: users = [] } = useUsers();
+	const { data: stats, isPending: statsLoading } = useStats();
 
-      <div className="admin-header-actions">
-        <button className="admin-notification" type="button">
-          🔔
-        </button>
+	const todayList = appointments
+		.filter((a) => isToday(a.date))
+		.sort((x, y) => (x.time > y.time ? 1 : -1));
 
-        <div className="admin-profile">
-          <div className="admin-profile-avatar">A</div>
+	const ownerCount = users.filter((u) => u.role === "user").length;
+	const vetCount = users.filter((u) => u.role === "vet").length;
 
-          <div>
-            <strong>Admin</strong>
-            <span>Clinic Administrator</span>
-          </div>
-        </div>
-      </div>
-    </header>
+	const statCards = [
+		{ label: "Today's Appointments", value: todayList.length, sub: `${todayList.filter((a) => a.status === "confirmed").length} confirmed so far`, icon: "📅" },
+		{ label: "Total Patients", value: pets.length, sub: "registered pets on file", icon: "🐾" },
+		{ label: "Pet Owners", value: ownerCount, sub: "active client accounts", icon: "👤" },
+		{ label: "Veterinarians", value: vetCount, sub: "staffed on the team", icon: "🩺" },
+	];
 
-    {/* STATISTICS */}
-    <section className="admin-stats">
+	// Recent patients = newest pets (createdAt desc).
+	const recentPets = [...pets]
+		.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+		.slice(0, 3);
 
-      <div className="admin-stat-card">
-        <div className="admin-stat-top">
-          <span>Today's Appointments</span>
-          <span className="admin-stat-icon">📅</span>
-        </div>
+	const loading = apptsLoading || petsLoading || statsLoading;
 
-        <strong>24</strong>
-        <p>8 remaining today</p>
-      </div>
+	return (
+		<>
+		<header className="admin-header">
+			<div>
+				<p className="admin-eyebrow">MUTUALS PAWS VETERINARY CLINIC</p>
+				<h1>Clinic Dashboard</h1>
+				<p className="admin-header-text">
+					{loading
+						? "Loading today's activity…"
+						: `Here's what's happening at the clinic today.`}
+				</p>
+			</div>
 
-      <div className="admin-stat-card">
-        <div className="admin-stat-top">
-          <span>Total Patients</span>
-          <span className="admin-stat-icon">🐾</span>
-        </div>
+			<div className="admin-header-actions">
+				<button className="admin-notification" type="button">
+					🔔
+				</button>
+			</div>
+		</header>
 
-        <strong>186</strong>
-        <p>12 added this month</p>
-      </div>
+		{loading ? (
+			<div className="admin-loading">Loading dashboard…</div>
+		) : (
+			<>
+			{/* STATISTICS */}
+			<section className="admin-stats">
+				{statCards.map((s) => (
+					<div className="admin-stat-card" key={s.label}>
+						<div className="admin-stat-top">
+							<span>{s.label}</span>
+							<span className="admin-stat-icon">{s.icon}</span>
+						</div>
 
-      <div className="admin-stat-card">
-        <div className="admin-stat-top">
-          <span>Pet Owners</span>
-          <span className="admin-stat-icon">👤</span>
-        </div>
+						<strong>{s.value}</strong>
+						<p>{s.sub}</p>
+					</div>
+				))}
+			</section>
 
-        <strong>142</strong>
-        <p>6 new this month</p>
-      </div>
+			{/* MAIN GRID */}
+			<section className="admin-dashboard-grid">
 
-      <div className="admin-stat-card">
-        <div className="admin-stat-top">
-          <span>Veterinarians</span>
-          <span className="admin-stat-icon">🩺</span>
-        </div>
+				{/* APPOINTMENTS */}
+				<div className="admin-panel appointments-panel">
+					<div className="admin-panel-header">
+						<div>
+							<h2>Today's Appointments</h2>
+							<p>{todayList.length} scheduled for today</p>
+						</div>
 
-        <strong>12</strong>
-        <p>8 currently available</p>
-      </div>
+						<a href="/admin/appointments">
+							View all
+						</a>
+					</div>
 
-    </section>
+					<div className="appointment-list">
+						{todayList.length === 0 && (
+							<p className="admin-panel-empty">No appointments scheduled today.</p>
+						)}
 
-    {/* MAIN GRID */}
-    <section className="admin-dashboard-grid">
+						{todayList.slice(0, 5).map((a) => (
+							<div className="admin-appointment" key={a._id}>
+								<div className="appointment-time">
+									<strong>{format12h(a.time)}</strong>
+								</div>
 
-      {/* APPOINTMENTS */}
-      <div className="admin-panel appointments-panel">
+								<div className="appointment-pet">
+									<div className="appointment-avatar">
+										{a.pet?.species === "cat" ? "🐱" : "🐶"}
+									</div>
 
-        <div className="admin-panel-header">
-          <div>
-            <h2>Today's Appointments</h2>
-            <p>Upcoming appointments for today</p>
-          </div>
+									<div>
+										<strong>{a.pet?.name ?? "Unknown pet"}</strong>
+										<span>
+											{a.pet?.breed ?? a.pet?.species ?? "—"} • {a.reason}
+										</span>
+									</div>
+								</div>
 
-          <a href="/admin/appointments">
-            View all
-          </a>
-        </div>
+								<div className="appointment-vet">
+									<span>Veterinarian</span>
+									<strong>{a.vet ?? "—"}</strong>
+								</div>
 
-        <div className="appointment-list">
+								<span className={`status ${a.status === "confirmed" ? "confirmed" : "pending"}`}>
+									{a.status.charAt(0).toUpperCase() + a.status.slice(1)}
+								</span>
+							</div>
+						))}
+					</div>
+				</div>
 
-          <div className="admin-appointment">
-            <div className="appointment-time">
-              <strong>09:00</strong>
-              <span>AM</span>
-            </div>
+				{/* QUICK ACTIONS */}
+				<div className="admin-panel quick-actions-panel">
+					<div className="admin-panel-header">
+						<div>
+							<h2>Quick Actions</h2>
+							<p>Common clinic tasks</p>
+						</div>
+					</div>
 
-            <div className="appointment-pet">
-              <div className="appointment-avatar">🐶</div>
+					<div className="quick-actions">
+						<button type="button" onClick={() => (location.href = "/admin/appointments")}>
+							<span>📅</span>
+							<div>
+								<strong>Manage Appointments</strong>
+								<small>Confirm, complete or cancel visits</small>
+							</div>
+						</button>
 
-              <div>
-                <strong>Mochi</strong>
-                <span>Golden Retriever • Check-up</span>
-              </div>
-            </div>
+						<button type="button" onClick={() => (location.href = "/admin/patients")}>
+							<span>🐾</span>
+							<div>
+								<strong>Patients</strong>
+								<small>Browse the patient register</small>
+							</div>
+						</button>
 
-            <div className="appointment-vet">
-              <span>Veterinarian</span>
-              <strong>Dr. Evelyn Dane</strong>
-            </div>
+						<button type="button" onClick={() => (location.href = "/admin/medical-records")}>
+							<span>📋</span>
+							<div>
+								<strong>Medical Records</strong>
+								<small>Completed visit notes</small>
+							</div>
+						</button>
+					</div>
+				</div>
+			</section>
 
-            <span className="status confirmed">
-              Confirmed
-            </span>
-          </div>
+			{/* RECENT PATIENTS */}
+			<section className="admin-panel recent-patients-panel">
+				<div className="admin-panel-header">
+					<div>
+						<h2>Recent Patients</h2>
+						<p>Recently registered pets</p>
+					</div>
 
-          <div className="admin-appointment">
-            <div className="appointment-time">
-              <strong>10:30</strong>
-              <span>AM</span>
-            </div>
+					<a href="/admin/patients">
+						View all
+					</a>
+				</div>
 
-            <div className="appointment-pet">
-              <div className="appointment-avatar">🐱</div>
+				<div className="recent-patients">
+					{recentPets.map((p) => (
+						<div className="recent-patient" key={p._id}>
+							<div
+								className="recent-patient-avatar"
+								role="img"
+								aria-label={p.name}
+							>
+								{p.species === "cat" ? "🐱" : "🐶"}
+							</div>
 
-              <div>
-                <strong>Luna</strong>
-                <span>Persian • Vaccination</span>
-              </div>
-            </div>
+							<div>
+								<strong>{p.name}</strong>
+								<span>{p.breed ?? p.species ?? "—"}</span>
+							</div>
 
-            <div className="appointment-vet">
-              <span>Veterinarian</span>
-              <strong>Dr. Alex Mercer</strong>
-            </div>
-
-            <span className="status pending">
-              Pending
-            </span>
-          </div>
-
-          <div className="admin-appointment">
-            <div className="appointment-time">
-              <strong>11:00</strong>
-              <span>AM</span>
-            </div>
-
-            <div className="appointment-pet">
-              <div className="appointment-avatar">🐶</div>
-
-              <div>
-                <strong>Bruno</strong>
-                <span>Labrador • Consultation</span>
-              </div>
-            </div>
-
-            <div className="appointment-vet">
-              <span>Veterinarian</span>
-              <strong>Dr. Elena Rostova</strong>
-            </div>
-
-            <span className="status confirmed">
-              Confirmed
-            </span>
-          </div>
-
-        </div>
-      </div>
-
-      {/* QUICK ACTIONS */}
-      <div className="admin-panel quick-actions-panel">
-
-        <div className="admin-panel-header">
-          <div>
-            <h2>Quick Actions</h2>
-            <p>Common clinic tasks</p>
-          </div>
-        </div>
-
-        <div className="quick-actions">
-
-          <button type="button">
-            <span>📅</span>
-            <div>
-              <strong>New Appointment</strong>
-              <small>Schedule a visit</small>
-            </div>
-          </button>
-
-          <button type="button">
-            <span>🐾</span>
-            <div>
-              <strong>Add Patient</strong>
-              <small>Register a new pet</small>
-            </div>
-          </button>
-
-          <button type="button">
-            <span>📋</span>
-            <div>
-              <strong>Medical Record</strong>
-              <small>Create a new record</small>
-            </div>
-          </button>
-
-        </div>
-      </div>
-
-    </section>
-
-    {/* RECENT PATIENTS */}
-    <section className="admin-panel recent-patients-panel">
-
-      <div className="admin-panel-header">
-        <div>
-          <h2>Recent Patients</h2>
-          <p>Recently registered pets</p>
-        </div>
-
-        <a href="/admin/patients">
-          View all
-        </a>
-      </div>
-
-      <div className="recent-patients">
-
-        <div className="recent-patient">
-          <img
-            src="/src/assets/images/pets/mochi.jpeg"
-            alt="Mochi"
-          />
-
-          <div>
-            <strong>Mochi</strong>
-            <span>Golden Retriever</span>
-          </div>
-
-          <small>Today</small>
-        </div>
-
-        <div className="recent-patient">
-          <img
-            src="/src/assets/images/pets/luna.jpeg"
-            alt="Luna"
-          />
-
-          <div>
-            <strong>Luna</strong>
-            <span>Persian Cat</span>
-          </div>
-
-          <small>Yesterday</small>
-        </div>
-
-        <div className="recent-patient">
-          <img
-            src="/src/assets/images/pets/bruno.jpeg"
-            alt="Bruno"
-          />
-
-          <div>
-            <strong>Bruno</strong>
-            <span>Labrador</span>
-          </div>
-
-          <small>2 days ago</small>
-        </div>
-
-      </div>
-
-    </section>
-
-    </>
-  );
+							<small>
+								{new Date(p.createdAt).toLocaleDateString("en-US", {
+									month: "short",
+									day: "numeric",
+								})}
+							</small>
+						</div>
+					))}
+				</div>
+			</section>
+			</>
+		)}
+		</>
+	);
 }
 
 export default AdminDashboard;

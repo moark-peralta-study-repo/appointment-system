@@ -3469,6 +3469,26 @@ img {
   color: #6E6200;
 }
 
+.status.completed {
+  background: #D6EFFF;
+  color: #00345B;
+}
+
+.status.cancelled {
+  background: #F2E6E6;
+  color: #7A2E2E;
+}
+
+/* EMPTY STATE */
+
+.admin-panel-empty {
+	padding: 16px;
+	color: #4E6E85;
+	font-family: "Baloo Thambi 2", sans-serif;
+	font-size: 13px;
+	text-align: center;
+}
+
 /* QUICK ACTIONS */
 
 .quick-actions {
@@ -3544,11 +3564,18 @@ img {
   border-right: 0;
 }
 
-.recent-patient img {
+.recent-patient img,
+.recent-patient-avatar {
   width: 48px;
   height: 48px;
   border-radius: 12px;
   object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  background: #EAF3FB;
+  flex-shrink: 0;
 }
 
 .recent-patient div {
@@ -3905,6 +3932,65 @@ img {
 }
 
 /* MORE BUTTON */
+
+.table-date-sub {
+  display: block;
+  font-size: 10px;
+  color: #4E6E85;
+  margin-top: 2px;
+}
+
+/* ROW ACTIONS */
+
+.appointment-action-cell {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.row-action {
+  border: 1px solid rgba(0, 52, 91, 0.15);
+  background: #fff;
+  border-radius: 9999px;
+  padding: 5px 12px;
+  font-family: "Baloo Thambi 2", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.row-action.confirm {
+  color: #3E6B14;
+  border-color: rgba(62, 107, 20, 0.35);
+}
+
+.row-action.confirm:hover {
+  background: #DCF2AA;
+}
+
+.row-action.complete {
+  color: #00345B;
+  border-color: rgba(0, 52, 91, 0.3);
+}
+
+.row-action.complete:hover {
+  background: #D6EFFF;
+}
+
+.row-action.cancel {
+  color: #7A2E2E;
+  border-color: rgba(122, 46, 46, 0.3);
+}
+
+.row-action.cancel:hover {
+  background: #F2E6E6;
+}
+
+.row-action-muted {
+  color: #9DB4C6;
+  font-size: 12px;
+}
 
 .appointment-more {
   width: 34px;
