@@ -3,8 +3,10 @@ import { RxDashboard, RxCalendar, RxPeople, RxPerson } from "react-icons/rx";
 import { CiMedicalCase, CiMedicalClipboard, CiSettings } from "react-icons/ci";
 import { FaChartBar } from "react-icons/fa";
 import logo from "../../assets/logo/happy-paws-logo.png";
+import { useAuth } from "../../context/useAuth";
 
 function AdminSidebar() {
+	const { user, logout } = useAuth();
 	return (
 		<aside className="admin-sidebar">
 			{/* BRAND */}
@@ -94,12 +96,23 @@ function AdminSidebar() {
 					<span>Settings</span>
 				</NavLink>
 
-				<div className="admin-user">
-					<div className="admin-user-avatar">A</div>
+				<div
+					className="admin-user"
+					onClick={() => {
+						logout();
+						navigate("/admin/login");
+					}}
+					title="Click to sign out"
+				>
+					<div className="admin-user-avatar">
+						{user?.name?.[0]?.toUpperCase() || "?"}
+					</div>
 
 					<div className="admin-user-details">
-						<strong>Admin</strong>
-						<span>Clinic Administrator</span>
+						<strong>{user?.name || "Staff"}</strong>
+						<span>
+							{user?.role === "vet" ? "Veterinarian" : "Clinic Administrator"}
+						</span>
 					</div>
 
 					<button className="admin-user-menu" type="button">

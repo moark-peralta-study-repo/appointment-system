@@ -3147,6 +3147,16 @@ img {
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
+}
+
+.admin-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: #64748b;
+  font-size: 14px;
 }
 
 .admin-user-avatar,
@@ -6296,6 +6306,12 @@ img {
 .admin-login-button:hover {
   background: #0070e0;
   transform: translateY(-1px);
+}
+
+.admin-login-button:disabled {
+  background: #9dcef7;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .admin-login-demo {
