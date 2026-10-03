@@ -24,7 +24,3 @@ function toHHMM(mins) {
 
 	return `${HH}:${mm}`;
 }
-
-const schedule = [{ day: 1, start: "09:00", end: "11:00", slotMinutes: 30 }];
-console.log(getFreeSlots(schedule, ["09:30"], new Date(2026, 8, 28)));
-console.log(getFreeSlots(schedule, [], new Date(2026, 8, 29)));
