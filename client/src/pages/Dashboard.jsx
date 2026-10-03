@@ -154,7 +154,9 @@ function Dashboard() {
 								<h2>My furry friends</h2>
 							</div>
 
-							<button className="text-button">View all →</button>
+							<button className="text-button">
+								View all <FaArrowRight />
+							</button>
 						</div>
 
 						<div className="pet-cards">
@@ -325,7 +327,9 @@ function Dashboard() {
 							</p>
 						</div>
 
-						<button>Schedule visit →</button>
+						<button>
+							Schedule visit <FaArrowRight />
+						</button>
 					</section>
 
 					<footer className="client-footer">
