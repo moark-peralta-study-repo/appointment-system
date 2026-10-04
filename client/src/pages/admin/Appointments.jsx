@@ -58,7 +58,9 @@ function Appointments() {
 				{summary.map((s) => (
 					<div className="appointment-summary-card" key={s.label}>
 						<span>{s.label}</span>
-						<strong>{isPending ? "…" : s.value}</strong>
+						<strong>
+						{isPending ? <span className="mini-spinner" /> : s.value}
+					</strong>
 					</div>
 				))}
 			</section>

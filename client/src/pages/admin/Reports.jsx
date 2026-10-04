@@ -74,7 +74,13 @@ function Reports() {
 
 					<div>
 						<span>Total Appointments</span>
-						<strong>{statsPending ? "…" : total}</strong>
+						<strong>
+						{statsPending ? (
+							<span className="mini-spinner" />
+						) : (
+							total
+						)}
+					</strong>
 						<small>all time at the clinic</small>
 					</div>
 				</div>

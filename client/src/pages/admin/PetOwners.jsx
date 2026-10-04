@@ -51,7 +51,13 @@ function PetOwners() {
 
 					<div>
 						<span>Total Pet Owners</span>
-						<strong>{isPending ? "…" : owners.length}</strong>
+						<strong>
+						{isPending ? (
+							<span className="mini-spinner" />
+						) : (
+							owners.length
+						)}
+					</strong>
 					</div>
 				</div>
 
