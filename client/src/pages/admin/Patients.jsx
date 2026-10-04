@@ -59,7 +59,13 @@ function Patients() {
 
 					<div>
 						<span>Total Patients</span>
-						<strong>{isPending ? "…" : pets.length}</strong>
+						<strong>
+						{isPending ? (
+							<span className="mini-spinner" />
+						) : (
+							pets.length
+						)}
+					</strong>
 					</div>
 				</div>
 

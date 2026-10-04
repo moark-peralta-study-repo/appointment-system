@@ -56,7 +56,13 @@ function MedicalRecords() {
 
 					<div>
 						<span>Total Records</span>
-						<strong>{isPending ? "…" : completedCount}</strong>
+						<strong>
+						{isPending ? (
+							<span className="mini-spinner" />
+						) : (
+							completedCount
+						)}
+					</strong>
 					</div>
 				</div>
 

@@ -62,7 +62,13 @@ function Veterinarians() {
 
 					<div>
 						<span>Total Veterinarians</span>
-						<strong>{isPending ? "…" : vets.length}</strong>
+						<strong>
+						{isPending ? (
+							<span className="mini-spinner" />
+						) : (
+							vets.length
+						)}
+					</strong>
 					</div>
 				</div>
 
