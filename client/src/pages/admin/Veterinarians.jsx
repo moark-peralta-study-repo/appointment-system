@@ -1,223 +1,209 @@
+import { useState } from "react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
+import { useVets, useAppointments } from "../../hooks/useAdminData";
+import { isToday, initials } from "../../utils/admin";
+
+const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/** "Mon–Fri 09:00–17:00" from a vet's embedded schedule. */
+function scheduleLabel(schedule = []) {
+	if (!schedule.length) return "No schedule set";
+	const days = [...new Set(schedule.map((s) => DAY_NAMES[s.day]))].join(", ");
+	const first = schedule[0];
+	return `${days} ${first.start}–${first.end}`;
+}
 
 function Veterinarians() {
-  const veterinarians = [
-    {
-      name: "Dr. Evelyn Dane",
-      specialty: "General Practice",
-      experience: "8 years experience",
-      appointments: 9,
-      status: "Available",
-      initials: "ED",
-    },
-    {
-      name: "Dr. Alex Mercer",
-      specialty: "Surgery & Diagnostics",
-      experience: "10 years experience",
-      appointments: 7,
-      status: "In Consultation",
-      initials: "AM",
-    },
-    {
-      name: "Dr. Elena Rostova",
-      specialty: "Internal Medicine",
-      experience: "7 years experience",
-      appointments: 6,
-      status: "Available",
-      initials: "ER",
-    },
-    {
-      name: "Dr. Marcus Bennett",
-      specialty: "Dermatology",
-      experience: "6 years experience",
-      appointments: 5,
-      status: "Available",
-      initials: "MB",
-    },
-    {
-      name: "Dr. Claire Morgan",
-      specialty: "Emergency Care",
-      experience: "9 years experience",
-      appointments: 8,
-      status: "On Break",
-      initials: "CM",
-    },
-    {
-      name: "Dr. Noah Williams",
-      specialty: "Preventive Care",
-      experience: "5 years experience",
-      appointments: 4,
-      status: "Available",
-      initials: "NW",
-    },
-  ];
+	const { data: vets = [], isPending } = useVets();
+	const { data: appointments = [] } = useAppointments();
 
-  return (
-    <>
-        <AdminPageHeader
-      eyebrow="CLINIC MANAGEMENT"
-      title="Veterinarians"
-      description="Manage the veterinary team and monitor their availability."
-      actions={
-        <button className="admin-primary-button" type="button">
-          + Add Veterinarian
-        </button>
-      }
-    />
+	const [specialtyFilter, setSpecialtyFilter] = useState("all");
 
+	// Active (pending/confirmed) appointments per vet, today — the API
+	// flattens vet to a name string, so count by name.
+	const todayByVet = {};
+	for (const a of appointments) {
+		if (!a.vet || !isToday(a.date)) continue;
+		if (a.status !== "pending" && a.status !== "confirmed") continue;
+		todayByVet[a.vet] = (todayByVet[a.vet] || 0) + 1;
+	}
 
-    {/* SUMMARY */}
+	const rows = vets
+		.filter((v) => specialtyFilter === "all" || v.specialty === specialtyFilter)
+		.map((v) => ({
+			...v,
+			todayCount: todayByVet[v.name] || 0,
+			status: todayByVet[v.name] ? "In Consultation" : "Available",
+			initials: initials(v.name),
+		}));
 
-    <section className="vet-summary">
-      <div className="vet-summary-card">
-        <div className="vet-summary-icon blue">
-          🩺
-        </div>
+	const specialties = [...new Set(vets.map((v) => v.specialty).filter(Boolean))];
 
-        <div>
-          <span>Total Veterinarians</span>
-          <strong>12</strong>
-        </div>
-      </div>
+	return (
+		<>
+			<AdminPageHeader
+				eyebrow="CLINIC MANAGEMENT"
+				title="Veterinarians"
+				description="Manage the veterinary team and monitor their availability."
+				actions={
+					<button className="admin-primary-button" type="button">
+						+ Add Veterinarian
+					</button>
+				}
+			/>
 
-      <div className="vet-summary-card">
-        <div className="vet-summary-icon green">
-          ✓
-        </div>
+			{/* SUMMARY */}
 
-        <div>
-          <span>Available Now</span>
-          <strong>8</strong>
-        </div>
-      </div>
+			<section className="vet-summary">
+				<div className="vet-summary-card">
+					<div className="vet-summary-icon blue">
+						🩺
+					</div>
 
-      <div className="vet-summary-card">
-        <div className="vet-summary-icon yellow">
-          📅
-        </div>
+					<div>
+						<span>Total Veterinarians</span>
+						<strong>{isPending ? "…" : vets.length}</strong>
+					</div>
+				</div>
 
-        <div>
-          <span>Appointments Today</span>
-          <strong>24</strong>
-        </div>
-      </div>
+				<div className="vet-summary-card">
+					<div className="vet-summary-icon green">
+						✓
+					</div>
 
-      <div className="vet-summary-card">
-        <div className="vet-summary-icon soft-blue">
-          ✦
-        </div>
+					<div>
+						<span>Available Now</span>
+						<strong>{rows.filter((r) => r.status === "Available").length}</strong>
+					</div>
+				</div>
 
-        <div>
-          <span>Specialties</span>
-          <strong>7</strong>
-        </div>
-      </div>
-    </section>
+				<div className="vet-summary-card">
+					<div className="vet-summary-icon yellow">
+						📅
+					</div>
 
-    {/* TOOLBAR */}
+					<div>
+						<span>Appointments Today</span>
+						<strong>{Object.values(todayByVet).reduce((a, b) => a + b, 0)}</strong>
+					</div>
+				</div>
 
-    <section className="admin-panel veterinarians-panel">
-      <div className="veterinarians-toolbar">
-        <div className="vet-search">
-          <span>⌕</span>
+				<div className="vet-summary-card">
+					<div className="vet-summary-icon soft-blue">
+						✦
+					</div>
 
-          <input
-            type="text"
-            placeholder="Search veterinarian or specialty..."
-          />
-        </div>
+					<div>
+						<span>Specialties</span>
+						<strong>{specialties.length}</strong>
+					</div>
+				</div>
+			</section>
 
-        <div className="vet-filters">
-          <select defaultValue="all">
-            <option value="all">All Specialties</option>
-            <option value="general">General Practice</option>
-            <option value="surgery">
-              Surgery & Diagnostics
-            </option>
-            <option value="internal">
-              Internal Medicine
-            </option>
-            <option value="dermatology">Dermatology</option>
-            <option value="emergency">Emergency Care</option>
-            <option value="preventive">Preventive Care</option>
-          </select>
+			{/* TOOLBAR */}
 
-          <select defaultValue="all">
-            <option value="all">All Availability</option>
-            <option value="available">Available</option>
-            <option value="consultation">
-              In Consultation
-            </option>
-            <option value="break">On Break</option>
-          </select>
-        </div>
-      </div>
+			<section className="admin-panel veterinarians-panel">
+				<div className="veterinarians-toolbar">
+					<div className="vet-search">
+						<span>⌕</span>
 
-      {/* VETERINARIAN CARDS */}
+						<input
+							type="text"
+							placeholder="Search veterinarian or specialty..."
+						/>
+					</div>
 
-      <div className="veterinarian-grid">
-        {veterinarians.map((vet, index) => (
-          <div className="veterinarian-card" key={index}>
-            <div className="vet-card-top">
-              <div className="vet-avatar">
-                {vet.initials}
-              </div>
+					<div className="vet-filters">
+						<select value={specialtyFilter} onChange={(e) => setSpecialtyFilter(e.target.value)}>
+							<option value="all">All Specialties</option>
+							{specialties.map((s) => (
+								<option key={s} value={s}>
+									{s}
+								</option>
+							))}
+						</select>
 
-              <button
-                className="vet-more-button"
-                type="button"
-                aria-label={`More options for ${vet.name}`}
-              >
-                •••
-              </button>
-            </div>
+						<select defaultValue="all">
+							<option value="all">All Availability</option>
+							<option value="available">Available</option>
+							<option value="consultation">
+								In Consultation
+							</option>
+						</select>
+					</div>
+				</div>
 
-            <div className="vet-card-info">
-              <h3>{vet.name}</h3>
+				{/* VETERINARIAN CARDS */}
 
-              <p className="vet-specialty">
-                {vet.specialty}
-              </p>
+				<div className="veterinarian-grid">
+					{isPending && (
+						<div className="admin-panel-empty" style={{ gridColumn: "1 / -1" }}>
+							Loading veterinary team…
+						</div>
+					)}
 
-              <p className="vet-experience">
-                {vet.experience}
-              </p>
-            </div>
+					{rows.map((vet) => (
+						<div className="veterinarian-card" key={vet._id}>
+							<div className="vet-card-top">
+								<div className="vet-avatar">
+									{vet.initials}
+								</div>
 
-            <div className="vet-card-divider"></div>
+								<button
+									className="vet-more-button"
+									type="button"
+									aria-label={`More options for ${vet.name}`}
+								>
+									•••
+								</button>
+							</div>
 
-            <div className="vet-card-bottom">
-              <div>
-                <span>Today's Appointments</span>
-                <strong>{vet.appointments}</strong>
-              </div>
+							<div className="vet-card-info">
+								<h3>{vet.name}</h3>
 
-              <span
-                className={`vet-status ${
-                  vet.status === "Available"
-                    ? "available"
-                    : vet.status === "In Consultation"
-                    ? "consultation"
-                    : "break"
-                }`}
-              >
-                <span className="vet-status-dot"></span>
-                {vet.status}
-              </span>
-            </div>
+								<p className="vet-specialty">
+									{vet.specialty ?? "General"}
+								</p>
 
-            <button
-              className="vet-view-button"
-              type="button"
-            >
-              View Profile
-            </button>
-          </div>
-        ))}
-      </div>
-    </section>
-    </>
-  );
+								<p className="vet-experience">
+									{scheduleLabel(vet.schedule)}
+								</p>
+							</div>
+
+							<div className="vet-card-divider"></div>
+
+							<div className="vet-card-bottom">
+								<div>
+									<span>Today's Appointments</span>
+									<strong>{vet.todayCount}</strong>
+								</div>
+
+								<span
+									className={`vet-status ${
+										vet.status === "Available"
+											? "available"
+											: vet.status === "In Consultation"
+											? "consultation"
+											: "break"
+									}`}
+								>
+									<span className="vet-status-dot"></span>
+									{vet.status}
+								</span>
+							</div>
+
+							<button
+								className="vet-view-button"
+								type="button"
+							>
+								View Profile
+							</button>
+						</div>
+					))}
+				</div>
+			</section>
+		</>
+	);
 }
 
 export default Veterinarians;
