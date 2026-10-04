@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { RxDashboard, RxCalendar, RxPeople, RxPerson } from "react-icons/rx";
 import { CiMedicalCase, CiMedicalClipboard, CiSettings } from "react-icons/ci";
 import { FaChartBar } from "react-icons/fa";
@@ -7,6 +7,8 @@ import { useAuth } from "../../context/useAuth";
 
 function AdminSidebar() {
 	const { user, logout } = useAuth();
+	const navigate = useNavigate();
+
 	return (
 		<aside className="admin-sidebar">
 			{/* BRAND */}
