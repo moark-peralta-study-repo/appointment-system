@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Router, Routes, Route, Navigate } from "react-router-dom";
 
 import Home from "./pages/Home";
 import BookAppointment from "./pages/BookAppointment";
@@ -16,12 +16,21 @@ import Reports from "./pages/admin/Reports";
 import Settings from "./pages/admin/Settings";
 import AdminLogin from "./pages/admin/AdminLogin";
 
+import ClientLogin from "./pages/client/ClientLogin";
+import ClientDashboard from "./pages/client/ClientDashboard";
+
 function App() {
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/book-appointment" element={<BookAppointment />} />
+
+				<Route path="/client" element={<Navigate to="/client/login" replace />} />
+
+        {/* Client Routes */}
+        <Route path="/client/login" element={<ClientLogin />} />
+        <Route path="/client/dashboard" element={<ClientDashboard />} />
 
 				{/* Staff login is a standalone page (no sidebar). */}
 				<Route path="/admin/login" element={<AdminLogin />} />

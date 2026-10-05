@@ -1,0 +1,356 @@
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg-main: #f8fafc;
+    --bg-card: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+}
+
+.client-app {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.client-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.client-content {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* WELCOME BANNER */
+.client-welcome {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #eff6ff;
+    padding: 1.75rem 2rem;
+    border-radius: 1rem;
+    border: 1px solid #bfdbfe;
+}
+
+.client-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.client-welcome h1 {
+    font-size: 1.5rem;
+    margin: 0.25rem 0;
+}
+
+.book-button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.book-button:hover {
+    background: var(--primary-hover);
+}
+
+/* PET CARDS */
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1rem;
+}
+
+.text-button {
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pet-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+}
+
+.pet-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.pet-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.pet-card-info {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.pet-card-info h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.pet-card-info p {
+    margin: 0.25rem 0 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.health-chip {
+    background: #dcfce7;
+    color: #166534;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+}
+
+.pet-card-bottom {
+    padding: 0.75rem 1rem;
+    background: #f8fafc;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin-top: auto;
+}
+
+.add-pet-card {
+    background: transparent;
+    border: 2px dashed var(--border);
+    border-radius: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    min-height: 250px;
+}
+
+.add-pet-card:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* GRID LAYOUT */
+.client-main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+.next-appointment, .quick-actions-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+}
+
+.confirmed-chip {
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.appointment-highlight {
+    display: flex;
+    gap: 1.5rem;
+    margin: 1rem 0;
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    align-items: center;
+}
+
+.appointment-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    min-width: 65px;
+}
+
+.appointment-date strong {
+    font-size: 1.4rem;
+}
+
+.appointment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.appointment-pet {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.appointment-pet img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.appointment-info {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+}
+
+.appointment-info div {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.appointment-link {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* QUICK ACTIONS */
+.client-action {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    text-align: left;
+}
+
+.client-action:hover {
+    background: #f8fafc;
+}
+
+.action-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.blue-action { background: #eff6ff; color: #2563eb; }
+.yellow-action { background: #fefce8; color: #ca8a04; }
+.green-action { background: #f0fdf4; color: #16a34a; }
+
+.client-action span {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.client-action small {
+    color: var(--text-muted);
+}
+
+/* HEALTH REMINDER */
+.health-reminder {
+    background: #fefce8;
+    border: 1px solid #fef08a;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.reminder-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #fde047;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #854d0e;
+}
+
+.health-reminder button {
+    background: #ca8a04;
+    color: white;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.client-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+}
