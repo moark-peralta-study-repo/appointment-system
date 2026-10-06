@@ -17,6 +17,8 @@ import Settings from "./pages/admin/Settings";
 import AdminLogin from "./pages/admin/AdminLogin";
 
 import ClientLogin from "./pages/client/ClientLogin";
+import ClientLayout from "./components/client/ClientLayout";
+import ClientProtectedRoute from "./components/client/ClientProtectedRoute";
 import ClientDashboard from "./pages/client/ClientDashboard";
 
 function App() {
@@ -28,9 +30,16 @@ function App() {
 
 				<Route path="/client" element={<Navigate to="/client/login" replace />} />
 
-        {/* Client Routes */}
+        {/* Client routes — same pattern as /admin: the login page stands
+        alone, everything else is behind ClientProtectedRoute which
+        verifies /auth/profile, then ClientLayout renders the page in
+        its <Outlet />. */}
         <Route path="/client/login" element={<ClientLogin />} />
-        <Route path="/client/dashboard" element={<ClientDashboard />} />
+        <Route element={<ClientProtectedRoute />}>
+        <Route path="/client" element={<ClientLayout />}>
+            <Route path="dashboard" element={<ClientDashboard />} />
+        </Route>
+        </Route>
 
 				{/* Staff login is a standalone page (no sidebar). */}
 				<Route path="/admin/login" element={<AdminLogin />} />
