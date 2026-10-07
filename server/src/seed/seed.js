@@ -9,6 +9,8 @@
  *   Staff portal (vet owner): admin@mutualspaws.com / admin123  (Dr. Evelyn Dane)
  *   Other vets:               vet12345
  *   Pet owners:               patient123
+ *   Client portal demo:       client@mutualspaws.com / client123  (Jamie Rivera —
+ *                             the account the login page advertises)
  *
  * The seed creates the vet profiles + pets + appointments directly with
  * Mongoose models so "no double-booking" (rule #2) and schedule-slot rules
@@ -69,6 +71,8 @@ const OWNERS = [
 ];
 
 const PETS = [
+	{ owner: "Jamie Rivera", name: "Max", species: "dog", breed: "Beagle", age: 4, gender: "male" },
+	{ owner: "Jamie Rivera", name: "Bella", species: "cat", breed: "Ragdoll", age: 2, gender: "female" },
 	{ owner: "Maria Lopez", name: "Mochi", species: "dog", breed: "Golden Retriever", age: 3, gender: "male" },
 	{ owner: "Maria Lopez", name: "Loki", species: "dog", breed: "Corgi", age: 1, gender: "male" },
 	{ owner: "James Reyes", name: "Luna", species: "cat", breed: "Persian", age: 2, gender: "female" },
@@ -118,6 +122,15 @@ async function seed() {
 	for (const o of OWNERS) {
 		users[o.name] = await upsertUser({ ...o, password: "patient123", role: "user" });
 	}
+	// Client-portal demo account — separate from the owners loop because the
+	// login page advertises its own password (client123), not patient123.
+	users["Jamie Rivera"] = await upsertUser({
+		name: "Jamie Rivera",
+		email: "client@mutualspaws.com",
+		password: "client123",
+		role: "user",
+		phone: "+63 917 245 9999",
+	});
 	for (const v of VETS) {
 		users[v.name] = await upsertUser({ name: v.name, email: v.email, password: v.password, role: "vet", phone: v.phone });
 	}
@@ -150,12 +163,14 @@ async function seed() {
 		{ date: today, time: "09:00", pet: "Mochi", owner: "Maria Lopez", vet: "Dr. Evelyn Dane", reason: "General Check-up", status: "confirmed" },
 		{ date: today, time: "09:30", pet: "Luna", owner: "James Reyes", vet: "Dr. Alex Mercer", reason: "Vaccination", status: "pending" },
 		{ date: today, time: "10:00", pet: "Bruno", owner: "Sofia Cruz", vet: "Dr. Elena Rostova", reason: "Consultation", status: "confirmed" },
+		{ date: today, time: "11:00", pet: "Max", owner: "Jamie Rivera", vet: "Dr. Claire Morgan", reason: "General Check-up", status: "confirmed" },
 	];
 	// History: completed visits → the Medical Records page + reports data.
 	const history = [
 		{ ...daysAgo(7, "10:00", "completed"), pet: "Mochi", owner: "Maria Lopez", vet: "Dr. Evelyn Dane", reason: "General Check-up", vetNotes: "Healthy. Weight stable. Boosters current." },
 		{ ...daysAgo(5, "14:30", "completed"), pet: "Luna", owner: "James Reyes", vet: "Dr. Alex Mercer", reason: "Vaccination", vetNotes: "Annual rabies + FVRCP administered. Mild soreness possible for a day." },
 		{ ...daysAgo(14, "13:00", "completed"), pet: "Cookie", owner: "Anna Garcia", vet: "Dr. Evelyn Dane", reason: "Dental Cleaning", vetNotes: "Full dental clean, one extraction. On antibiotics 5 days." },
+		{ ...daysAgo(10, "15:00", "completed"), pet: "Bella", owner: "Jamie Rivera", vet: "Dr. Evelyn Dane", reason: "Vaccination", vetNotes: "FVRCP + rabies up to date. Clear eyes and ears." },
 	];
 
 	for (const a of [...todays, ...history]) {

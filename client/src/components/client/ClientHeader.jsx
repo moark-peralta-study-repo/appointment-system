@@ -1,30 +1,20 @@
-import React from "react";
-import { PiBell, PiUserCircle } from "react-icons/pi";
+// Reusable header for the client portal pages — same markup/classes as
+// the admin pages so the chrome matches. Pages pass their own title,
+// subtitle and (optional) header actions (e.g. "Book an appointment").
+function ClientHeader({ eyebrow = "MUTUALS PAWS VETERINARY CLINIC", title, subtitle, actions }) {
+	return (
+		<header className="admin-header">
+			<div>
+				<p className="admin-eyebrow">{eyebrow}</p>
+				<h1>{title}</h1>
+				{subtitle && <p className="admin-header-text">{subtitle}</p>}
+			</div>
 
-function ClientHeader({ title = "Dashboard" }) {
-  return (
-    <header style={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "16px 24px",
-      backgroundColor: "#ffffff",
-      borderBottom: "1px solid #e5e7eb"
-    }}>
-      <h1 style={{ fontSize: "1.25rem", fontWeight: "600", color: "#111827", margin: 0 }}>
-        {title}
-      </h1>
-      <div style={{ display: "flex", alignItems: "center", gap: "16px", color: "#4b5563" }}>
-        <button style={{ background: "none", border: "none", cursor: "pointer", color: "inherit" }}>
-          <PiBell size={22} />
-        </button>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <PiUserCircle size={28} />
-          <span style={{ fontSize: "0.9rem", fontWeight: "500" }}>Client Portal</span>
-        </div>
-      </div>
-    </header>
-  );
+			<div className="admin-header-actions">
+				{actions}
+			</div>
+		</header>
+	);
 }
 
 export default ClientHeader;

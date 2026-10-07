@@ -16,18 +16,11 @@ function ClientLogin() {
     const handleLogin = (e) => {
         e.preventDefault();
 
-        if (login?.mutate) {
-            login.mutate(
-                { email, password },
-                { onSuccess: () => navigate("/client/dashboard"),
-                onError: () => {
-                    navigate("/client/dashboard");
-                }
-        }
-            );
-        } else {
-            navigate("/client/dashboard");
-        }
+        // Only navigate on success — on error we stay on the form so the
+        // API's message (e.g. "Invalid email or password") stays visible.
+        login?.mutate?.({ email, password }, {
+            onSuccess: () => navigate("/client/dashboard"),
+        });
     };
 
     if (isAuthed) {
