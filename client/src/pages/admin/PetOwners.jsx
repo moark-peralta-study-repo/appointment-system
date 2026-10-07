@@ -1,32 +1,207 @@
+import { useMemo, useState } from "react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
-import { useUsers, usePets, useAppointments } from "../../hooks/useAdminData";
+import AdminModal from "../../components/admin/AdminModal";
+import {
+	useUsers,
+	usePets,
+	useAppointments,
+	useCreateOwner,
+} from "../../hooks/useAdminData";
 import { formatDate, initials } from "../../utils/admin";
+
+/* ---------------- ADD OWNER FORM ---------------- */
+
+function OwnerForm({ onClose }) {
+	const register = useCreateOwner();
+
+	const [form, setForm] = useState({
+		name: "",
+		email: "",
+		password: "",
+		phone: "",
+	});
+	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+
+	const canSubmit = form.name.trim() && form.email.trim() && form.password.length >= 6;
+
+	const submit = () => {
+		register.mutate(
+			{
+				name: form.name.trim(),
+				email: form.email.trim(),
+				password: form.password,
+				phone: form.phone.trim() || undefined,
+			},
+			{ onSuccess: onClose },
+		);
+	};
+
+	return (
+		<AdminModal
+			eyebrow="CLINIC MANAGEMENT"
+			title="Add Pet Owner"
+			onClose={onClose}
+			footer={
+				<>
+					<button className="admin-secondary-button" type="button" onClick={onClose}>
+						Cancel
+					</button>
+					<button
+						className="admin-primary-button"
+						type="button"
+						disabled={!canSubmit || register.isPending}
+						onClick={submit}
+					>
+						{register.isPending ? "Creating…" : "Create Account"}
+					</button>
+				</>
+			}
+		>
+			{register.error && (
+				<div className="admin-form-error">⚠ {register.error.message}</div>
+			)}
+
+			<div className="admin-form-grid">
+				<div className="admin-form-field full">
+					<label>Full Name <span>*</span></label>
+					<input type="text" value={form.name} onChange={set("name")} placeholder="e.g. Maria Lopez" />
+				</div>
+
+				<div className="admin-form-field">
+					<label>Email <span>*</span></label>
+					<input type="email" value={form.email} onChange={set("email")} placeholder="owner@email.com" />
+				</div>
+
+				<div className="admin-form-field">
+					<label>Phone</label>
+					<input type="text" value={form.phone} onChange={set("phone")} placeholder="+63 917 000 0000" />
+				</div>
+
+				<div className="admin-form-field full">
+					<label>Portal Password <span>* (min 6 chars — the owner uses this to sign in)</span></label>
+					<input type="text" value={form.password} onChange={set("password")} />
+				</div>
+			</div>
+		</AdminModal>
+	);
+}
+
+/* ---------------- OWNER DETAIL ---------------- */
+
+function OwnerView({ owner, pets, visits, onClose }) {
+	return (
+		<AdminModal
+			eyebrow="OWNER RECORD"
+			title={owner.name}
+			onClose={onClose}
+			wide
+		>
+			<div className="admin-detail-grid">
+				<div className="admin-detail-item">
+					<span>EMAIL</span>
+					<strong>{owner.email}</strong>
+				</div>
+				<div className="admin-detail-item">
+					<span>PHONE</span>
+					<strong>{owner.phone || "—"}</strong>
+				</div>
+				<div className="admin-detail-item">
+					<span>REGISTERED</span>
+					<strong>{formatDate(owner.createdAt)}</strong>
+				</div>
+				<div className="admin-detail-item">
+					<span>REGISTERED PETS</span>
+					<strong>
+						{pets.length} pet{pets.length === 1 ? "" : "s"}
+					</strong>
+				</div>
+			</div>
+
+			<div className="admin-detail-section">PETS</div>
+
+			{pets.length === 0 ? (
+				<p className="admin-slot-note">No pets registered yet.</p>
+			) : (
+				<div className="admin-detail-grid">
+					{pets.map((p) => (
+						<div className="admin-detail-item" key={p._id}>
+							<span>SPECIES</span>
+							<strong>
+								{p.species === "cat" ? "🐱" : "🐶"} {p.name}
+							</strong>
+							<small>
+								{p.breed ?? p.species}
+								{p.age != null ? ` · ${p.age} yrs` : ""}
+								{p.notes ? " · Under observation" : ""}
+							</small>
+						</div>
+					))}
+				</div>
+			)}
+
+			<div className="admin-detail-section">APPOINTMENTS</div>
+
+			{visits.length === 0 ? (
+				<p className="admin-slot-note">No appointments on file.</p>
+			) : (
+				<div className="admin-detail-grid">
+					{visits.map((v) => (
+						<div className="admin-detail-item" key={v._id}>
+							<span>
+								{formatDate(v.date)} · {v.status?.toUpperCase()}
+							</span>
+							<strong>
+								{v.pet?.name ?? "Unknown"} — {v.reason ?? "Visit"}
+							</strong>
+							<small>Dr. {(v.vet ?? "").replace(/^Dr\.\s*/, "") || "—"}</small>
+						</div>
+					))}
+				</div>
+			)}
+		</AdminModal>
+	);
+}
+
+/* ---------------- PAGE ---------------- */
 
 function PetOwners() {
 	const { data: users = [], isPending } = useUsers();
 	const { data: pets = [] } = usePets();
 	const { data: appointments = [] } = useAppointments();
 
+	const [search, setSearch] = useState("");
+	const [statusFilter, setStatusFilter] = useState("all");
+	const [showAdd, setShowAdd] = useState(false);
+	const [viewing, setViewing] = useState(null);
+
 	// Pet counts + most recent appointment per owner.
 	const petCount = {};
 	const lastAppt = {};
-	for (const p of pets) {
-		petCount[p.owner] = (petCount[p.owner] || 0) + 1;
-	}
+	for (const p of pets) petCount[p.owner] = (petCount[p.owner] || 0) + 1;
 	for (const a of appointments) {
 		const d = new Date(a.date).getTime();
 		if (!lastAppt[a.owner] || d > lastAppt[a.owner]) lastAppt[a.owner] = d;
 	}
 
-	const owners = users
-		.filter((u) => u.role === "user")
-		.map((u) => ({
-			...u,
-			pets: petCount[u._id] || 0,
-			lastAppointment: lastAppt[u._id] ? formatDate(lastAppt[u._id]) : "No visits yet",
-			initials: initials(u.name),
-			status: "Active",
-		}));
+	const owners = useMemo(() => {
+		const q = search.trim().toLowerCase();
+		return users
+			.filter((u) => u.role === "user")
+			.map((u) => ({
+				...u,
+				pets: petCount[u._id] || 0,
+				lastAppointment: lastAppt[u._id] ? formatDate(lastAppt[u._id]) : "No visits yet",
+				initials: initials(u.name),
+				status: "Active",
+			}))
+			.filter((o) => statusFilter === "all" || o.status === statusFilter)
+			.filter((o) => {
+				if (!q) return true;
+				return `${o.name} ${o.email} ${o.phone ?? ""}`.toLowerCase().includes(q);
+			});
+	}, [users, petCount, lastAppt, statusFilter, search]);
+
+	const totalOwners = users.filter((u) => u.role === "user").length;
 
 	return (
 		<>
@@ -35,7 +210,7 @@ function PetOwners() {
 				title="Pet Owners"
 				description="Manage client information and their registered pets."
 				actions={
-					<button className="admin-primary-button" type="button">
+					<button className="admin-primary-button" type="button" onClick={() => setShowAdd(true)}>
 						+ Add Pet Owner
 					</button>
 				}
@@ -52,12 +227,12 @@ function PetOwners() {
 					<div>
 						<span>Total Pet Owners</span>
 						<strong>
-						{isPending ? (
-							<span className="mini-spinner" />
-						) : (
-							owners.length
-						)}
-					</strong>
+							{isPending ? (
+								<span className="mini-spinner" />
+							) : (
+								totalOwners
+							)}
+						</strong>
 					</div>
 				</div>
 
@@ -107,13 +282,15 @@ function PetOwners() {
 						<input
 							type="text"
 							placeholder="Search owner, email, or phone..."
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
 						/>
 					</div>
 
 					<div className="owner-filters">
-						<select defaultValue="all">
+						<select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
 							<option value="all">All Status</option>
-							<option value="active">Active</option>
+							<option value="Active">Active</option>
 						</select>
 					</div>
 				</div>
@@ -185,6 +362,7 @@ function PetOwners() {
 										<button
 											className="owner-view-button"
 											type="button"
+											onClick={() => setViewing(owner)}
 										>
 											View
 										</button>
@@ -195,7 +373,7 @@ function PetOwners() {
 							{owners.length === 0 && !isPending && (
 								<tr>
 									<td colSpan={6} className="admin-panel-empty">
-										No pet owners registered yet.
+										No pet owners match this search.
 									</td>
 								</tr>
 							)}
@@ -219,6 +397,19 @@ function PetOwners() {
 					</div>
 				</div>
 			</section>
+
+			{showAdd && <OwnerForm onClose={() => setShowAdd(false)} />}
+
+			{viewing && (
+				<OwnerView
+					owner={viewing}
+					pets={pets.filter((p) => p.owner === viewing._id)}
+					visits={appointments
+						.filter((a) => a.owner === viewing._id)
+						.sort((x, y) => new Date(y.date) - new Date(x.date))}
+					onClose={() => setViewing(null)}
+				/>
+			)}
 		</>
 	);
 }

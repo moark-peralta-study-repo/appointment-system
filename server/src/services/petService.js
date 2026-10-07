@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Pet from "../models/Pet.js";
+import User from "../models/User.js";
 import ApiError from "../utils/ApiError.js";
 
 export async function listPets(user) {
@@ -12,10 +13,16 @@ export async function listPets(user) {
 
 export async function createPet(
 	user,
-	{ name, species, breed, age, gender, notes },
+	{ name, species, breed, age, gender, notes, ownerId },
 ) {
+	// Vets register patients on behalf of owners — pass the owner id in.
+	// Owners always register for themselves.
+	const owner = user.role === "vet" && ownerId ? await User.findById(ownerId) : user;
+	if (!owner) throw new ApiError(404, "Owner not found");
+	if (owner.role !== "user") throw new ApiError(400, "Owner must be a pet owner account");
+
 	const pet = await Pet.create({
-		owner: user._id,
+		owner: owner._id,
 		name,
 		species,
 		breed,
@@ -33,7 +40,9 @@ export async function updatePet(user, petId, updates) {
 
 	const pet = await Pet.findById(petId);
 	if (!pet) throw new ApiError(404, "Pet not found");
-	if (!pet.owner.equals(user._id)) throw new ApiError(403, "Not your pet");
+	if (user.role !== "vet" && !pet.owner.equals(user._id)) {
+		throw new ApiError(403, "Not your pet");
+	}
 
 	const allowed = ["name", "species", "breed", "age", "gender", "notes"];
 	for (const field of allowed) {
@@ -50,7 +59,9 @@ export async function deletePet(user, petId) {
 
 	const pet = await Pet.findById(petId);
 	if (!pet) throw new ApiError(404, "Pet not found");
-	if (!pet.owner.equals(user._id)) throw new ApiError(403, "Not your pet");
+	if (user.role !== "vet" && !pet.owner.equals(user._id)) {
+		throw new ApiError(403, "Not your pet");
+	}
 
 	await pet.deleteOne();
 	return { message: "Pet deleted" };

@@ -31,6 +31,7 @@ export async function listVets() {
 		_id: v._id,
 		name: v.user.name,
 		specialty: v.specialty,
+		bio: v.bio,
 		schedule: v.schedule,
 	}));
 }
