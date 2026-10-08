@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
 	useAppointments,
 	useUsers,
@@ -8,6 +8,7 @@ import {
 } from "../../hooks/useAdminData";
 import { format12h, isToday } from "../../utils/admin";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
+import NewAppointmentModal from "../../components/admin/booking/NewAppointmentModal";
 
 function Appointments() {
 	const { data: appointments = [], isPending } = useAppointments();
@@ -15,6 +16,9 @@ function Appointments() {
 	const { data: stats } = useStats();
 
 	const [statusFilter, setStatusFilter] = useState("all");
+	const [dateFilter, setDateFilter] = useState("today");
+	const [search, setSearch] = useState("");
+	const [showNew, setShowNew] = useState(false);
 
 	const updateStatus = useUpdateAppointmentStatus();
 	const cancel = useCancelAppointment();
@@ -22,12 +26,36 @@ function Appointments() {
 	const ownersById = Object.fromEntries(users.map((u) => [u._id, u]));
 
 	const todayCount = appointments.filter((a) => isToday(a.date)).length;
-	const rows = appointments
-		.filter((a) => statusFilter === "all" || a.status === statusFilter)
-		.sort((x, y) => {
-			const dx = new Date(x.date) - new Date(y.date);
-			return dx !== 0 ? dx : x.time > y.time ? 1 : -1;
-		});
+
+	const rows = useMemo(() => {
+		const q = search.trim().toLowerCase();
+		return appointments
+			.filter((a) => statusFilter === "all" || a.status === statusFilter)
+			.filter((a) => {
+				if (dateFilter === "today") return isToday(a.date);
+				if (dateFilter === "week") {
+					// Next 7 days: today → +6 days, local calendar days.
+					const d = new Date(a.date);
+					const start = new Date();
+					start.setHours(0, 0, 0, 0);
+					const end = new Date(start);
+					end.setDate(end.getDate() + 6);
+					end.setHours(23, 59, 59, 999);
+					return d >= start && d <= end;
+				}
+				return true; // "all"
+			})
+			.filter((a) => {
+				if (!q) return true;
+				const hay =
+					`${a.pet?.name ?? ""} ${ownersById[a.owner]?.name ?? ""} ${a.vet ?? ""} ${a.reason ?? ""}`.toLowerCase();
+				return hay.includes(q);
+			})
+			.sort((x, y) => {
+				const dx = new Date(x.date) - new Date(y.date);
+				return dx !== 0 ? dx : x.time > y.time ? 1 : -1;
+			});
+	}, [appointments, statusFilter, dateFilter, search, ownersById]);
 
 	const summary = [
 		{ label: "Today's Appointments", value: todayCount },
@@ -48,7 +76,7 @@ function Appointments() {
 				title="Appointments"
 				description="Manage and monitor all scheduled veterinary appointments."
 				actions={
-					<button className="admin-primary-button" type="button">
+					<button className="admin-primary-button" type="button" onClick={() => setShowNew(true)}>
 						+ New Appointment
 					</button>
 				}
@@ -59,8 +87,8 @@ function Appointments() {
 					<div className="appointment-summary-card" key={s.label}>
 						<span>{s.label}</span>
 						<strong>
-						{isPending ? <span className="mini-spinner" /> : s.value}
-					</strong>
+							{isPending ? <span className="mini-spinner" /> : s.value}
+						</strong>
 					</div>
 				))}
 			</section>
@@ -72,6 +100,8 @@ function Appointments() {
 						<input
 							type="text"
 							placeholder="Search pet, owner, or veterinarian..."
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
 						/>
 					</div>
 
@@ -84,10 +114,10 @@ function Appointments() {
 							<option value="cancelled">Cancelled</option>
 						</select>
 
-						<select defaultValue="today">
+						<select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}>
 							<option value="today">Today</option>
-							<option value="tomorrow">Tomorrow</option>
-							<option value="week">This Week</option>
+							<option value="week">Next 7 Days</option>
+							<option value="all">All Dates</option>
 						</select>
 					</div>
 				</div>
@@ -203,6 +233,8 @@ function Appointments() {
 					</table>
 				</div>
 			</section>
+
+			{showNew && <NewAppointmentModal onClose={() => setShowNew(false)} />}
 		</>
 	);
 }

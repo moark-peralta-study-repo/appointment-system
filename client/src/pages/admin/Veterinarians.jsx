@@ -1,6 +1,14 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
-import { useVets, useAppointments } from "../../hooks/useAdminData";
+import AdminModal from "../../components/admin/AdminModal";
+import ScheduleEditor, { defaultSchedule } from "../../components/admin/ScheduleEditor";
+import {
+	useVets,
+	useAppointments,
+	useUsers,
+	useCreateVet,
+	useDeactivateVet,
+} from "../../hooks/useAdminData";
 import { isToday, initials } from "../../utils/admin";
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -13,11 +21,204 @@ function scheduleLabel(schedule = []) {
 	return `${days} ${first.start}–${first.end}`;
 }
 
+/* ---------------- ADD VET FORM ---------------- */
+
+function VetForm({ onClose }) {
+	const createVet = useCreateVet();
+
+	const [form, setForm] = useState({
+		name: "",
+		email: "",
+		password: "",
+		specialty: "",
+		bio: "",
+		schedule: defaultSchedule(),
+	});
+	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+
+	const canSubmit =
+		form.name.trim() && form.email.trim() && form.password.length >= 6;
+
+	const submit = () => {
+		// Only send days marked open.
+		const schedule = form.schedule
+			.filter((s) => s.open !== false)
+			.map(({ day, start, end, slotMinutes }) => ({
+				day,
+				start,
+				end,
+				slotMinutes: slotMinutes || 30,
+			}));
+
+		createVet.mutate(
+			{
+				name: form.name.trim(),
+				email: form.email.trim(),
+				password: form.password,
+				specialty: form.specialty.trim() || undefined,
+				bio: form.bio.trim() || undefined,
+				schedule,
+			},
+			{ onSuccess: onClose },
+		);
+	};
+
+	return (
+		<AdminModal
+			eyebrow="CLINIC MANAGEMENT"
+			title="Add Veterinarian"
+			onClose={onClose}
+			wide
+			footer={
+				<>
+					<button className="admin-secondary-button" type="button" onClick={onClose}>
+						Cancel
+					</button>
+					<button
+						className="admin-primary-button"
+						type="button"
+						disabled={!canSubmit || createVet.isPending}
+						onClick={submit}
+					>
+						{createVet.isPending ? "Creating…" : "Create Veterinarian"}
+					</button>
+				</>
+			}
+		>
+			{createVet.error && (
+				<div className="admin-form-error">⚠ {createVet.error.message}</div>
+			)}
+
+			<div className="admin-form-grid">
+				<div className="admin-form-field">
+					<label>Full Name <span>*</span></label>
+					<input type="text" value={form.name} onChange={set("name")} placeholder="Dr. Jane Smith" />
+				</div>
+
+				<div className="admin-form-field">
+					<label>Email <span>*</span></label>
+					<input type="email" value={form.email} onChange={set("email")} placeholder="vet@mutualspaws.com" />
+				</div>
+
+				<div className="admin-form-field">
+					<label>Portal Password <span>*</span></label>
+					<input type="text" value={form.password} onChange={set("password")} />
+				</div>
+
+				<div className="admin-form-field">
+					<label>Specialty</label>
+					<input type="text" value={form.specialty} onChange={set("specialty")} placeholder="General Practice" />
+				</div>
+
+				<div className="admin-form-field full">
+					<label>Bio</label>
+					<textarea rows="2" value={form.bio} onChange={set("bio")} placeholder="Short public bio…" />
+				</div>
+
+				<div className="admin-form-field full">
+					<label>Working Schedule</label>
+					<p className="schedule-caption">
+						Bookable slots come from each open day's times + slot length.
+						Uncheck a day to close it.
+					</p>
+					<ScheduleEditor value={form.schedule} onChange={(schedule) => setForm((f) => ({ ...f, schedule }))} />
+				</div>
+			</div>
+		</AdminModal>
+	);
+}
+
+/* ---------------- VET PROFILE VIEW ---------------- */
+
+function VetView({ vet, onClose }) {
+	const { data: users = [] } = useUsers();
+	const deactivateVet = useDeactivateVet();
+	const [confirming, setConfirming] = useState(false);
+
+	// The public vet list omits email/phone — the vet's name matches their
+	// staff user record, so look it up there.
+	const user = users.find((u) => u.name === vet.name);
+	const phone = user?.phone;
+
+	return (
+		<AdminModal
+			eyebrow="STAFF PROFILE"
+			title={vet.name}
+			onClose={onClose}
+			wide
+			footer={
+				<>
+					{confirming ? (
+						<>
+							<span className="admin-slot-note">
+								{deactivateVet.error?.message ?? "Remove " + vet.name + " from the roster?"}
+							</span>
+							<button className="admin-secondary-button" type="button" onClick={() => setConfirming(false)}>
+								Keep
+							</button>
+							<button
+								className="row-action cancel"
+								type="button"
+								disabled={deactivateVet.isPending}
+								onClick={() =>
+									deactivateVet.mutate(vet._id, { onSuccess: onClose })
+								}
+							>
+								{deactivateVet.isPending ? "Removing…" : "Deactivate"}
+							</button>
+						</>
+					) : (
+						<>
+							<button className="admin-secondary-button" type="button" onClick={onClose}>
+								Close
+							</button>
+							<button className="row-action cancel" type="button" onClick={() => setConfirming(true)}>
+								Deactivate
+							</button>
+						</>
+					)}
+				</>
+			}
+		>
+			<div className="admin-detail-grid">
+				<div className="admin-detail-item">
+					<span>EMAIL</span>
+					<strong>{user?.email ?? "—"}</strong>
+				</div>
+				<div className="admin-detail-item">
+					<span>PHONE</span>
+					<strong>{phone ?? "—"}</strong>
+				</div>
+				<div className="admin-detail-item">
+					<span>SPECIALTY</span>
+					<strong>{vet.specialty ?? "General"}</strong>
+				</div>
+				<div className="admin-detail-item">
+					<span>WORKING HOURS</span>
+					<strong>{scheduleLabel(vet.schedule)}</strong>
+				</div>
+				{vet.bio && (
+					<div className="admin-detail-item full">
+						<span>BIO</span>
+						<strong>{vet.bio}</strong>
+					</div>
+				)}
+			</div>
+		</AdminModal>
+	);
+}
+
+/* ---------------- PAGE ---------------- */
+
 function Veterinarians() {
 	const { data: vets = [], isPending } = useVets();
 	const { data: appointments = [] } = useAppointments();
 
 	const [specialtyFilter, setSpecialtyFilter] = useState("all");
+	const [availabilityFilter, setAvailabilityFilter] = useState("all");
+	const [search, setSearch] = useState("");
+	const [showAdd, setShowAdd] = useState(false);
+	const [viewing, setViewing] = useState(null);
 
 	// Active (pending/confirmed) appointments per vet, today — the API
 	// flattens vet to a name string, so count by name.
@@ -28,14 +229,22 @@ function Veterinarians() {
 		todayByVet[a.vet] = (todayByVet[a.vet] || 0) + 1;
 	}
 
-	const rows = vets
-		.filter((v) => specialtyFilter === "all" || v.specialty === specialtyFilter)
-		.map((v) => ({
-			...v,
-			todayCount: todayByVet[v.name] || 0,
-			status: todayByVet[v.name] ? "In Consultation" : "Available",
-			initials: initials(v.name),
-		}));
+	const rows = useMemo(() => {
+		const q = search.trim().toLowerCase();
+		return vets
+			.map((v) => ({
+				...v,
+				todayCount: todayByVet[v.name] || 0,
+				status: todayByVet[v.name] ? "In Consultation" : "Available",
+				initials: initials(v.name),
+			}))
+			.filter((v) => specialtyFilter === "all" || v.specialty === specialtyFilter)
+			.filter((v) => availabilityFilter === "all" || v.status === availabilityFilter)
+			.filter((v) => {
+				if (!q) return true;
+				return `${v.name} ${v.specialty ?? ""}`.toLowerCase().includes(q);
+			});
+	}, [vets, todayByVet, specialtyFilter, availabilityFilter, search]);
 
 	const specialties = [...new Set(vets.map((v) => v.specialty).filter(Boolean))];
 
@@ -46,7 +255,7 @@ function Veterinarians() {
 				title="Veterinarians"
 				description="Manage the veterinary team and monitor their availability."
 				actions={
-					<button className="admin-primary-button" type="button">
+					<button className="admin-primary-button" type="button" onClick={() => setShowAdd(true)}>
 						+ Add Veterinarian
 					</button>
 				}
@@ -63,12 +272,12 @@ function Veterinarians() {
 					<div>
 						<span>Total Veterinarians</span>
 						<strong>
-						{isPending ? (
-							<span className="mini-spinner" />
-						) : (
-							vets.length
-						)}
-					</strong>
+							{isPending ? (
+								<span className="mini-spinner" />
+							) : (
+								vets.length
+							)}
+						</strong>
 					</div>
 				</div>
 
@@ -116,6 +325,8 @@ function Veterinarians() {
 						<input
 							type="text"
 							placeholder="Search veterinarian or specialty..."
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
 						/>
 					</div>
 
@@ -129,10 +340,10 @@ function Veterinarians() {
 							))}
 						</select>
 
-						<select defaultValue="all">
+						<select value={availabilityFilter} onChange={(e) => setAvailabilityFilter(e.target.value)}>
 							<option value="all">All Availability</option>
-							<option value="available">Available</option>
-							<option value="consultation">
+							<option value="Available">Available</option>
+							<option value="In Consultation">
 								In Consultation
 							</option>
 						</select>
@@ -159,6 +370,7 @@ function Veterinarians() {
 									className="vet-more-button"
 									type="button"
 									aria-label={`More options for ${vet.name}`}
+									onClick={() => setViewing(vet)}
 								>
 									•••
 								</button>
@@ -189,8 +401,8 @@ function Veterinarians() {
 										vet.status === "Available"
 											? "available"
 											: vet.status === "In Consultation"
-											? "consultation"
-											: "break"
+												? "consultation"
+												: "break"
 									}`}
 								>
 									<span className="vet-status-dot"></span>
@@ -201,6 +413,7 @@ function Veterinarians() {
 							<button
 								className="vet-view-button"
 								type="button"
+								onClick={() => setViewing(vet)}
 							>
 								View Profile
 							</button>
@@ -208,6 +421,12 @@ function Veterinarians() {
 					))}
 				</div>
 			</section>
+
+			{showAdd && <VetForm onClose={() => setShowAdd(false)} />}
+
+			{viewing && (
+				<VetView vet={viewing} onClose={() => setViewing(null)} />
+			)}
 		</>
 	);
 }

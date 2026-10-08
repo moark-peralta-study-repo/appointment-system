@@ -64,7 +64,12 @@ export async function bookAppointment(user, { vetId, petId, date: dateParam, tim
 
 	const pet = await Pet.findById(petId);
 	if (!pet) throw new ApiError(404, "Pet not found");
-	if (!pet.owner.equals(user._id)) throw new ApiError(403, "Not your pet");
+
+	// A vet books on behalf of a patient — the owner stays the pet's owner.
+	// An owner can only book their own pets.
+	const isVet = user.role === "vet";
+	if (!isVet && !pet.owner.equals(user._id)) throw new ApiError(403, "Not your pet");
+	const ownerId = isVet ? pet.owner._id : user._id;
 
 	const end = new Date(date);
 	end.setDate(end.getDate() + 1);
@@ -81,7 +86,7 @@ export async function bookAppointment(user, { vetId, petId, date: dateParam, tim
 	}
 
 	const appointment = await Appointment.create({
-		owner: user._id,
+		owner: ownerId,
 		pet: pet._id,
 		vet: vetUser._id,
 		date,

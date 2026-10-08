@@ -10,7 +10,7 @@ import {
 const router = Router();
 
 router.get("/", protectAuth, getPets);
-router.post("/", protectAuth, authorize("user"), createPet);
+router.post("/", protectAuth, authorize("user", "vet"), createPet);
 router.put("/:id", protectAuth, updatePet);
 router.delete("/:id", protectAuth, deletePet);
 

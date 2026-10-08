@@ -7019,3 +7019,351 @@ img {
     transform: rotate(360deg);
   }
 }
+/* =========================================================
+   ADMIN — MODALS, FORMS & SLOT PICKER
+   ========================================================= */
+
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 30, 59, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 20px;
+  overflow-y: auto;
+}
+
+.admin-modal {
+  width: 100%;
+  max-width: 560px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 52, 91, 0.07);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(0, 52, 91, 0.25);
+  overflow: hidden;
+}
+
+.admin-modal-wide {
+  max-width: 660px;
+}
+
+.admin-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(0, 52, 91, 0.07);
+}
+
+.admin-modal-header .admin-eyebrow {
+  margin-bottom: 5px;
+}
+
+.admin-modal-header h2 {
+  margin: 0;
+  font-family: "League Spartan", sans-serif;
+  font-size: 20px;
+  color: #00345B;
+}
+
+.admin-modal-close {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(0, 52, 91, 0.1);
+  border-radius: 10px;
+  background: #FFFFFF;
+  color: #4E6E85;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  flex-shrink: 0;
+}
+
+.admin-modal-close:hover {
+  background: #D6EFFF;
+  color: #00345B;
+}
+
+.admin-modal-body {
+  padding: 24px;
+}
+
+/* FORMS */
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.admin-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.admin-form-field.full {
+  grid-column: 1 / -1;
+}
+
+.admin-form-field > label {
+  font-family: "League Spartan", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #00345B;
+  letter-spacing: 0.3px;
+}
+
+.admin-form-field > label span {
+  color: #0062C8;
+}
+
+.admin-form-field input,
+.admin-form-field select,
+.admin-form-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 52, 91, 0.16);
+  border-radius: 10px;
+  background: #FFFFFF;
+  color: #00345B;
+  font-family: "Baloo Thambi 2", sans-serif;
+  font-size: 15px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-form-field textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.admin-form-field input:focus,
+.admin-form-field select:focus,
+.admin-form-field textarea:focus {
+  border-color: #0091FD;
+  box-shadow: 0 0 0 3px rgba(0, 145, 253, 0.15);
+}
+
+.admin-form-field input:disabled,
+.admin-form-field select:disabled {
+  background: #F5F7F9;
+  color: #7A8B98;
+  cursor: not-allowed;
+}
+
+/* SLOT PICKER */
+
+.admin-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 8px;
+}
+
+.admin-slot {
+  border: 1px solid rgba(0, 52, 91, 0.16);
+  border-radius: 10px;
+  background: #FFFFFF;
+  color: #00345B;
+  font-family: "League Spartan", sans-serif;
+  font-size: 13px;
+  padding: 9px 0;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.admin-slot:hover {
+  background: #D6EFFF;
+  border-color: #0091FD;
+}
+
+.admin-slot.selected {
+  background: #0091FD;
+  border-color: #0091FD;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0, 145, 253, 0.35);
+}
+
+.admin-slot-note {
+  margin: 8px 0 0;
+  color: #4E6E85;
+  font-family: "Baloo Thambi 2", sans-serif;
+  font-size: 12px;
+}
+
+/* MODAL FOOTER */
+
+.admin-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(0, 52, 91, 0.07);
+  background: #FBFDF4;
+}
+
+.admin-form-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #F2E6E6;
+  color: #7A2E2E;
+  font-family: "Baloo Thambi 2", sans-serif;
+  font-size: 13px;
+}
+
+/* DETAIL PANEL (view modals) */
+
+.admin-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.admin-detail-item {
+  border: 1px solid rgba(0, 52, 91, 0.07);
+  border-radius: 12px;
+  background: #FDFFF1;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.admin-detail-item.full {
+  grid-column: 1 / -1;
+}
+
+.admin-detail-item > span {
+  font-family: "League Spartan", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #4E6E85;
+}
+
+.admin-detail-item > strong {
+  font-family: "League Spartan", sans-serif;
+  font-size: 15px;
+  color: #00345B;
+  word-break: break-word;
+}
+
+.admin-detail-item > small {
+  font-family: "Baloo Thambi 2", sans-serif;
+  font-size: 12px;
+  color: #4E6E85;
+}
+
+.admin-detail-section {
+  margin: 18px 0 10px;
+  font-family: "League Spartan", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #4E6E85;
+  border-top: 1px solid rgba(0, 52, 91, 0.07);
+  padding-top: 14px;
+}
+
+/* SCHEDULE EDITOR (vet create / settings) */
+
+.schedule-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule-row {
+  display: grid;
+  grid-template-columns: 74px 1fr 14px 1fr 86px 18px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(0, 52, 91, 0.07);
+  border-radius: 10px;
+  background: #FFFFFF;
+  padding: 8px 12px;
+}
+
+.schedule-row.schedule-head {
+  border: 0;
+  background: transparent;
+  padding: 0 12px 4px;
+}
+
+.schedule-row.schedule-head strong,
+.schedule-row.schedule-head .schedule-to {
+  font-family: "League Spartan", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  color: #4E6E85;
+}
+
+.schedule-row.disabled {
+  background: #F5F7F9;
+  color: #7A8B98;
+}
+
+.schedule-row strong {
+  font-family: "League Spartan", sans-serif;
+  font-size: 13px;
+  color: #00345B;
+}
+
+.schedule-row input[type="time"] {
+  border: 1px solid rgba(0, 52, 91, 0.16);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-family: "Baloo Thambi 2", sans-serif;
+  font-size: 13px;
+  color: #00345B;
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFFFFF;
+}
+
+.schedule-row input:disabled {
+  background: transparent;
+  border-color: transparent;
+}
+
+.schedule-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #0091FD;
+  cursor: pointer;
+}
+
+.schedule-row input[type="number"] {
+  border: 1px solid rgba(0, 52, 91, 0.16);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-family: "Baloo Thambi 2", sans-serif;
+  font-size: 13px;
+  color: #00345B;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.schedule-row .schedule-to {
+  font-family: "Baloo Thambi 2", sans-serif;
+  font-size: 12px;
+  color: #4E6E85;
+}
+
+.schedule-caption {
+  margin: 0 0 10px;
+  color: #4E6E85;
+  font-family: "Baloo Thambi 2", sans-serif;
+  font-size: 12px;
+}
