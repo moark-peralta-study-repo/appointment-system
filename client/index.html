@@ -5,12 +5,13 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>client</title>
-<style id="loading-splash-style">#loading-splash{
+    <style id="loading-splash-style">#loading-splash{
   position:fixed; inset:0; z-index:2147483647;
   display:flex; align-items:center; justify-content:center;
   background:#fdfff1;
+  transition:opacity .4s ease;
 }
-#loading-splash[hidden]{display:none;}
+#loading-splash.splash-hide{ opacity:0; pointer-events:none; }
 .dog-loader {
   position: relative;
   width: 23.5vmax;
@@ -442,11 +443,12 @@
 </style>
   </head>
   <body>
-    <div id="root">
-      <!-- Pre-hydration splash: paints instantly (HTML + inline CSS) before the
-           JS bundle loads. createRoot().render() in main.jsx clears this on mount. -->
-      <div id="loading-splash" data-splash>
-        <div class="dog-loader" role="status" aria-label="Loading">
+    <div id="root"></div>
+    <!-- Pre-hydration splash: a SIBLING of #root so React's mount doesn't clear it.
+         Shows for a fixed minimum time (SPLASH_MIN_MS), then fades to reveal the app.
+         Removed after it fades, so it never re-appears on later data refetches. -->
+    <div id="loading-splash" data-splash>
+      <div class="dog-loader" role="status" aria-label="Loading">
   <div class="dog">
     <div class="dog__paws">
       <div class="dog__bl-leg leg"><div class="dog__bl-paw paw"></div><div class="dog__bl-top top"></div></div>
@@ -462,8 +464,29 @@
     <div class="dog__head-c"><div class="dog__ear-r"></div><div class="dog__ear-l"></div></div>
   </div>
 </div>
-      </div>
     </div>
+    <script>
+  (function () {
+    var SPLASH_MIN_MS = 1500; // fixed minimum time the dog is shown on first load
+    var s = {
+      minDone: false,
+      appReady: false,
+      hide: function () {
+        if (!s.minDone || !s.appReady) return;
+        var el = document.getElementById('loading-splash');
+        if (!el) return;
+        el.classList.add('splash-hide'); // fade out
+        setTimeout(function () { el.parentNode && el.parentNode.removeChild(el); }, 420);
+      }
+    };
+    window.__splash = s;
+    // 1) fixed minimum time
+    setTimeout(function () { s.minDone = true; s.hide(); }, SPLASH_MIN_MS);
+    // 2) the JS bundle has finished loading (module script blocks the load event)
+    if (document.readyState === 'complete') { s.appReady = true; s.hide(); }
+    else window.addEventListener('load', function () { s.appReady = true; s.hide(); });
+  })();
+</script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
