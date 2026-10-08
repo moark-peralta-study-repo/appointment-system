@@ -1,0 +1,366 @@
+/* =========================================================
+   ADMIN-VETERINARIANS.CSS
+   Split from App.css (see refactor/style-split-tokens branch).
+   This file is tokenized: colors/radii/fonts use the design
+   tokens from styles/tailwind.css @theme (var(--color-*)).
+   ========================================================= */
+
+/* =========================================
+   ADMIN VETERINARIANS PAGE
+========================================= */
+
+.vet-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.vet-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid rgba(0, 52, 91, 0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 6px 18px rgba(0, 52, 91, 0.06);
+}
+
+.vet-summary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  font-size: 18px;
+}
+
+.vet-summary-icon.blue {
+  background: var(--primary-soft);
+}
+
+.vet-summary-icon.green {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.vet-summary-icon.yellow {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.vet-summary-icon.soft-blue {
+  background: var(--primary-soft);
+  color: var(--primary-text);
+}
+
+.vet-summary-card span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.vet-summary-card strong {
+  color: var(--foreground);
+  font-family: var(--font-display);
+  font-size: 28px;
+}
+
+/* TOOLBAR */
+
+.veterinarians-panel {
+  overflow: hidden;
+}
+
+.veterinarians-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px;
+  border-bottom: 1px solid rgba(0, 52, 91, 0.08);
+}
+
+.vet-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 360px;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--border-cool-strong);
+  border-radius: var(--radius-md);
+  background: var(--background);
+}
+
+.vet-search span {
+  color: var(--muted);
+  font-size: 22px;
+}
+
+.vet-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.vet-search input::placeholder {
+  color: var(--faint);
+}
+
+.vet-filters {
+  display: flex;
+  gap: 10px;
+}
+
+.vet-filters select {
+  height: 42px;
+  padding: 0 34px 0 12px;
+  border: 1px solid var(--border-cool-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* VETERINARIAN GRID */
+
+.veterinarian-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  padding: 24px;
+}
+
+.veterinarian-card {
+  padding: 20px;
+  border: 1px solid rgba(0, 52, 91, 0.08);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: 0 5px 15px rgba(0, 52, 91, 0.05);
+  transition: 0.2s ease;
+}
+
+.veterinarian-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 22px rgba(0, 52, 91, 0.09);
+}
+
+/* CARD TOP */
+
+.vet-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.vet-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: var(--radius-lg);
+  background: var(--primary-soft);
+  color: var(--primary-text);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.vet-more-button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.vet-more-button:hover {
+  background: var(--primary-soft);
+  color: var(--foreground);
+}
+
+/* CARD INFO */
+
+.vet-card-info {
+  margin-top: 18px;
+}
+
+.vet-card-info h3 {
+  margin: 0 0 5px;
+  color: var(--foreground);
+  font-family: var(--font-display);
+  font-size: 20px;
+}
+
+.vet-specialty {
+  margin: 0 0 5px;
+  color: var(--primary-text);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.vet-experience {
+  margin: 0;
+  color: var(--faint);
+  font-size: 12px;
+}
+
+/* DIVIDER */
+
+.vet-card-divider {
+  height: 1px;
+  margin: 18px 0;
+  background: rgba(0, 52, 91, 0.08);
+}
+
+/* CARD BOTTOM */
+
+.vet-card-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.vet-card-bottom > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vet-card-bottom > div span {
+  color: var(--faint);
+  font-size: 10px;
+}
+
+.vet-card-bottom > div strong {
+  color: var(--foreground);
+  font-family: var(--font-display);
+  font-size: 22px;
+}
+
+/* AVAILABILITY */
+
+.vet-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.vet-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.vet-status.available {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.vet-status.available .vet-status-dot {
+  background: var(--success);
+}
+
+.vet-status.consultation {
+  background: var(--primary-soft);
+  color: var(--primary-text);
+}
+
+.vet-status.consultation .vet-status-dot {
+  background: var(--primary-text);
+}
+
+.vet-status.break {
+  background: var(--warning-soft);
+  color: var(--accent-text);
+}
+
+.vet-status.break .vet-status-dot {
+  background: var(--accent-text);
+}
+
+/* PROFILE BUTTON */
+
+.vet-view-button {
+  width: 100%;
+  margin-top: 18px;
+  padding: 10px;
+  border: 1px solid var(--primary-soft);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--primary-text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.vet-view-button:hover {
+  background: var(--primary-soft);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+  .veterinarian-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .vet-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 750px) {
+  .veterinarian-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .veterinarians-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .vet-search {
+    width: 100%;
+  }
+
+  .vet-filters {
+    flex-direction: column;
+  }
+
+  .vet-filters select {
+    width: 100%;
+  }
+}
+
+@media (max-width: 550px) {
+  .vet-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+

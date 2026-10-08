@@ -1,0 +1,348 @@
+/* =========================================================
+   ADMIN-PET-OWNERS.CSS
+   Split from App.css (see refactor/style-split-tokens branch).
+   This file is tokenized: colors/radii/fonts use the design
+   tokens from styles/tailwind.css @theme (var(--color-*)).
+   ========================================================= */
+
+/* =========================================
+   ADMIN PET OWNERS PAGE
+========================================= */
+
+.owner-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.owner-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid rgba(0, 52, 91, 0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 6px 18px rgba(0, 52, 91, 0.06);
+}
+
+.owner-summary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  font-size: 18px;
+}
+
+.owner-summary-icon.blue {
+  background: var(--primary-soft);
+}
+
+.owner-summary-icon.green {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.owner-summary-icon.yellow {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.owner-summary-icon.soft-blue {
+  background: var(--primary-soft);
+  color: var(--primary-text);
+}
+
+.owner-summary-card span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.owner-summary-card strong {
+  color: var(--foreground);
+  font-family: var(--font-display);
+  font-size: 28px;
+}
+
+/* TOOLBAR */
+
+.owners-page-panel {
+  overflow: hidden;
+}
+
+.owners-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px;
+  border-bottom: 1px solid rgba(0, 52, 91, 0.08);
+}
+
+.owner-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 360px;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--border-cool-strong);
+  border-radius: var(--radius-md);
+  background: var(--background);
+}
+
+.owner-search span {
+  color: var(--muted);
+  font-size: 22px;
+}
+
+.owner-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.owner-search input::placeholder {
+  color: var(--faint);
+}
+
+.owner-filters {
+  display: flex;
+  gap: 10px;
+}
+
+.owner-filters select {
+  height: 42px;
+  padding: 0 34px 0 12px;
+  border: 1px solid var(--border-cool-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* TABLE */
+
+.owners-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.owners-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.owners-table th {
+  padding: 15px 20px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-align: left;
+  letter-spacing: 0.04em;
+}
+
+.owners-table td {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(0, 52, 91, 0.07);
+  color: var(--muted);
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.owners-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.owners-table tbody tr:hover {
+  background: var(--surface-2);
+}
+
+/* OWNER INFO */
+
+.owner-table-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.owner-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--primary-soft);
+  color: var(--primary-text);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.owner-table-info div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.owner-table-info strong {
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.owner-table-info span {
+  color: var(--faint);
+  font-size: 11px;
+}
+
+.owner-phone {
+  color: var(--muted);
+}
+
+.owner-pet-count {
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+/* STATUS */
+
+.owner-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.owner-status.active {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.owner-status.inactive {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+/* VIEW */
+
+.owner-view-button {
+  border: 1px solid var(--primary-soft);
+  border-radius: 8px;
+  padding: 7px 13px;
+  background: var(--surface);
+  color: var(--primary-text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.owner-view-button:hover {
+  background: var(--primary-soft);
+}
+
+/* FOOTER */
+
+.owners-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-top: 1px solid rgba(0, 52, 91, 0.08);
+}
+
+.owners-table-footer > span {
+  color: var(--faint);
+  font-size: 12px;
+}
+
+.owner-pagination {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.owner-pagination button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--border-cool-strong);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.owner-pagination button:hover {
+  background: var(--primary-soft);
+  color: var(--foreground);
+}
+
+.owner-pagination button.active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--surface);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+  .owner-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .owners-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .owner-search {
+    width: 100%;
+  }
+}
+
+@media (max-width: 650px) {
+  .owner-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .owner-filters {
+    flex-direction: column;
+  }
+
+  .owner-filters select {
+    width: 100%;
+  }
+
+  .owners-table-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+

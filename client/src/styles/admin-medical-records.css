@@ -1,0 +1,351 @@
+/* =========================================================
+   ADMIN-MEDICAL-RECORDS.CSS
+   Split from App.css (see refactor/style-split-tokens branch).
+   This file is tokenized: colors/radii/fonts use the design
+   tokens from styles/tailwind.css @theme (var(--color-*)).
+   ========================================================= */
+
+/* =========================================
+   ADMIN MEDICAL RECORDS PAGE
+========================================= */
+
+.medical-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.medical-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid rgba(0, 52, 91, 0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 6px 18px rgba(0, 52, 91, 0.06);
+}
+
+.medical-summary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  font-size: 18px;
+}
+
+.medical-summary-icon.blue {
+  background: var(--primary-soft);
+}
+
+.medical-summary-icon.green {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.medical-summary-icon.yellow {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.medical-summary-icon.soft-blue {
+  background: var(--primary-soft);
+  color: var(--primary-text);
+}
+
+.medical-summary-card span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.medical-summary-card strong {
+  color: var(--foreground);
+  font-family: var(--font-display);
+  font-size: 28px;
+}
+
+/* TOOLBAR */
+
+.medical-records-panel {
+  overflow: hidden;
+}
+
+.medical-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px;
+  border-bottom: 1px solid rgba(0, 52, 91, 0.08);
+}
+
+.medical-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 360px;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--border-cool-strong);
+  border-radius: var(--radius-md);
+  background: var(--background);
+}
+
+.medical-search span {
+  color: var(--muted);
+  font-size: 22px;
+}
+
+.medical-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.medical-search input::placeholder {
+  color: var(--faint);
+}
+
+.medical-filters {
+  display: flex;
+  gap: 10px;
+}
+
+.medical-filters select {
+  height: 42px;
+  padding: 0 34px 0 12px;
+  border: 1px solid var(--border-cool-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* TABLE */
+
+.medical-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.medical-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+}
+
+.medical-table th {
+  padding: 15px 20px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-align: left;
+  letter-spacing: 0.04em;
+}
+
+.medical-table td {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(0, 52, 91, 0.07);
+  color: var(--muted);
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.medical-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.medical-table tbody tr:hover {
+  background: var(--surface-2);
+}
+
+/* PATIENT */
+
+.medical-patient-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.medical-patient-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--primary-soft);
+  color: var(--primary-text);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.medical-patient-info div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.medical-patient-info strong {
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.medical-patient-info span {
+  color: var(--faint);
+  font-size: 11px;
+}
+
+.medical-owner {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+/* RECORD TYPE */
+
+.medical-record-type {
+  color: var(--primary-text);
+  font-weight: 600;
+}
+
+/* STATUS */
+
+.medical-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.medical-status.completed {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.medical-status.followup {
+  background: var(--warning-soft);
+  color: var(--accent-text);
+}
+
+/* VIEW */
+
+.medical-view-button {
+  border: 1px solid var(--primary-soft);
+  border-radius: 8px;
+  padding: 7px 13px;
+  background: var(--surface);
+  color: var(--primary-text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.medical-view-button:hover {
+  background: var(--primary-soft);
+}
+
+/* FOOTER */
+
+.medical-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-top: 1px solid rgba(0, 52, 91, 0.08);
+}
+
+.medical-table-footer > span {
+  color: var(--faint);
+  font-size: 12px;
+}
+
+.medical-pagination {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.medical-pagination button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--border-cool-strong);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.medical-pagination button:hover {
+  background: var(--primary-soft);
+  color: var(--foreground);
+}
+
+.medical-pagination button.active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--surface);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+  .medical-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .medical-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .medical-search {
+    width: 100%;
+  }
+}
+
+@media (max-width: 650px) {
+  .medical-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .medical-filters {
+    flex-direction: column;
+  }
+
+  .medical-filters select {
+    width: 100%;
+  }
+
+  .medical-table-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+

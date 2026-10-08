@@ -1,0 +1,1107 @@
+/* =========================================================
+   SERVICES.CSS
+   Split from App.css (see refactor/style-split-tokens branch).
+   This file is tokenized: colors/radii/fonts use the design
+   tokens from styles/tailwind.css @theme (var(--color-*)).
+   ========================================================= */
+
+/* =========================================
+   SERVICES - NEW LAYOUT
+========================================= */
+
+.services {
+  padding: 110px 0;
+  background: var(--background);
+}
+
+.services .section-container {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* HEADING */
+
+.services-heading {
+  max-width: 650px;
+  margin-bottom: 48px;
+}
+
+.services-heading span {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: var(--primary-text);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.services-heading h2 {
+  margin: 0 0 16px;
+  color: var(--foreground);
+  font-size: clamp(42px, 5vw, 64px);
+  line-height: 0.98;
+  letter-spacing: -1.5px;
+}
+
+.services-heading p {
+  max-width: 540px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+
+/* GRID */
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+
+/* CARD */
+
+.service-card-new {
+  position: relative;
+  min-height: 285px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  background: var(--surface);
+  border: 1px solid var(--border-cool);
+  border-radius: var(--radius-xl);
+
+  box-shadow: 0 12px 35px rgba(0, 52, 91, 0.07);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.service-card-new:hover {
+  transform: translateY(-7px);
+  border-color: var(--primary-soft);
+  box-shadow: 0 20px 45px rgba(0, 52, 91, 0.12);
+}
+
+
+/* TOP */
+
+.service-top-new {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+
+/* ICON */
+
+.service-icon-new {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+
+  background: var(--primary-soft);
+  color: var(--primary-text);
+
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.service-card-new:nth-child(2) .service-icon-new {
+  background: var(--accent-soft);
+}
+
+.service-card-new:nth-child(3) .service-icon-new {
+  background: var(--success-soft);
+}
+
+.service-card-new:nth-child(4) .service-icon-new {
+  background: var(--danger-soft);
+}
+
+.service-card-new:nth-child(5) .service-icon-new {
+  background: var(--primary-soft);
+}
+
+.service-card-new:nth-child(6) .service-icon-new {
+  background: var(--accent-soft);
+}
+
+
+/* ARROW */
+
+.service-arrow-new {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--border-cool-strong);
+  border-radius: 50%;
+
+  color: var(--foreground);
+  font-size: 19px;
+
+  transition: 0.2s ease;
+}
+
+.service-card-new:hover .service-arrow-new {
+  background: var(--inverse-surface);
+  border-color: var(--inverse-surface);
+  color: var(--on-inverse-surface);
+}
+
+
+/* CONTENT */
+
+.service-content-new {
+  margin-top: 30px;
+}
+
+.service-content-new h3 {
+  margin: 0 0 10px;
+
+  color: var(--foreground);
+  font-size: 23px;
+  line-height: 1.15;
+}
+
+.service-content-new p {
+  margin: 0;
+
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+
+/* BOTTOM */
+
+.service-bottom-new {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 28px;
+  padding-top: 18px;
+
+  border-top: 1px solid #edf2f5;
+}
+
+.service-bottom-new > span:first-child {
+  color: var(--primary-text);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.service-learn-new {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* =========================================
+   FEATURED CARD
+========================================= */
+
+/* Keep all service cards consistent */
+
+.service-card-new:first-child {
+  background: var(--surface);
+  border-color: var(--border-cool);
+}
+
+.service-card-new:first-child:hover {
+  border-color: var(--primary-soft);
+  box-shadow: 0 20px 45px rgba(0, 52, 91, 0.12);
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 850px) {
+
+  .service-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 560px) {
+
+  .services {
+    padding: 75px 0;
+  }
+
+  .services .section-container {
+    width: min(100% - 32px, 1120px);
+  }
+
+  .services-heading {
+    margin-bottom: 32px;
+  }
+
+  .services-heading h2 {
+    font-size: 42px;
+  }
+
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-card-new {
+    min-height: 260px;
+    padding: 24px;
+  }
+
+}
+/* =========================================
+   PET CARE / PET RECORDS
+========================================= */
+
+.pet-section {
+  padding: 110px 0;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.pet-inner {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: center;
+  gap: 80px;
+}
+
+
+/* LEFT SIDE */
+
+.pet-text {
+  max-width: 500px;
+}
+
+.pet-text .section-label {
+  display: inline-block;
+  margin-bottom: 14px;
+
+  color: var(--primary-text);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.pet-text h2 {
+  margin: 0 0 20px;
+
+  color: var(--foreground);
+  font-size: clamp(42px, 5vw, 62px);
+  line-height: 0.98;
+  letter-spacing: -1.5px;
+}
+
+.pet-text h2 span {
+  color: var(--primary);
+}
+
+.pet-text > p {
+  margin: 0 0 28px;
+
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+
+/* CHECKLIST */
+
+.pet-text ul {
+  margin: 0 0 32px;
+  padding: 0;
+
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pet-text li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  color: var(--foreground);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.pet-text li span {
+  width: 25px;
+  height: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: var(--success-soft);
+  color: var(--success);
+
+  font-size: 13px;
+  font-weight: 900;
+}
+
+
+/* RIGHT SIDE */
+
+.record-wrapper {
+  position: relative;
+  min-height: 480px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* RECORD CARD */
+
+.record-card {
+  position: relative;
+  z-index: 2;
+
+  width: min(100%, 480px);
+  padding: 30px;
+
+  background: var(--background);
+  border: 1px solid var(--border-cool-strong);
+  border-radius: 30px;
+
+  box-shadow:
+    0 25px 60px rgba(0, 52, 91, 0.12);
+}
+
+
+/* CARD TOP */
+
+.record-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border-cool-strong);
+}
+
+.record-top > div > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.record-top h3 {
+  margin: 5px 0 0;
+
+  color: var(--foreground);
+  font-size: 27px;
+}
+
+.healthy {
+  padding: 7px 12px;
+
+  border-radius: 999px;
+
+  background: var(--success-soft);
+  color: var(--success);
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* PROFILE */
+
+.record-profile {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  padding: 28px 0;
+}
+
+.record-profile img {
+  width: 82px;
+  height: 82px;
+
+  flex-shrink: 0;
+
+  object-fit: cover;
+  border-radius: 22px;
+
+  border: 4px solid var(--surface);
+
+  box-shadow: 0 8px 20px rgba(0, 52, 91, 0.1);
+}
+
+.record-profile h3 {
+  margin: 0 0 5px;
+
+  color: var(--foreground);
+  font-size: 23px;
+}
+
+.record-profile p {
+  margin: 0;
+
+  color: var(--muted);
+  font-size: 13px;
+}
+
+
+/* STATS */
+
+.record-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  padding-top: 22px;
+  border-top: 1px solid var(--border-cool-strong);
+}
+
+.record-stats div {
+  padding: 0 15px;
+  border-right: 1px solid var(--border-cool-strong);
+}
+
+.record-stats div:first-child {
+  padding-left: 0;
+}
+
+.record-stats div:last-child {
+  padding-right: 0;
+  border-right: none;
+}
+
+.record-stats span {
+  display: block;
+  margin-bottom: 7px;
+
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.record-stats strong {
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+
+/* DECORATION */
+
+.record-decoration {
+  position: absolute;
+  right: 0;
+  bottom: 20px;
+
+  width: 180px;
+  height: 180px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: var(--accent);
+
+  transform: translate(15px, 15px) rotate(8deg);
+}
+
+.record-decoration span {
+  color: var(--foreground);
+  font-size: 35px;
+}
+
+.record-decoration p {
+  margin: 5px 0 0;
+
+  color: var(--foreground);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* =========================================
+   PET CARE RESPONSIVE
+========================================= */
+
+@media (max-width: 850px) {
+
+  .pet-inner {
+    grid-template-columns: 1fr;
+    gap: 55px;
+  }
+
+  .pet-text {
+    max-width: 650px;
+  }
+
+  .record-wrapper {
+    min-height: 430px;
+  }
+
+}
+
+@media (max-width: 560px) {
+
+  .pet-section {
+    padding: 75px 0;
+  }
+
+  .pet-inner {
+    width: min(100% - 32px, 1120px);
+  }
+
+  .pet-text h2 {
+    font-size: 42px;
+  }
+
+  .record-card {
+    padding: 22px;
+    border-radius: var(--radius-xl);
+  }
+
+  .record-profile img {
+    width: 65px;
+    height: 65px;
+  }
+
+  .record-profile h3 {
+    font-size: 20px;
+  }
+
+  .record-stats {
+    gap: 5px;
+  }
+
+  .record-stats div {
+    padding: 0 8px;
+  }
+
+  .record-stats strong {
+    font-size: 12px;
+  }
+
+  .record-decoration {
+    width: 125px;
+    height: 125px;
+    right: -10px;
+    bottom: 5px;
+  }
+
+  .record-decoration span {
+    font-size: 25px;
+  }
+
+  .record-decoration p {
+    font-size: 10px;
+  }
+
+}
+/* =========================================
+   VETERINARIANS
+========================================= */
+
+.vets {
+  padding: 110px 0;
+  background: var(--background);
+}
+
+.vets .section-container {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+
+/* HEADING */
+
+.vets .section-heading {
+  max-width: 650px;
+  margin-bottom: 48px;
+}
+
+.vets .section-heading > span {
+  display: inline-block;
+  margin-bottom: 12px;
+
+  color: var(--primary-text);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.vets .section-heading h2 {
+  margin: 0 0 16px;
+
+  color: var(--foreground);
+  font-size: clamp(42px, 5vw, 60px);
+  line-height: 1;
+  letter-spacing: -1.5px;
+}
+
+.vets .section-heading p {
+  max-width: 550px;
+  margin: 0;
+
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+
+/* GRID */
+
+.vet-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+
+/* CARD */
+
+.vet-card {
+  overflow: hidden;
+
+  background: var(--surface);
+  border: 1px solid var(--border-cool);
+  border-radius: 26px;
+
+  box-shadow: 0 12px 35px rgba(0, 52, 91, 0.07);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.vet-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 22px 45px rgba(0, 52, 91, 0.13);
+}
+
+
+/* PHOTO */
+
+.vet-photo {
+  position: relative;
+
+  height: 310px;
+  overflow: hidden;
+
+  background: var(--primary-soft);
+}
+
+.vet-card:nth-child(2) .vet-photo {
+  background: var(--accent-soft);
+}
+
+.vet-card:nth-child(3) .vet-photo {
+  background: var(--success-soft);
+}
+
+.vet-photo img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform 0.45s ease;
+}
+
+.vet-card:hover .vet-photo img {
+  transform: scale(1.04);
+}
+
+
+/* BADGE */
+
+.vet-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+
+  padding: 7px 12px;
+
+  border-radius: 999px;
+
+  background: var(--surface);
+  color: var(--primary-text);
+
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+
+  box-shadow: 0 5px 15px rgba(0, 52, 91, 0.1);
+}
+
+
+/* INFO */
+
+.vet-info {
+  padding: 25px;
+}
+
+.vet-specialty {
+  display: inline-block;
+  margin-bottom: 9px;
+
+  color: var(--primary-text);
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.vet-info h3 {
+  margin: 0 0 10px;
+
+  color: var(--foreground);
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.vet-info p {
+  margin: 0;
+
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+
+/* FOOTER */
+
+.vet-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 24px;
+  padding-top: 17px;
+
+  border-top: 1px solid #e7eef2;
+
+  color: var(--primary-text);
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.vet-arrow {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--border-cool-strong);
+  border-radius: 50%;
+
+  color: var(--foreground);
+  font-size: 16px;
+
+  transition: 0.2s ease;
+}
+
+.vet-card:hover .vet-arrow {
+  background: var(--inverse-surface);
+  border-color: var(--inverse-surface);
+  color: var(--on-inverse-surface);
+}
+
+
+/* =========================================
+   VETERINARIANS RESPONSIVE
+========================================= */
+
+@media (max-width: 850px) {
+
+  .vet-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .vet-card:last-child {
+    grid-column: span 2;
+    max-width: calc(50% - 10px);
+    justify-self: center;
+  }
+
+}
+
+@media (max-width: 560px) {
+
+  .vets {
+    padding: 75px 0;
+  }
+
+  .vets .section-container {
+    width: min(100% - 32px, 1120px);
+  }
+
+  .vets .section-heading h2 {
+    font-size: 42px;
+  }
+
+  .vet-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vet-card:last-child {
+    grid-column: auto;
+    max-width: none;
+  }
+
+  .vet-photo {
+    height: 280px;
+  }
+
+}
+
+/* =========================================
+   TESTIMONIALS
+========================================= */
+
+.testimonials {
+  padding: 110px 0;
+  background: var(--surface);
+}
+
+.testimonials .section-container {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+
+/* HEADING */
+
+.testimonials .section-heading {
+  max-width: 650px;
+  margin-bottom: 48px;
+}
+
+.testimonials .section-heading > span {
+  display: inline-block;
+  margin-bottom: 12px;
+
+  color: var(--primary-text);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.testimonials .section-heading h2 {
+  margin: 0 0 16px;
+
+  color: var(--foreground);
+  font-size: clamp(42px, 5vw, 60px);
+  line-height: 1;
+  letter-spacing: -1.5px;
+}
+
+.testimonials .section-heading p {
+  max-width: 540px;
+  margin: 0;
+
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+
+/* GRID */
+
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+
+/* CARD */
+
+.review-card {
+  min-height: 275px;
+  padding: 28px;
+
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid var(--border-cool);
+  border-radius: 26px;
+
+  background: var(--background);
+
+  box-shadow: 0 10px 30px rgba(0, 52, 91, 0.05);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 52, 91, 0.1);
+}
+
+
+/* TOP */
+
+.review-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.review-stars {
+  color: var(--primary-text);
+  font-size: 15px;
+  letter-spacing: 2px;
+}
+
+.review-quote {
+  color: var(--primary);
+  font-family: Georgia, serif;
+  font-size: 54px;
+  line-height: 0.5;
+}
+
+
+/* REVIEW TEXT */
+
+.review-card > p {
+  margin: 25px 0 auto;
+
+  color: var(--foreground);
+
+  font-size: 16px;
+  line-height: 1.65;
+  font-weight: 600;
+}
+
+
+/* PERSON */
+
+.review-person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 28px;
+  padding-top: 18px;
+
+  border-top: 1px solid var(--surface-2);
+}
+
+.review-avatar {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: var(--primary-soft);
+  color: var(--primary-text);
+
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.review-card:nth-child(2) .review-avatar {
+  background: var(--accent-soft);
+}
+
+.review-card:nth-child(3) .review-avatar {
+  background: var(--success-soft);
+}
+
+.review-person div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.review-person strong {
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.review-person span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+
+/* =========================================
+   TESTIMONIALS RESPONSIVE
+========================================= */
+
+@media (max-width: 850px) {
+
+  .testimonial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .review-card {
+    min-height: 230px;
+  }
+
+}
+
+@media (max-width: 560px) {
+
+  .testimonials {
+    padding: 75px 0;
+  }
+
+  .testimonials .section-container {
+    width: min(100% - 32px, 1120px);
+  }
+
+  .testimonials .section-heading h2 {
+    font-size: 42px;
+  }
+
+}
+

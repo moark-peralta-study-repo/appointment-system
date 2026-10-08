@@ -33,3 +33,4 @@ coverage/
 
 # Vite
 .vite/
+.refactor-verify/

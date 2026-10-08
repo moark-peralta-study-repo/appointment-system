@@ -1,4 +1,4 @@
-import "./App.css";
+// styles now live in src/styles/* (imported from main.jsx — see refactor/style-split-tokens)
 import { BrowserRouter, Router, Routes, Route, Navigate } from "react-router-dom";
 
 import Home from "./pages/Home";
