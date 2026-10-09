@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import ScheduleEditor, { defaultSchedule } from "../../components/admin/ScheduleEditor";
 import { useAuth } from "../../context/useAuth";
@@ -41,6 +42,23 @@ function Settings() {
 	const { user } = useAuth();
 	const { data: vets = [] } = useVets();
 	const updateVet = useUpdateVet();
+	const [searchParams, setSearchParams] = useSearchParams();
+	const scheduleRef = useRef(null);
+
+	// ?focus=schedule — deep link from the sidebar "My Schedule" menu item:
+	// scroll the Working Hours panel into view and flash a highlight, then
+	// clean the param so a refresh doesn't re-trigger it. Re-runs while the
+	// panel is missing (vet list loads async) until the first success.
+	useEffect(() => {
+		if (searchParams.get("focus") !== "schedule" || !scheduleRef.current) return;
+		const el = scheduleRef.current;
+		el.scrollIntoView({ behavior: "smooth", block: "start" });
+		el.classList.add("settings-panel-focus");
+		const t = setTimeout(() => el.classList.remove("settings-panel-focus"), 2200);
+		setSearchParams({}, { replace: true });
+		return () => clearTimeout(t);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [searchParams, vets.length]);
 
 	// This account's own vet profile — matched by name (the public vet
 	// list omits email; the staff user list has the name).
@@ -196,7 +214,7 @@ function Settings() {
 					</section>
 
 					{/* Working Hours */}
-					<section className="admin-panel settings-panel">
+					<section className="admin-panel settings-panel" ref={scheduleRef}>
 						<div className="settings-panel-header">
 							<div>
 								<h2>Working Hours</h2>

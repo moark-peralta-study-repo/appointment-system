@@ -1,13 +1,36 @@
+import { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { RxDashboard, RxCalendar, RxPeople, RxPerson } from "react-icons/rx";
-import { CiMedicalCase, CiMedicalClipboard, CiSettings } from "react-icons/ci";
-import { FaChartBar } from "react-icons/fa";
+import { CiMedicalCase, CiMedicalClipboard, CiSettings, CiUser } from "react-icons/ci";
+import { FaChartBar, FaSignOutAlt } from "react-icons/fa";
 import logo from "../../assets/logo/happy-paws-logo.png";
 import { useAuth } from "../../context/useAuth";
 
 function AdminSidebar() {
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
+	const [menuOpen, setMenuOpen] = useState(false);
+	const menuRef = useRef(null);
+
+	// Close on outside click / Esc
+	useEffect(() => {
+		if (!menuOpen) return;
+		const onClick = (e) => {
+			if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+		};
+		const onKey = (e) => e.key === "Escape" && setMenuOpen(false);
+		document.addEventListener("mousedown", onClick);
+		document.addEventListener("keydown", onKey);
+		return () => {
+			document.removeEventListener("mousedown", onClick);
+			document.removeEventListener("keydown", onKey);
+		};
+	}, [menuOpen]);
+
+	const go = (path) => {
+		setMenuOpen(false);
+		navigate(path);
+	};
 
 	return (
 		<aside className="admin-sidebar">
@@ -98,14 +121,7 @@ function AdminSidebar() {
 					<span>Settings</span>
 				</NavLink>
 
-				<div
-					className="admin-user"
-					onClick={() => {
-						logout();
-						navigate("/admin/login");
-					}}
-					title="Click to sign out"
-				>
+				<div className="admin-user" ref={menuRef}>
 					<div className="admin-user-avatar">
 						{user?.name?.[0]?.toUpperCase() || "?"}
 					</div>
@@ -117,10 +133,43 @@ function AdminSidebar() {
 						</span>
 					</div>
 
-					<button className="admin-user-menu" type="button">
+					<button
+						className="admin-user-menu"
+						type="button"
+						aria-label="Account menu"
+						aria-expanded={menuOpen}
+						onClick={() => setMenuOpen((o) => !o)}
+					>
 						•••
 					</button>
 				</div>
+
+				{menuOpen && (
+					<div className="admin-user-dropdown" role="menu">
+						<button role="menuitem" type="button" onClick={() => go("/admin/settings")}>
+							<CiUser />
+							<span>My Profile</span>
+						</button>
+						<button role="menuitem" type="button" onClick={() => go("/admin/settings?focus=schedule")}>
+							<RxCalendar />
+							<span>My Schedule</span>
+						</button>
+						<div className="admin-user-dropdown-divider" role="separator" />
+						<button
+							role="menuitem"
+							type="button"
+							className="danger"
+							onClick={() => {
+								setMenuOpen(false);
+								logout();
+								navigate("/admin/login");
+							}}
+						>
+							<FaSignOutAlt />
+							<span>Sign Out</span>
+						</button>
+					</div>
+				)}
 			</div>
 		</aside>
 	);

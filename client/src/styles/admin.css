@@ -120,6 +120,8 @@
 
 .admin-sidebar-bottom {
   margin-top: auto;
+  position: relative; /* containing block for the account dropdown */
+  z-index: 60;
 }
 
 .admin-sidebar-bottom .admin-nav-link {
@@ -678,3 +680,85 @@
 }
 
 
+
+/* =========================================================
+   SIDEBAR — ACCOUNT (user) DROPDOWN MENU
+========================================================= */
+
+.admin-user {
+	cursor: default;
+}
+.admin-user-menu {
+	padding: 8px 10px;
+	margin-right: -10px;
+	border-radius: var(--radius-sm);
+	font-size: 14px;
+	transition: background-color 120ms var(--ease);
+}
+.admin-user-menu:hover {
+	background: rgba(255, 254, 161, 0.08);
+}
+.admin-user-menu[aria-expanded="true"] {
+	background: rgba(255, 254, 161, 0.12);
+}
+
+.admin-user-dropdown {
+	position: absolute;
+	left: 12px;
+	right: 12px;
+	bottom: calc(100% + 8px);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-md);
+	box-shadow: var(--shadow-lg);
+	padding: 6px;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	z-index: 50;
+	animation: admin-menu-in 140ms var(--ease);
+}
+@keyframes admin-menu-in {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+}
+.admin-user-dropdown button {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 12px;
+	border: 0;
+	background: transparent;
+	color: var(--foreground);
+	font-family: var(--font-sans);
+	font-size: 13px;
+	font-weight: 600;
+	text-align: left;
+	border-radius: var(--radius-sm);
+	cursor: pointer;
+	transition: background-color 120ms var(--ease);
+}
+.admin-user-dropdown button svg {
+	font-size: 15px;
+	color: var(--muted);
+	flex-shrink: 0;
+}
+.admin-user-dropdown button:hover {
+	background: var(--surface-2);
+}
+.admin-user-dropdown button.danger {
+	color: var(--danger);
+}
+.admin-user-dropdown button.danger svg {
+	color: var(--danger);
+}
+.admin-user-dropdown button.danger:hover {
+	background: var(--danger-soft);
+}
+.admin-user-dropdown-divider {
+	height: 1px;
+	background: var(--border);
+	margin: 4px 6px;
+}

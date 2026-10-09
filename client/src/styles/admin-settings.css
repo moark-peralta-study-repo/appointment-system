@@ -398,3 +398,20 @@
   }
 }
 
+
+/* Deep-link highlight: ?focus=schedule from the sidebar "My Schedule" item */
+.settings-panel.settings-panel-focus {
+	animation: settings-panel-flash 2.2s var(--ease);
+	border-color: var(--primary);
+}
+@keyframes settings-panel-flash {
+	0% {
+		box-shadow: 0 0 0 0 var(--primary-soft);
+	}
+	30% {
+		box-shadow: 0 0 0 6px var(--primary-soft);
+	}
+	100% {
+		box-shadow: 0 0 0 0 transparent;
+	}
+}
