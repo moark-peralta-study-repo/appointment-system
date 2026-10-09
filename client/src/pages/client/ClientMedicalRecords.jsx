@@ -1,0 +1,180 @@
+import { useMemo, useState } from "react";
+import { PiCat, PiDog } from "react-icons/pi";
+import ClientHeader from "../../components/client/ClientHeader";
+import AdminModal from "../../components/admin/AdminModal";
+import DogLoader from "../../components/admin/DogLoader";
+import { useMyAppointments, useMyPets } from "../../hooks/useClientData";
+import { formatDate, format12h } from "../../utils/admin";
+
+const SPECIES_ICON = (s) => (s === "cat" ? <PiCat size={22} /> : <PiDog size={22} />);
+
+/* ---------------- RECORD VIEW ---------------- */
+function RecordView({ record, onClose }) {
+	const pet = record.pet;
+	return (
+		<AdminModal
+			eyebrow="VISIT NOTES"
+			title={`${pet?.name ?? "Your pet"} — ${record.reason ?? "Visit"}`}
+			onClose={onClose}
+			wide
+		>
+			<div className="admin-detail-grid">
+				<div className="admin-detail-item">
+					<span>PET</span>
+					<strong>
+						{pet?.name ?? "Unknown"}
+						<small>{pet?.breed ?? pet?.species ?? ""}</small>
+					</strong>
+				</div>
+				<div className="admin-detail-item">
+					<span>VETERINARIAN</span>
+					<strong>{record.vet ?? "—"}</strong>
+				</div>
+				<div className="admin-detail-item">
+					<span>DATE</span>
+					<strong>
+						{formatDate(record.date)} · {format12h(record.time)}
+					</strong>
+				</div>
+				<div className="admin-detail-item">
+					<span>REASON</span>
+					<strong>{record.reason ?? "—"}</strong>
+				</div>
+				<div className="admin-detail-item full">
+					<span>VISIT NOTES</span>
+					{record.vetNotes ? (
+						<p className="client-record-notes">{record.vetNotes}</p>
+					) : (
+						<p className="admin-panel-empty">No notes were recorded for this visit.</p>
+					)}
+				</div>
+			</div>
+		</AdminModal>
+	);
+}
+
+/* ---------------- PAGE ---------------- */
+function ClientMedicalRecords() {
+	const { data: appointments = [], isPending } = useMyAppointments();
+	const { data: pets = [] } = useMyPets();
+	const [search, setSearch] = useState("");
+	const [viewing, setViewing] = useState(null);
+
+	const records = useMemo(() => {
+		const q = search.trim().toLowerCase();
+		return appointments
+			.filter((a) => a.status === "completed")
+			.filter((a) => {
+				if (!q) return true;
+				return `${a.pet?.name ?? ""} ${a.reason ?? ""} ${a.vet ?? ""} ${a.vetNotes ?? ""}`
+					.toLowerCase()
+					.includes(q);
+			})
+			.sort((x, y) => new Date(y.date) - new Date(x.date));
+	}, [appointments, search]);
+
+	const withNotes = appointments.filter((a) => a.status === "completed" && a.vetNotes).length;
+
+	return (
+		<>
+			<ClientHeader
+				title="Medical Records"
+				subtitle="Completed visits and the notes your vet left behind."
+			/>
+
+			{isPending ? (
+				<div className="admin-loading" style={{ minHeight: "50vh" }}>
+					<DogLoader />
+					<p>Loading your records…</p>
+				</div>
+			) : (
+				<>
+					<section className="client-records-summary">
+						<div className="medical-summary-card">
+							<div className="medical-summary-icon blue">📋</div>
+							<div>
+								<span>Completed Visits</span>
+								<strong>{appointments.filter((a) => a.status === "completed").length}</strong>
+							</div>
+						</div>
+						<div className="medical-summary-card">
+							<div className="medical-summary-icon green">✓</div>
+							<div>
+								<span>With Visit Notes</span>
+								<strong>{withNotes}</strong>
+							</div>
+						</div>
+						<div className="medical-summary-card">
+							<div className="medical-summary-icon soft-blue">🐾</div>
+							<div>
+								<span>My Pets</span>
+								<strong>{pets.length}</strong>
+							</div>
+						</div>
+					</section>
+
+					<section className="admin-panel client-records-panel">
+						<div className="client-records-toolbar">
+							<input
+								type="search"
+								className="client-appt-search"
+								placeholder="Search pet, reason, vet or notes…"
+								value={search}
+								onChange={(e) => setSearch(e.target.value)}
+							/>
+						</div>
+
+						{records.length === 0 ? (
+							<p className="admin-panel-empty">
+								No completed visits yet. Records appear here once your vet
+								marks a visit as complete.
+							</p>
+						) : (
+							<div className="client-records-list">
+								{records.map((a) => {
+									const pet = a.pet;
+									return (
+										<article className="client-record-card" key={a._id}>
+											<div className="client-appt-avatar">{SPECIES_ICON(pet?.species)}</div>
+
+											<div className="client-record-main">
+												<strong>
+													{pet?.name ?? "Unknown pet"} — {a.reason ?? "Visit"}
+												</strong>
+												<span>
+													{formatDate(a.date)} · {a.vet ?? "Vet"}
+												</span>
+											</div>
+
+											{a.vetNotes ? (
+												<p className="client-record-preview">
+													{a.vetNotes.length > 90
+														? a.vetNotes.slice(0, 90) + "…"
+														: a.vetNotes}
+												</p>
+											) : (
+												<span className="client-record-nonotes">No notes recorded</span>
+											)}
+
+											<button
+												className="client-record-view"
+												type="button"
+												onClick={() => setViewing(a)}
+											>
+												View record
+											</button>
+										</article>
+									);
+								})}
+							</div>
+						)}
+					</section>
+				</>
+			)}
+
+			{viewing && <RecordView record={viewing} onClose={() => setViewing(null)} />}
+		</>
+	);
+}
+
+export default ClientMedicalRecords;

@@ -27,3 +27,19 @@ export async function login({ email, password }) {
 
 	return { token: generateToken(user._id), user: safeUser };
 }
+
+export async function updateProfile(user, { name, phone, email }) {
+	const updates = {};
+	if (name !== undefined) updates.name = name.trim();
+	if (phone !== undefined) updates.phone = phone.trim() || undefined;
+
+	if (email !== undefined && email.trim().toLowerCase() !== user.email.toLowerCase()) {
+		const taken = await User.findOne({ email: email.trim().toLowerCase() });
+		if (taken) throw new ApiError(409, "That email is already in use");
+		updates.email = email.trim().toLowerCase();
+	}
+
+	Object.assign(user, updates);
+	await user.save();
+	return user;
+}

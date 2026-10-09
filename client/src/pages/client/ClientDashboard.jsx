@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMyPets, useMyAppointments } from "../../hooks/useClientData";
+import { useMyPets, useMyAppointments, useNotifications } from "../../hooks/useClientData";
 import { isToday, isWithinDays, format12h, formatDate } from "../../utils/admin";
 import { useAuth } from "../../context/useAuth";
 import ClientHeader from "../../components/client/ClientHeader";
@@ -10,6 +11,8 @@ function ClientDashboard() {
 	const { user } = useAuth();
 	const { data: pets = [], isPending: petsLoading } = useMyPets();
 	const { data: appointments = [], isPending: apptsLoading } = useMyAppointments();
+	const notifications = useNotifications();
+	const [bellOpen, setBellOpen] = useState(false);
 
 	// Upcoming = not completed/cancelled, within 14 days, sorted by date+time.
 	const upcoming = appointments
@@ -57,7 +60,47 @@ function ClientDashboard() {
 				subtitle="Here's what's happening with your pets."
 				actions={
 					<>
-						<button className="admin-notification" type="button" title="Notifications coming soon">🔔</button>
+						<div className="client-bell-wrap">
+							<button
+								className="admin-notification"
+								type="button"
+								aria-label="Notifications"
+								aria-expanded={bellOpen}
+								onClick={() => setBellOpen((o) => !o)}
+							>
+								🔔
+								{notifications.items.length > 0 && (
+									<span className="client-bell-badge">{notifications.items.length}</span>
+								)}
+							</button>
+
+							{bellOpen && (
+								<div className="client-bell-menu" role="menu">
+									<div className="client-bell-head">
+										<strong>Notifications</strong>
+										<small>{notifications.items.length || "No updates"}</small>
+									</div>
+
+									{notifications.items.length === 0 ? (
+										<p className="client-bell-empty">
+											You're all caught up. We'll flag bookings that need
+											your attention here.
+										</p>
+									) : (
+										notifications.items.map((n) => (
+											<div className="client-bell-item" key={n.id} role="menuitem">
+												<span className={`client-bell-dot ${n.kind}`} />
+												<div>
+													<p>{n.text}</p>
+													<small>{formatDate(n.date)}</small>
+												</div>
+											</div>
+										))
+									)}
+								</div>
+							)}
+						</div>
+
 						<button
 							className="admin-primary-button"
 							type="button"

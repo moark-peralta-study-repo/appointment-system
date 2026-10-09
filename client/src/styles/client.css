@@ -1,0 +1,548 @@
+/* =========================================================
+   CLIENT — pet-owner portal (appointments, records, profile)
+   Reuses admin-* panel/chrome classes; this file styles the
+   client-specific cards, tabs, forms and pickers.
+   ========================================================= */
+
+/* ---------- SHARED: appointment-style card ---------- */
+.client-appointments-panel,
+.client-records-panel,
+.client-pets-panel,
+.client-settings-panel,
+.client-profile-card,
+.client-profile-account {
+	padding: 24px;
+}
+
+/* ---------- APPOINTMENTS: toolbar tabs ---------- */
+.client-appt-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 18px;
+	flex-wrap: wrap;
+}
+.client-appt-tabs {
+	display: inline-flex;
+	background: var(--surface-2);
+	border-radius: 9999px;
+	padding: 4px;
+	gap: 2px;
+}
+.client-appt-tabs button {
+	border: 0;
+	background: transparent;
+	color: var(--muted);
+	font-family: var(--font-display);
+	font-weight: 700;
+	font-size: 13px;
+	padding: 8px 16px;
+	border-radius: 9999px;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	transition: all 0.15s;
+}
+.client-appt-tabs button.active {
+	background: var(--surface);
+	color: var(--foreground);
+	box-shadow: 0 2px 6px rgba(0, 52, 91, 0.08);
+}
+.client-appt-tab-count {
+	background: var(--primary);
+	color: var(--primary-contrast);
+	font-size: 10px;
+	font-weight: 800;
+	padding: 1px 6px;
+	border-radius: 9999px;
+	min-width: 18px;
+	text-align: center;
+}
+.client-appt-search {
+	background: var(--surface);
+	border: 1px solid var(--border-cool-strong);
+	border-radius: var(--radius-md);
+	padding: 9px 12px;
+	font-family: var(--font-sans);
+	font-size: 13px;
+	min-width: 220px;
+	color: var(--foreground);
+}
+.client-appt-search:focus {
+	outline: none;
+	border-color: var(--primary);
+	box-shadow: 0 0 0 3px var(--primary-soft);
+}
+.client-appt-search:disabled {
+	opacity: 0.5;
+}
+
+/* today banner */
+.client-today-banner {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	background: var(--accent);
+	border: 1px solid var(--accent-hover);
+	border-radius: var(--radius-md);
+	padding: 12px 16px;
+	margin-bottom: 16px;
+	color: var(--accent-text);
+}
+.client-today-banner strong {
+	font-family: var(--font-display);
+	font-size: 15px;
+}
+.client-today-banner em {
+	font-style: normal;
+	font-size: 12px;
+	opacity: 0.8;
+	margin-left: auto;
+}
+
+/* appointment card list */
+.client-appt-list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.client-appt-card {
+	display: grid;
+	grid-template-columns: 150px 1fr 160px 110px auto;
+	align-items: center;
+	gap: 16px;
+	border: 1px solid var(--border-cool);
+	border-radius: var(--radius-lg);
+	padding: 16px 20px;
+	background: var(--surface);
+	transition: box-shadow 0.15s, border-color 0.15s;
+}
+.client-appt-card:hover {
+	border-color: var(--border-cool-strong);
+	box-shadow: 0 6px 18px rgba(0, 52, 91, 0.06);
+}
+.client-appt-when .client-appt-day {
+	display: block;
+	font-family: var(--font-sans);
+	font-size: 12px;
+	color: var(--muted);
+}
+.client-appt-when strong {
+	font-family: var(--font-display);
+	font-size: 16px;
+	color: var(--foreground);
+}
+.client-appt-who {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-width: 0;
+}
+.client-appt-avatar {
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: var(--primary-soft);
+	display: grid;
+	place-items: center;
+	color: var(--primary);
+	flex-shrink: 0;
+}
+.client-appt-who strong {
+	display: block;
+	font-family: var(--font-display);
+	font-size: 15px;
+}
+.client-appt-who span {
+	font-size: 12px;
+	color: var(--muted);
+}
+.client-appt-vet {
+	display: flex;
+	flex-direction: column;
+}
+.client-appt-vet span {
+	font-size: 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: var(--faint);
+}
+.client-appt-vet strong {
+	font-size: 13px;
+}
+.client-appt-cancel {
+	border: 1px solid var(--border-cool-strong);
+	background: transparent;
+	color: var(--danger);
+	font-family: var(--font-sans);
+	font-weight: 700;
+	font-size: 12px;
+	border-radius: 9999px;
+	padding: 7px 14px;
+	cursor: pointer;
+	transition: all 0.15s;
+}
+.client-appt-cancel:hover {
+	background: var(--danger-soft);
+	border-color: var(--danger);
+}
+
+/* ---------- MEDICAL RECORDS ---------- */
+.client-records-summary {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 16px;
+	margin-bottom: 20px;
+}
+.client-records-panel .client-records-toolbar {
+	margin-bottom: 16px;
+}
+.client-records-list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.client-record-card {
+	display: grid;
+	grid-template-columns: 44px 1fr 1.2fr auto;
+	align-items: center;
+	gap: 16px;
+	border: 1px solid var(--border-cool);
+	border-radius: var(--radius-lg);
+	padding: 16px 20px;
+	background: var(--surface);
+}
+.client-record-main strong {
+	display: block;
+	font-family: var(--font-display);
+	font-size: 15px;
+}
+.client-record-main span {
+	font-size: 12px;
+	color: var(--muted);
+}
+.client-record-preview {
+	margin: 0;
+	font-size: 13px;
+	color: var(--muted);
+	line-height: 1.4;
+}
+.client-record-nonotes {
+	font-size: 12px;
+	color: var(--faint);
+	font-style: italic;
+}
+.client-record-view {
+	border: 1px solid var(--primary);
+	background: transparent;
+	color: var(--primary);
+	font-weight: 700;
+	font-size: 12px;
+	font-family: var(--font-sans);
+	border-radius: var(--radius-md);
+	padding: 8px 14px;
+	cursor: pointer;
+	transition: all 0.15s;
+	white-space: nowrap;
+}
+.client-record-view:hover {
+	background: var(--primary);
+	color: var(--primary-contrast);
+}
+.client-record-notes {
+	margin: 0;
+	white-space: pre-wrap;
+	font-family: var(--font-sans);
+	font-size: 15px;
+	line-height: 1.55;
+	color: var(--foreground);
+}
+
+/* ---------- PROFILE ---------- */
+.client-profile-card {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	margin-bottom: 20px;
+}
+.client-profile-id {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+.client-profile-id .settings-profile-avatar {
+	background: var(--primary);
+	color: var(--primary-contrast);
+}
+.client-profile-id strong {
+	display: block;
+	font-family: var(--font-display);
+	font-size: 20px;
+}
+.client-profile-id span {
+	color: var(--muted);
+	font-size: 13px;
+}
+.client-profile-meta {
+	display: flex;
+	gap: 28px;
+	margin: 0;
+}
+.client-profile-meta dt {
+	font-size: 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: var(--faint);
+	margin-bottom: 3px;
+}
+.client-profile-meta dd {
+	margin: 0;
+	font-family: var(--font-display);
+	font-weight: 700;
+	font-size: 15px;
+}
+
+.client-save-badge {
+	font-size: 12px;
+	font-weight: 700;
+	color: var(--success);
+	background: var(--success-soft);
+	padding: 4px 10px;
+	border-radius: 9999px;
+}
+
+/* pets list */
+.client-pets-panel .settings-panel-header {
+	margin-bottom: 16px;
+}
+.client-pets-list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.client-pet-card {
+	display: grid;
+	grid-template-columns: 44px 1fr auto;
+	align-items: center;
+	gap: 16px;
+	border: 1px solid var(--border-cool);
+	border-radius: var(--radius-lg);
+	padding: 16px 20px;
+	background: var(--surface);
+}
+.client-pet-main strong {
+	font-family: var(--font-display);
+	font-size: 15px;
+}
+.client-pet-gender {
+	font-size: 11px;
+	color: var(--muted);
+	font-weight: 400;
+	text-transform: capitalize;
+}
+.client-pet-main > span {
+	font-size: 12px;
+	color: var(--muted);
+}
+.client-pet-notes {
+	margin: 6px 0 0;
+	font-size: 12px;
+	color: var(--muted);
+	font-style: italic;
+}
+.client-pet-actions {
+	display: flex;
+	gap: 8px;
+}
+
+/* species picker in pet form */
+.client-species-picker {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 8px;
+}
+.client-species-picker button {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	padding: 12px 6px;
+	border: 1px solid var(--border-cool-strong);
+	background: var(--surface);
+	border-radius: var(--radius-md);
+	cursor: pointer;
+	color: var(--muted);
+	transition: all 0.15s;
+}
+.client-species-picker button small {
+	font-size: 11px;
+	font-weight: 700;
+	font-family: var(--font-sans);
+}
+.client-species-picker button.active {
+	border-color: var(--primary);
+	background: var(--primary-soft);
+	color: var(--primary);
+	box-shadow: 0 0 0 2px var(--primary-soft);
+}
+
+/* settings panel spacing */
+.client-settings-panel .settings-options {
+	margin-top: 4px;
+}
+.client-settings-panel .settings-panel-header {
+	margin-bottom: 12px;
+}
+.client-settings-panel + .client-settings-panel {
+	margin-top: 20px;
+}
+
+/* ---------- NOTIFICATION BELL (dashboard) ---------- */
+.client-bell-wrap {
+	position: relative;
+}
+.admin-notification {
+	font-size: 16px;
+	line-height: 1;
+	padding: 8px 10px;
+}
+.client-bell-badge {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+	background: var(--danger);
+	color: #fff;
+	font-size: 9px;
+	font-weight: 800;
+	min-width: 15px;
+	height: 15px;
+	padding: 0 3px;
+	border-radius: 9999px;
+	display: grid;
+	place-items: center;
+}
+.client-bell-menu {
+	position: absolute;
+	top: calc(100% + 10px);
+	right: 0;
+	width: 320px;
+	background: var(--surface);
+	border: 1px solid var(--border-cool);
+	border-radius: var(--radius-lg);
+	box-shadow: 0 12px 35px rgba(0, 52, 91, 0.12);
+	padding: 6px;
+	z-index: 80;
+	animation: client-bell-in 140ms var(--ease);
+}
+@keyframes client-bell-in {
+	from {
+		opacity: 0;
+		transform: translateY(-6px);
+	}
+}
+.client-bell-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 12px;
+	border-bottom: 1px solid var(--border-cool);
+}
+.client-bell-head strong {
+	font-family: var(--font-display);
+	font-size: 14px;
+}
+.client-bell-head small {
+	font-size: 11px;
+	color: var(--muted);
+}
+.client-bell-empty {
+	padding: 18px 12px;
+	font-size: 13px;
+	color: var(--muted);
+	text-align: center;
+	margin: 0;
+}
+.client-bell-item {
+	display: flex;
+	gap: 10px;
+	padding: 12px;
+	border-radius: var(--radius-md);
+}
+.client-bell-item + .client-bell-item {
+	border-top: 1px solid var(--border-cool);
+}
+.client-bell-item p {
+	margin: 0;
+	font-size: 13px;
+	color: var(--foreground);
+	line-height: 1.35;
+}
+.client-bell-item small {
+	font-size: 11px;
+	color: var(--muted);
+}
+.client-bell-dot {
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	flex-shrink: 0;
+	margin-top: 4px;
+}
+.client-bell-dot.confirm {
+	background: var(--warning);
+}
+.client-bell-dot.notes {
+	background: var(--success);
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 900px) {
+	.client-appointments-panel,
+	.client-records-panel,
+	.client-pets-panel,
+	.client-settings-panel,
+	.client-profile-card,
+	.client-profile-account {
+		padding: 18px;
+	}
+	.client-appt-card {
+		grid-template-columns: 1fr auto;
+		row-gap: 8px;
+	}
+	.client-appt-when {
+		order: -1;
+	}
+	.client-appt-vet {
+		display: none;
+	}
+	.client-records-summary {
+		grid-template-columns: 1fr;
+	}
+	.client-record-card {
+		grid-template-columns: 44px 1fr;
+	}
+	.client-record-preview,
+	.client-record-nonotes {
+		grid-column: 2;
+	}
+	.client-record-view {
+		grid-column: 2;
+		justify-self: start;
+	}
+	.client-profile-card {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.client-pet-card {
+		grid-template-columns: 44px 1fr;
+	}
+	.client-pet-actions {
+		grid-column: 2;
+	}
+	.client-species-picker {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}

@@ -1,6 +1,8 @@
+import { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { RxDashboard, RxCalendar, RxPerson } from "react-icons/rx";
-import { CiMedicalClipboard, CiSettings } from "react-icons/ci";
+import { CiMedicalClipboard, CiSettings, CiUser } from "react-icons/ci";
+import { FaSignOutAlt } from "react-icons/fa";
 import logo from "../../assets/logo/happy-paws-logo.png";
 import { useAuth } from "../../context/useAuth";
 
@@ -11,10 +13,26 @@ import { useAuth } from "../../context/useAuth";
 function ClientSidebar() {
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
+	const [menuOpen, setMenuOpen] = useState(false);
+	const menuRef = useRef(null);
 
-	const handleLogout = () => {
-		logout();
-		navigate("/client/login");
+	useEffect(() => {
+		if (!menuOpen) return;
+		const onClick = (e) => {
+			if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+		};
+		const onKey = (e) => e.key === "Escape" && setMenuOpen(false);
+		document.addEventListener("mousedown", onClick);
+		document.addEventListener("keydown", onKey);
+		return () => {
+			document.removeEventListener("mousedown", onClick);
+			document.removeEventListener("keydown", onKey);
+		};
+	}, [menuOpen]);
+
+	const go = (path) => {
+		setMenuOpen(false);
+		navigate(path);
 	};
 
 	return (
@@ -81,11 +99,7 @@ function ClientSidebar() {
 					<span>Settings</span>
 				</NavLink>
 
-				<div
-					className="admin-user"
-					onClick={handleLogout}
-					title="Click to sign out"
-				>
+				<div className="admin-user" ref={menuRef}>
 					<div className="admin-user-avatar">
 						{user?.name?.[0]?.toUpperCase() || "?"}
 					</div>
@@ -95,10 +109,43 @@ function ClientSidebar() {
 						<span>Client Account</span>
 					</div>
 
-					<button className="admin-user-menu" type="button">
+					<button
+						className="admin-user-menu"
+						type="button"
+						aria-label="Account menu"
+						aria-expanded={menuOpen}
+						onClick={() => setMenuOpen((o) => !o)}
+					>
 						•••
 					</button>
 				</div>
+
+				{menuOpen && (
+					<div className="admin-user-dropdown" role="menu">
+						<button role="menuitem" type="button" onClick={() => go("/client/profile")}>
+							<CiUser />
+							<span>My Profile</span>
+						</button>
+						<button role="menuitem" type="button" onClick={() => go("/client/settings")}>
+							<CiSettings />
+							<span>Notifications</span>
+						</button>
+						<div className="admin-user-dropdown-divider" role="separator" />
+						<button
+							role="menuitem"
+							type="button"
+							className="danger"
+							onClick={() => {
+								setMenuOpen(false);
+								logout();
+								navigate("/client/login");
+							}}
+						>
+							<FaSignOutAlt />
+							<span>Sign Out</span>
+						</button>
+					</div>
+				)}
 			</div>
 		</aside>
 	);

@@ -19,6 +19,7 @@ import "./styles/admin-medical-records.css";
 import "./styles/admin-reports.css";
 import "./styles/admin-settings.css";
 import "./styles/admin-login.css";
+import "./styles/client.css";
 import "./styles/dog.css";
 import "./styles/admin-modals.css";
 import App from "./App.jsx";

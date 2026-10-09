@@ -20,6 +20,10 @@ import ClientLogin from "./pages/client/ClientLogin";
 import ClientLayout from "./components/client/ClientLayout";
 import ClientProtectedRoute from "./components/client/ClientProtectedRoute";
 import ClientDashboard from "./pages/client/ClientDashboard";
+import ClientAppointments from "./pages/client/ClientAppointments";
+import ClientMedicalRecords from "./pages/client/ClientMedicalRecords";
+import ClientProfile from "./pages/client/ClientProfile";
+import ClientSettings from "./pages/client/ClientSettings";
 
 function App() {
 	return (
@@ -37,7 +41,12 @@ function App() {
         <Route path="/client/login" element={<ClientLogin />} />
         <Route element={<ClientProtectedRoute />}>
         <Route path="/client" element={<ClientLayout />}>
+            <Route index element={<Navigate to="/client/dashboard" replace />} />
             <Route path="dashboard" element={<ClientDashboard />} />
+            <Route path="appointments" element={<ClientAppointments />} />
+            <Route path="medical-records" element={<ClientMedicalRecords />} />
+            <Route path="profile" element={<ClientProfile />} />
+            <Route path="settings" element={<ClientSettings />} />
         </Route>
         </Route>
 
