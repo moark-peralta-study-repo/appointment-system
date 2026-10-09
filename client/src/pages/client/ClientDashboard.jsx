@@ -5,6 +5,9 @@ import { isToday, isWithinDays, format12h, formatDate } from "../../utils/admin"
 import { useAuth } from "../../context/useAuth";
 import ClientHeader from "../../components/client/ClientHeader";
 import DogLoader from "../../components/admin/DogLoader";
+import { FaBell, FaClipboardList, FaClock } from "react-icons/fa";
+import { RxCalendar } from "react-icons/rx";
+import { PiCat, PiDog, PiPawPrint } from "react-icons/pi";
 
 function ClientDashboard() {
 	const navigate = useNavigate();
@@ -28,25 +31,25 @@ function ClientDashboard() {
 			label: "Upcoming Appointments",
 			value: upcoming.length,
 			sub: "next two weeks",
-			icon: "📅",
+			icon: <RxCalendar size={20} />,
 		},
 		{
 			label: "Today's Appointments",
 			value: todayList.length,
 			sub: todayList.length ? "see below for details" : "nothing scheduled today",
-			icon: "⏰",
+			icon: <FaClock size={20} />,
 		},
 		{
 			label: "My Pets",
 			value: pets.length,
 			sub: "registered with the clinic",
-			icon: "🐾",
+			icon: <PiPawPrint size={20} />,
 		},
 		{
 			label: "Completed Visits",
 			value: appointments.filter((a) => a.status === "completed").length,
 			sub: "health records on file",
-			icon: "📋",
+			icon: <FaClipboardList size={20} />,
 		},
 	];
 
@@ -68,7 +71,7 @@ function ClientDashboard() {
 								aria-expanded={bellOpen}
 								onClick={() => setBellOpen((o) => !o)}
 							>
-								🔔
+								<FaBell size={16} />
 								{notifications.items.length > 0 && (
 									<span className="client-bell-badge">{notifications.items.length}</span>
 								)}
@@ -163,7 +166,7 @@ function ClientDashboard() {
 
 										<div className="appointment-pet">
 											<div className="appointment-avatar">
-												{nextAppt.pet?.species === "cat" ? "🐱" : "🐶"}
+												{nextAppt.pet?.species === "cat" ? <PiCat size={18} /> : <PiDog size={18} />}
 											</div>
 
 											<div>
@@ -203,7 +206,7 @@ function ClientDashboard() {
 									type="button"
 									onClick={() => navigate("/book-appointment")}
 								>
-									<span>📅</span>
+									<span className="quick-ic"><RxCalendar size={16} /></span>
 									<div>
 										<strong>Book appointment</strong>
 										<small>Schedule a clinic visit</small>
@@ -214,7 +217,7 @@ function ClientDashboard() {
 									type="button"
 									onClick={() => navigate("/client/appointments")}
 								>
-									<span>🗓️</span>
+									<span className="quick-ic"><PiPawPrint size={16} /></span>
 									<div>
 										<strong>My appointments</strong>
 										<small>View or cancel upcoming visits</small>
@@ -225,7 +228,7 @@ function ClientDashboard() {
 									type="button"
 									onClick={() => navigate("/client/medical-records")}
 								>
-									<span>📋</span>
+									<span className="quick-ic"><FaClipboardList size={16} /></span>
 									<div>
 										<strong>Medical records</strong>
 										<small>Completed visit notes</small>
@@ -253,7 +256,7 @@ function ClientDashboard() {
 								{pets.slice(0, 3).map((p) => (
 									<div className="recent-patient" key={p._id}>
 										<div className="recent-patient-avatar" role="img" aria-label={p.name}>
-											{p.species === "cat" ? "🐱" : "🐶"}
+											{p.species === "cat" ? <PiCat size={18} /> : <PiDog size={18} />}
 										</div>
 
 										<div>

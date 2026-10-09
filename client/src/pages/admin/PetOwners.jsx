@@ -8,6 +8,9 @@ import {
 	useCreateOwner,
 } from "../../hooks/useAdminData";
 import { formatDate, initials } from "../../utils/admin";
+import { FaUsers } from "react-icons/fa";
+import { PiCat, PiDog, PiPawPrint, PiStar } from "react-icons/pi";
+import { FiAlertTriangle, FiCheck, FiSearch } from "react-icons/fi";
 
 /* ---------------- ADD OWNER FORM ---------------- */
 
@@ -58,7 +61,7 @@ function OwnerForm({ onClose }) {
 			}
 		>
 			{register.error && (
-				<div className="admin-form-error">⚠ {register.error.message}</div>
+				<div className="admin-form-error"><FiAlertTriangle size={13} /> {register.error.message}</div>
 			)}
 
 			<div className="admin-form-grid">
@@ -127,7 +130,7 @@ function OwnerView({ owner, pets, visits, onClose }) {
 						<div className="admin-detail-item" key={p._id}>
 							<span>SPECIES</span>
 							<strong>
-								{p.species === "cat" ? "🐱" : "🐶"} {p.name}
+								{p.species === "cat" ? <PiCat size={15} /> : <PiDog size={15} />} {p.name}
 							</strong>
 							<small>
 								{p.breed ?? p.species}
@@ -221,7 +224,7 @@ function PetOwners() {
 			<section className="owner-summary">
 				<div className="owner-summary-card">
 					<div className="owner-summary-icon blue">
-						👥
+						<FaUsers size={20} />
 					</div>
 
 					<div>
@@ -238,7 +241,7 @@ function PetOwners() {
 
 				<div className="owner-summary-card">
 					<div className="owner-summary-icon green">
-						✓
+						<FiCheck size={20} />
 					</div>
 
 					<div>
@@ -249,7 +252,7 @@ function PetOwners() {
 
 				<div className="owner-summary-card">
 					<div className="owner-summary-icon yellow">
-						✦
+						<PiStar size={20} />
 					</div>
 
 					<div>
@@ -262,7 +265,7 @@ function PetOwners() {
 
 				<div className="owner-summary-card">
 					<div className="owner-summary-icon soft-blue">
-						🐾
+						<PiPawPrint size={20} />
 					</div>
 
 					<div>
@@ -277,7 +280,7 @@ function PetOwners() {
 			<section className="admin-panel owners-page-panel">
 				<div className="owners-toolbar">
 					<div className="owner-search">
-						<span>⌕</span>
+						<FiSearch size={15} />
 
 						<input
 							type="text"
@@ -340,7 +343,7 @@ function PetOwners() {
 
 									<td>
 										<span className="owner-pet-count">
-											🐾 {owner.pets}
+											<PiPawPrint size={20} /> {owner.pets}
 										</span>
 									</td>
 

@@ -9,6 +9,8 @@ import {
 import { format12h, isToday } from "../../utils/admin";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import NewAppointmentModal from "../../components/admin/booking/NewAppointmentModal";
+import { PiCat, PiDog } from "react-icons/pi";
+import { FiSearch } from "react-icons/fi";
 
 function Appointments() {
 	const { data: appointments = [], isPending } = useAppointments();
@@ -96,7 +98,7 @@ function Appointments() {
 			<section className="admin-panel appointments-page-panel">
 				<div className="appointments-toolbar">
 					<div className="appointment-search">
-						<span>⌕</span>
+						<FiSearch size={15} />
 						<input
 							type="text"
 							placeholder="Search pet, owner, or veterinarian..."
@@ -161,7 +163,7 @@ function Appointments() {
 										<td>
 											<div className="table-patient">
 												<div className="table-patient-avatar">
-													{appointment.pet?.species === "cat" ? "🐱" : "🐶"}
+													{appointment.pet?.species === "cat" ? <PiCat size={18} /> : <PiDog size={18} />}
 												</div>
 
 												<div>

@@ -13,6 +13,8 @@ import {
 	useDeletePet,
 } from "../../hooks/useAdminData";
 import { formatDate } from "../../utils/admin";
+import { PiPawPrint } from "react-icons/pi";
+import { FiAlertTriangle, FiSearch } from "react-icons/fi";
 
 const SPECIES = ["dog", "cat", "bird", "rabbit", "other"];
 const GENDERS = ["male", "female"];
@@ -82,7 +84,7 @@ function PetForm({ pet, onClose }) {
 				</>
 			}
 		>
-			{error && <div className="admin-form-error">⚠ {error.message}</div>}
+			{error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {error.message}</div>}
 
 			<div className="admin-form-grid">
 				<div className="admin-form-field full">
@@ -245,7 +247,7 @@ function Patients() {
 					ownerName: owner?.name ?? "—",
 					lastVisit: lastDate ? formatDate(lastDate) : "No visits yet",
 					status: p.notes ? "Under Observation" : "Healthy",
-					emoji: p.species === "cat" ? "🐱" : "🐶",
+					species: p.species,
 				};
 			})
 			.filter((p) => speciesFilter === "all" || p.species === speciesFilter)
@@ -285,7 +287,7 @@ function Patients() {
 
 			<section className="patient-summary">
 				<div className="patient-summary-card">
-					<div className="patient-summary-icon blue">🐾</div>
+					<div className="patient-summary-icon blue"><PiPawPrint size={20} /></div>
 
 					<div>
 						<span>Total Patients</span>
@@ -334,7 +336,7 @@ function Patients() {
 			<section className="admin-panel patients-page-panel">
 				<div className="patients-toolbar">
 					<div className="patient-search">
-						<span>⌕</span>
+						<FiSearch size={15} />
 
 						<input
 							type="text"
@@ -512,7 +514,7 @@ function Patients() {
 						on the appointments page.
 					</p>
 					{deletePet.error && (
-						<div className="admin-form-error">⚠ {deletePet.error.message}</div>
+						<div className="admin-form-error"><FiAlertTriangle size={13} /> {deletePet.error.message}</div>
 					)}
 				</AdminModal>
 			)}

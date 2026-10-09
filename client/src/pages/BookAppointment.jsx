@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/useAuth";
+import { FiArrowLeft, FiCheck } from "react-icons/fi";
 import BookingHeader from "../components/booking/BookingHeader";
 import BookingAccountStep from "../components/booking/BookingAccountStep";
 import BookingPetStep from "../components/booking/BookingPetStep";
@@ -50,7 +51,7 @@ function BookAppointment() {
 			<BookingHeader
 				right={
 					<a href="/" className="back-home">
-						← Back to Home
+						<FiArrowLeft size={14} /> Back to Home
 					</a>
 				}
 			/>
@@ -64,14 +65,13 @@ function BookAppointment() {
 					<p>Schedule a visit for your pet with our veterinary team.</p>
 				</div>
 
-				{/* PROGRESS — 4 steps */}
 				<div className="booking-progress booking-progress-4">
 					{STEPS.map((label, i) => (
 						<span key={label} style={{ display: "contents" }}>
 							<div
 								className={`progress-step ${step > i + 1 ? "done" : step === i + 1 ? "active" : ""}`}
 							>
-								<span>{step > i + 1 ? "✓" : i + 1}</span>
+								<span>{step > i + 1 ? <FiCheck size={16} /> : i + 1}</span>
 								<p>{label}</p>
 							</div>
 

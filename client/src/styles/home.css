@@ -147,6 +147,7 @@
 .eyebrow {
   display: inline-flex;
   align-items: center;
+  gap: 7px;
   margin-bottom: 18px;
   padding: 8px 13px;
   border-radius: 999px;
@@ -155,6 +156,7 @@
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .hero h1 {
@@ -203,9 +205,18 @@
 }
 
 .primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 24px;
+  height: 50px;
   border: none;
+  border-radius: 999px;
   background: var(--primary);
   color: white;
+  font-size: 14px;
+  font-weight: 800;
   box-shadow: 0 7px 18px rgba(0, 145, 253, 0.2);
 }
 
@@ -238,8 +249,10 @@
 }
 
 .stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
   color: #e2b900;
-  letter-spacing: 2px;
 }
 
 
@@ -378,6 +391,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
 }
 
 .find-button:hover {
@@ -622,6 +636,39 @@
   gap: 9px;
 }
 
+.pet-text ul li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 600;
+}
+
+.pet-text ul li svg {
+  color: var(--success);
+  flex-shrink: 0;
+}
+
+.healthy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: var(--success-soft);
+  color: var(--success);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.healthy::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
 .pet-text li {
   color: var(--foreground);
   font-size: 14px;
@@ -662,15 +709,6 @@
   color: white;
   font-family: var(--font-display);
   font-size: 23px;
-}
-
-.healthy {
-  padding: 6px 9px;
-  border-radius: 999px;
-  background: var(--success-soft);
-  color: var(--success);
-  font-size: 10px;
-  font-weight: 800;
 }
 
 .record-profile {
@@ -833,9 +871,11 @@
 }
 
 .review-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
   margin-bottom: 15px;
   color: #e2b900;
-  letter-spacing: 2px;
 }
 
 .review-card p {
@@ -926,6 +966,9 @@
 
 .emergency-button {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
 
   padding: 15px 24px;
 

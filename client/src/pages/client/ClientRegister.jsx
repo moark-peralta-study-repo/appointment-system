@@ -45,7 +45,6 @@ function ClientRegister() {
 			className="admin-login-page"
 			style={{ display: "flex", flexDirection: "row-reverse !important", flexWrap: "nowrap" }}
 		>
-			{/* 1. KANAN: Register Form */}
 			<div className="admin-login-card" style={{ order: 2 }}>
 				<div className="admin-login-brand">
 					<img src={logo} alt="Mutuals Paws Veterinary Clinic" />
@@ -169,7 +168,6 @@ function ClientRegister() {
 				</button>
 			</div>
 
-			{/* 2. KALIWA: Hero Banner */}
 			<div className="admin-login-side" style={{ order: 1 }}>
 				<div className="admin-login-side-content">
 					<span className="admin-login-side-label">MUTUALS PAWS</span>

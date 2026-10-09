@@ -1,3 +1,5 @@
+import { FaPhoneAlt } from "react-icons/fa";
+
 function Emergency() {
 	return (
 		<section className="emergency">
@@ -11,7 +13,7 @@ function Emergency() {
 				</div>
 
 				<button type="button" className="emergency-button">
-					☎ Call Clinic
+					<FaPhoneAlt /> Call Clinic
 				</button>
 			</div>
 		</section>

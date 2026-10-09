@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
+import { FiArrowLeft } from "react-icons/fi";
 import { useVets, useVetFreeSlots } from "../../hooks/useAdminData";
 import { SERVICES } from "../../data/catalog";
 
@@ -153,7 +154,7 @@ function BookingScheduleStep({ onDone, onBack }) {
 
 			<div className="appointment-actions">
 				<button type="button" className="cancel-button" onClick={onBack}>
-					← Back
+					<FiArrowLeft size={14} /> Back
 				</button>
 
 				<button

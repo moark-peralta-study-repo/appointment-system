@@ -36,7 +36,6 @@ function ClientLogin() {
                 flexWrap: "nowrap" 
             }}
         >
-            {/* 1. KANAN: Login Form */}
             <div className="admin-login-card" style={{ order: 2 }}>
                 {/* Brand Logo & Name */}
                 <div className="admin-login-brand">
@@ -128,7 +127,6 @@ function ClientLogin() {
                 </button>
             </div>
 
-            {/* 2. KALIWA: Hero Banner */}
             <div className="admin-login-side" style={{ order: 1 }}>
                 <div className="admin-login-side-content">
                     <span className="admin-login-side-label">MUTUALS PAWS</span>

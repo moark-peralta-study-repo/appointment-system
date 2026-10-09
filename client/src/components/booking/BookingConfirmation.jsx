@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FaCheck } from "react-icons/fa";
 import BookingHeader from "./BookingHeader";
 import { format12h, formatDate } from "../../utils/admin";
 
@@ -9,7 +10,7 @@ function BookingConfirmation({ appointment }) {
 
 			<main className="booking-main">
 				<div className="appointment-card confirmation-card">
-					<div className="confirmation-icon">✓</div>
+					<div className="confirmation-icon"><FaCheck size={22} /></div>
 
 					<span className="confirmation-label">APPOINTMENT REQUESTED</span>
 

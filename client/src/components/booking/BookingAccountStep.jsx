@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaCheck } from "react-icons/fa";
+import { FiAlertTriangle } from "react-icons/fi";
 import { useAuth } from "../../context/useAuth";
 import { useRegister } from "../../hooks/useClientData";
 
@@ -23,7 +24,7 @@ function BookingAccountStep({ onDone }) {
 			<div className="appointment-card">
 				<section className="form-section">
 					<div className="booking-step-banner">
-						<span className="booking-step-banner-icon">✓</span>
+						<span className="booking-step-banner-icon"><FaCheck size={16} /></span>
 						<div>
 							<h2>Welcome back, {user.name}</h2>
 							<p className="form-description">
@@ -157,7 +158,7 @@ function BookingAccountStep({ onDone }) {
 						/>
 					</div>
 
-					{error && <div className="admin-form-error">⚠ {error}</div>}
+					{error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {error}</div>}
 
 					<div className="appointment-actions">
 						<a href="/" className="cancel-button">

@@ -4,6 +4,7 @@ import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import ScheduleEditor, { defaultSchedule } from "../../components/admin/ScheduleEditor";
 import { useAuth } from "../../context/useAuth";
 import { useVets, useUpdateVet } from "../../hooks/useAdminData";
+import { FiAlertTriangle, FiCheck } from "react-icons/fi";
 
 const CLINIC_KEY = "mp_clinic_profile";
 const TOGGLES_KEY = "mp_clinic_toggles";
@@ -208,7 +209,7 @@ function Settings() {
 								type="button"
 								onClick={saveClinic}
 							>
-								{clinicSaved ? "Saved ✓" : "Save Changes"}
+								{clinicSaved ? (<><FiCheck size={13} /> Saved</>) : "Save Changes"}
 							</button>
 						</div>
 					</section>
@@ -229,11 +230,11 @@ function Settings() {
 							<ScheduleEditor value={schedule} onChange={setSchedule} />
 						)}
 
-						{hoursError && <div className="admin-form-error">⚠ {hoursError}</div>}
+						{hoursError && <div className="admin-form-error"><FiAlertTriangle size={13} /> {hoursError}</div>}
 
 						<div className="settings-actions">
 							<button className="admin-secondary-button" type="button" onClick={saveHours} disabled={updateVet.isPending}>
-								{updateVet.isPending ? "Saving…" : hoursSaved ? "Saved ✓" : "Save Hours"}
+								{updateVet.isPending ? "Saving…" : hoursSaved ? (<><FiCheck size={13} /> Saved</>) : "Save Hours"}
 							</button>
 						</div>
 					</section>

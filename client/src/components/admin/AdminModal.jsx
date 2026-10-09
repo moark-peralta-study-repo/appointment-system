@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { FiX } from "react-icons/fi";
 
 // Overlay + centered dialog for the admin portal. Closes on overlay click
 // and Escape. `footer` renders into the sticky action bar.
@@ -22,7 +23,7 @@ function AdminModal({ eyebrow, title, onClose, footer, children, wide }) {
 					</div>
 
 					<button className="admin-modal-close" type="button" onClick={onClose} aria-label="Close">
-						✕
+						<FiX size={15} />
 					</button>
 				</div>
 

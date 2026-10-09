@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import { useStats, useAppointments, usePets, useUsers } from "../../hooks/useAdminData";
 import { initials } from "../../utils/admin";
+import { FaClock, FaDownload, FaThLarge } from "react-icons/fa";
+import { FiCheck } from "react-icons/fi";
 
 // Ranges the header selector offers. All filtering is client-side over the
 // full /appointments list (small dataset), so the select actually works —
@@ -239,7 +241,7 @@ function Reports() {
 							disabled={inRange.length === 0}
 							title={inRange.length === 0 ? "No appointments in this range" : "Download CSV"}
 						>
-							⬇ Export CSV
+							<FaDownload size={13} /> Export CSV
 						</button>
 					</div>
 				}
@@ -248,7 +250,7 @@ function Reports() {
 			{/* Summary — range-aware where it makes sense */}
 			<section className="reports-summary">
 				<div className="reports-summary-card">
-					<div className="reports-summary-icon blue">▣</div>
+					<div className="reports-summary-icon blue"><FaThLarge size={20} /></div>
 
 					<div>
 						<span>Appointments ({label.toLowerCase()})</span>
@@ -258,7 +260,7 @@ function Reports() {
 				</div>
 
 				<div className="reports-summary-card">
-					<div className="reports-summary-icon green">✓</div>
+					<div className="reports-summary-icon green"><FiCheck size={20} /></div>
 
 					<div>
 						<span>Completed Visits (all time)</span>
@@ -268,7 +270,7 @@ function Reports() {
 				</div>
 
 				<div className="reports-summary-card">
-					<div className="reports-summary-icon yellow">◷</div>
+					<div className="reports-summary-icon yellow"><FaClock size={20} /></div>
 
 					<div>
 						<span>New Patients</span>

@@ -14,6 +14,7 @@ import {
 	useChangePassword,
 } from "../../hooks/useClientData";
 import { initials } from "../../utils/admin";
+import { FiAlertTriangle, FiCheck } from "react-icons/fi";
 
 const SPECIES = [
 	{ id: "dog", label: "Dog", icon: <PiDog size={20} /> },
@@ -78,7 +79,7 @@ function PetForm({ pet, onClose }) {
 				</>
 			}
 		>
-			{mutation.error && <div className="admin-form-error">⚠ {mutation.error.message}</div>}
+			{mutation.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {mutation.error.message}</div>}
 
 			<div className="admin-form-grid">
 				<div className="admin-form-field full">
@@ -174,7 +175,7 @@ function PetDeleteModal({ pet, onClose }) {
 				{pet.name} will be removed from your account. Past appointments stay in
 				your history, but future bookings will need a pet on file.
 			</p>
-			{deletePet.error && <div className="admin-form-error">⚠ {deletePet.error.message}</div>}
+			{deletePet.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {deletePet.error.message}</div>}
 		</AdminModal>
 	);
 }
@@ -234,7 +235,7 @@ function AccountSection() {
 				{updateProfile.isPending ? (
 					<span className="client-save-badge">Saving…</span>
 				) : saved ? (
-					<span className="client-save-badge">Saved ✓</span>
+					<span className="client-save-badge"><FiCheck size={12} /> Saved</span>
 				) : null}
 			</div>
 
@@ -253,7 +254,7 @@ function AccountSection() {
 				</div>
 			</div>
 
-			{updateProfile.error && <div className="admin-form-error">⚠ {updateProfile.error.message}</div>}
+			{updateProfile.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {updateProfile.error.message}</div>}
 
 			<div className="settings-actions">
 				<button
@@ -302,7 +303,7 @@ function PasswordSection() {
 					<h2>Password</h2>
 					<p>Use at least 6 characters. Your session stays signed in after the change.</p>
 				</div>
-				{done ? <span className="client-save-badge">Updated ✓</span> : null}
+				{done ? <span className="client-save-badge"><FiCheck size={12} /> Updated</span> : null}
 			</div>
 
 			<form onSubmit={submit} className="admin-form-grid">
@@ -342,7 +343,7 @@ function PasswordSection() {
 				</div>
 
 				{changePassword.error && (
-					<div className="admin-form-error full">⚠ {changePassword.error.message}</div>
+					<div className="admin-form-error full"><FiAlertTriangle size={13} /> {changePassword.error.message}</div>
 				)}
 
 				<div className="settings-actions full">
@@ -382,7 +383,6 @@ function ClientProfile() {
 				subtitle="Manage your account and keep your pets' details up to date."
 			/>
 
-			{/* ACCOUNT CARD */}
 			<section className="admin-panel client-profile-card">
 				<div className="client-profile-id">
 					<div className="settings-profile-avatar">{initials(user?.name)}</div>
@@ -411,7 +411,6 @@ function ClientProfile() {
 
 			<PasswordSection />
 
-			{/* PETS */}
 			<section className="admin-panel client-pets-panel">
 				<div className="settings-panel-header">
 					<div>

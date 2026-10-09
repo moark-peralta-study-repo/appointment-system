@@ -1,5 +1,5 @@
 import mochi from "../../assets/images/pets/mochi.jpeg";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaCheck } from "react-icons/fa";
 
 function PetPortal() {
 	return (
@@ -20,13 +20,13 @@ function PetPortal() {
 					</p>
 
 					<ul>
-						<li>✓ View medical records</li>
+						<li><FaCheck size={13} /> View medical records</li>
 
-						<li>✓ Keep track of vaccinations</li>
+						<li><FaCheck size={13} /> Keep track of vaccinations</li>
 
-						<li>✓ Manage upcoming appointments</li>
+						<li><FaCheck size={13} /> Manage upcoming appointments</li>
 
-						<li>✓ Update your pet's information</li>
+						<li><FaCheck size={13} /> Update your pet's information</li>
 					</ul>
 
 					<button type="button" className="primary-button">
@@ -43,7 +43,7 @@ function PetPortal() {
 								<h3>Mochi</h3>
 							</div>
 
-							<span className="healthy">● Healthy</span>
+							<span className="healthy">Healthy</span>
 						</div>
 
 						<div className="record-profile">

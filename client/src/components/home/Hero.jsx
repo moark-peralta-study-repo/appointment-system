@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 
 import bruno from "../../assets/images/pets/bruno.jpeg";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaStar } from "react-icons/fa";
 
 function Hero() {
 	return (
 		<section className="hero" id="home">
 			<div className="hero-inner">
 				<div className="hero-text">
-					<div className="eyebrow">✦ CARING FOR PETS, CARING FOR FAMILY</div>
+					<div className="eyebrow">Caring for pets, caring for family</div>
 
 					<h1>
 						Better care for
@@ -35,7 +35,11 @@ function Hero() {
 					</div>
 
 					<div className="rating">
-						<span className="stars">★★★★★</span>
+						<span className="stars">
+							{[0, 1, 2, 3, 4].map((i) => (
+								<FaStar key={i} size={12} />
+							))}
+						</span>
 
 						<strong>4.9/5</strong>
 

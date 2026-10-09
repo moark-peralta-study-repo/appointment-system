@@ -7,6 +7,7 @@ import {
 	useBookAppointment,
 } from "../../../hooks/useAdminData";
 import AdminModal from "../AdminModal";
+import { FiAlertTriangle } from "react-icons/fi";
 
 const REASONS = [
 	"General Check-up",
@@ -91,7 +92,7 @@ function NewAppointmentModal({ onClose }) {
 				</>
 			}
 		>
-			{book.error && <div className="admin-form-error">⚠ {book.error.message}</div>}
+			{book.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {book.error.message}</div>}
 
 			<div className="admin-form-grid">
 				<div className="admin-form-field">

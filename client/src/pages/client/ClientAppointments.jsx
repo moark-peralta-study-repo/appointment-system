@@ -10,6 +10,7 @@ import {
 	useCancelMyAppointment,
 } from "../../hooks/useClientData";
 import { isToday, isWithinDays, format12h, formatDate } from "../../utils/admin";
+import { FiAlertTriangle } from "react-icons/fi";
 
 const SPECIES_ICON = (s) => (s === "cat" ? <PiCat size={20} /> : <PiDog size={20} />);
 
@@ -55,7 +56,7 @@ function CancelModal({ appointment, onClose }) {
 				Cancelling frees the slot so another pet can book it. You can always
 				schedule a new visit afterwards.
 			</p>
-			{cancel.error && <div className="admin-form-error">⚠ {cancel.error.message}</div>}
+			{cancel.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {cancel.error.message}</div>}
 		</AdminModal>
 	);
 }

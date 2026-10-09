@@ -7,6 +7,9 @@ import {
 	useAddVisitNote,
 } from "../../hooks/useAdminData";
 import { formatDate, initials } from "../../utils/admin";
+import { FaClipboardList } from "react-icons/fa";
+import { PiStar } from "react-icons/pi";
+import { FiAlertTriangle, FiCheck, FiSearch } from "react-icons/fi";
 
 const REASONS = [
 	"General Check-up",
@@ -58,7 +61,7 @@ function NewRecordModal({ appointments, onClose }) {
 				</>
 			}
 		>
-			{addNote.error && <div className="admin-form-error">⚠ {addNote.error.message}</div>}
+			{addNote.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {addNote.error.message}</div>}
 
 			{eligible.length === 0 ? (
 				<p className="admin-slot-note">
@@ -204,7 +207,7 @@ function MedicalRecords() {
 
 			<section className="medical-summary">
 				<div className="medical-summary-card">
-					<div className="medical-summary-icon blue">📋</div>
+					<div className="medical-summary-icon blue"><FaClipboardList size={20} /></div>
 
 					<div>
 						<span>Total Records</span>
@@ -215,7 +218,7 @@ function MedicalRecords() {
 				</div>
 
 				<div className="medical-summary-card">
-					<div className="medical-summary-icon green">✓</div>
+					<div className="medical-summary-icon green"><FiCheck size={20} /></div>
 
 					<div>
 						<span>With Visit Notes</span>
@@ -233,7 +236,7 @@ function MedicalRecords() {
 				</div>
 
 				<div className="medical-summary-card">
-					<div className="medical-summary-icon soft-blue">✦</div>
+					<div className="medical-summary-icon soft-blue"><PiStar size={20} /></div>
 
 					<div>
 						<span>Completed Visits</span>
@@ -247,7 +250,7 @@ function MedicalRecords() {
 			<section className="admin-panel medical-records-panel">
 				<div className="medical-toolbar">
 					<div className="medical-search">
-						<span>⌕</span>
+						<FiSearch size={15} />
 
 						<input
 							type="text"

@@ -1,4 +1,6 @@
 import { FaArrowRight } from "react-icons/fa";
+import { FiArrowLeft } from "react-icons/fi";
+import { FiAlertTriangle } from "react-icons/fi";
 import BookingHeader from "./BookingHeader";
 import { useVets, useBookAppointment } from "../../hooks/useAdminData";
 import { format12h, formatDate } from "../../utils/admin";
@@ -14,7 +16,7 @@ function BookingReview({ booking, pet, account, onBack, onConfirm }) {
 			<BookingHeader
 				right={
 					<button type="button" className="back-home" onClick={onBack}>
-						← Edit Appointment
+						<FiArrowLeft size={14} /> Edit Appointment
 					</button>
 				}
 			/>
@@ -81,13 +83,13 @@ function BookingReview({ booking, pet, account, onBack, onConfirm }) {
 
 					{book.error && (
 						<div className="admin-form-error">
-							⚠ {book.error.message} — pick a different time or date.
+							<FiAlertTriangle size={13} /> {book.error.message} — pick a different time or date.
 						</div>
 					)}
 
 					<div className="appointment-actions">
 						<button type="button" className="cancel-button" onClick={onBack}>
-							← Edit
+							<FiArrowLeft size={14} /> Edit
 						</button>
 
 						<button

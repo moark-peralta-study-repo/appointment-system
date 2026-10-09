@@ -1,8 +1,8 @@
 import ServiceCard from "./ServiceCard";
 import { SERVICES } from "../../data/catalog";
 
-// Rendered from the shared service catalog (client/src/data/catalog.js) so
-// the home page and the booking form always agree on the menu.
+// Rendered from the shared service catalog so the home page and the
+// booking form always agree on the menu.
 function ServicesSection() {
 	return (
 		<section className="services" id="services">

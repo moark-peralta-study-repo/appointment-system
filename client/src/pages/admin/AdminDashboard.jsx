@@ -6,6 +6,9 @@ import {
 } from "../../hooks/useAdminData";
 import { isToday, format12h } from "../../utils/admin";
 import DogLoader from "../../components/admin/DogLoader";
+import { FaBell, FaClipboardList, FaStethoscope, FaUser } from "react-icons/fa";
+import { RxCalendar } from "react-icons/rx";
+import { PiCat, PiDog, PiPawPrint } from "react-icons/pi";
 
 function AdminDashboard() {
 	const { data: appointments = [], isPending: apptsLoading } =
@@ -26,25 +29,25 @@ function AdminDashboard() {
 			label: "Today's Appointments",
 			value: todayList.length,
 			sub: `${todayList.filter((a) => a.status === "confirmed").length} confirmed so far`,
-			icon: "📅",
+			icon: <RxCalendar size={20} />,
 		},
 		{
 			label: "Total Patients",
 			value: pets.length,
 			sub: "registered pets on file",
-			icon: "🐾",
+			icon: <PiPawPrint size={20} />,
 		},
 		{
 			label: "Pet Owners",
 			value: ownerCount,
 			sub: "active client accounts",
-			icon: "👤",
+			icon: <FaUser size={20} />,
 		},
 		{
 			label: "Veterinarians",
 			value: vetCount,
 			sub: "staffed on the team",
-			icon: "🩺",
+			icon: <FaStethoscope size={20} />,
 		},
 	];
 
@@ -69,8 +72,8 @@ function AdminDashboard() {
 				</div>
 
 				<div className="admin-header-actions">
-					<button className="admin-notification" type="button">
-						🔔
+					<button className="admin-notification" type="button" aria-label="Notifications">
+						<FaBell size={16} />
 					</button>
 				</div>
 			</header>
@@ -125,7 +128,7 @@ function AdminDashboard() {
 
 										<div className="appointment-pet">
 											<div className="appointment-avatar">
-												{a.pet?.species === "cat" ? "🐱" : "🐶"}
+												{a.pet?.species === "cat" ? <PiCat size={20} /> : <PiDog size={20} />}
 											</div>
 
 											<div>
@@ -165,7 +168,7 @@ function AdminDashboard() {
 									type="button"
 									onClick={() => (location.href = "/admin/appointments")}
 								>
-									<span>📅</span>
+									<span className="quick-ic"><RxCalendar size={18} /></span>
 									<div>
 										<strong>Manage Appointments</strong>
 										<small>Confirm, complete or cancel visits</small>
@@ -176,7 +179,7 @@ function AdminDashboard() {
 									type="button"
 									onClick={() => (location.href = "/admin/patients")}
 								>
-									<span>🐾</span>
+									<span className="quick-ic"><PiPawPrint size={18} /></span>
 									<div>
 										<strong>Patients</strong>
 										<small>Browse the patient register</small>
@@ -187,7 +190,7 @@ function AdminDashboard() {
 									type="button"
 									onClick={() => (location.href = "/admin/medical-records")}
 								>
-									<span>📋</span>
+									<span className="quick-ic"><FaClipboardList size={18} /></span>
 									<div>
 										<strong>Medical Records</strong>
 										<small>Completed visit notes</small>
@@ -216,7 +219,7 @@ function AdminDashboard() {
 										role="img"
 										aria-label={p.name}
 									>
-										{p.species === "cat" ? "🐱" : "🐶"}
+										{p.species === "cat" ? <PiCat size={20} /> : <PiDog size={20} />}
 									</div>
 
 									<div>

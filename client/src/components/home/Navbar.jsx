@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FaPhoneAlt } from "react-icons/fa";
 import logo from "../../assets/logo/happy-paws-logo.png";
 
 function Navbar() {
@@ -21,9 +22,10 @@ function Navbar() {
             Staff Login
           </Link>
 
-          <span className="phone">☎ 0917 123 4567</span>
+          <span className="phone">
+            <FaPhoneAlt /> 0917 123 4567
+          </span>
 
-          {/* Ginawang Link para pumunta sa /client route */}
           <Link to="/client" className="login-button">
             Client Login
           </Link>

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaArrowRight, FaPlus } from "react-icons/fa";
+import { FiArrowLeft } from "react-icons/fi";
+import { FiCheck, FiAlertTriangle } from "react-icons/fi";
 import { PiCat, PiDog, PiBird, PiPawPrint, PiRabbit } from "react-icons/pi";
 import { useMyPets, useCreateMyPet } from "../../hooks/useClientData";
 import { PET_TYPES } from "../../data/catalog";
@@ -89,7 +91,7 @@ function BookingPetStep({ onDone, onBack }) {
 									</small>
 								</span>
 
-								{selected?._id === p._id && <span className="booking-pet-check">✓</span>}
+								{selected?._id === p._id && <span className="booking-pet-check"><FiCheck size={15} /></span>}
 							</button>
 						))}
 
@@ -106,7 +108,7 @@ function BookingPetStep({ onDone, onBack }) {
 					</div>
 				)}
 
-				{createPet.error && <div className="admin-form-error">⚠ {createPet.error.message}</div>}
+				{createPet.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {createPet.error.message}</div>}
 
 				{/* INLINE ADD-PET FORM */}
 				{(adding || pets.length === 0) && (
@@ -174,7 +176,7 @@ function BookingPetStep({ onDone, onBack }) {
 
 			<div className="appointment-actions">
 				<button type="button" className="cancel-button" onClick={onBack}>
-					← Back
+					<FiArrowLeft size={14} /> Back
 				</button>
 
 				<button

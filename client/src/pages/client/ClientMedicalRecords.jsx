@@ -5,6 +5,9 @@ import AdminModal from "../../components/admin/AdminModal";
 import DogLoader from "../../components/admin/DogLoader";
 import { useMyAppointments, useMyPets } from "../../hooks/useClientData";
 import { formatDate, format12h } from "../../utils/admin";
+import { FaClipboardList } from "react-icons/fa";
+import { PiPawPrint } from "react-icons/pi";
+import { FiCheck } from "react-icons/fi";
 
 const SPECIES_ICON = (s) => (s === "cat" ? <PiCat size={22} /> : <PiDog size={22} />);
 
@@ -91,21 +94,21 @@ function ClientMedicalRecords() {
 				<>
 					<section className="client-records-summary">
 						<div className="medical-summary-card">
-							<div className="medical-summary-icon blue">📋</div>
+							<div className="medical-summary-icon blue"><FaClipboardList size={20} /></div>
 							<div>
 								<span>Completed Visits</span>
 								<strong>{appointments.filter((a) => a.status === "completed").length}</strong>
 							</div>
 						</div>
 						<div className="medical-summary-card">
-							<div className="medical-summary-icon green">✓</div>
+							<div className="medical-summary-icon green"><FiCheck size={20} /></div>
 							<div>
 								<span>With Visit Notes</span>
 								<strong>{withNotes}</strong>
 							</div>
 						</div>
 						<div className="medical-summary-card">
-							<div className="medical-summary-icon soft-blue">🐾</div>
+							<div className="medical-summary-icon soft-blue"><PiPawPrint size={20} /></div>
 							<div>
 								<span>My Pets</span>
 								<strong>{pets.length}</strong>

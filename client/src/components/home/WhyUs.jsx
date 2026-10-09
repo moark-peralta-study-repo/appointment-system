@@ -1,3 +1,5 @@
+import { FaHeart, FaTabletAlt, FaStethoscope } from "react-icons/fa";
+
 function WhyUs() {
 	return (
 		<section className="features">
@@ -15,7 +17,7 @@ function WhyUs() {
 
 				<div className="feature-grid">
 					<div className="feature-card">
-						<div className="feature-icon">♡</div>
+						<div className="feature-icon"><FaHeart size={20} /></div>
 
 						<h3>Gentle by nature</h3>
 
@@ -26,7 +28,7 @@ function WhyUs() {
 					</div>
 
 					<div className="feature-card">
-						<div className="feature-icon">▣</div>
+						<div className="feature-icon"><FaTabletAlt size={20} /></div>
 
 						<h3>Everything in one place</h3>
 
@@ -37,7 +39,7 @@ function WhyUs() {
 					</div>
 
 					<div className="feature-card">
-						<div className="feature-icon">✚</div>
+						<div className="feature-icon"><FaStethoscope size={20} /></div>
 
 						<h3>Modern veterinary care</h3>
 

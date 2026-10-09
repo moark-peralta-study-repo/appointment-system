@@ -36,6 +36,7 @@
 .back-home {
   display: inline-flex;
   align-items: center;
+  gap: 7px;
   justify-content: center;
   padding: 10px 18px;
   border-radius: 999px;
@@ -305,6 +306,8 @@
 }
 
 .booking-pet-check {
+  display: inline-flex;
+  align-items: center;
   color: var(--success);
   font-weight: 800;
 }
@@ -488,6 +491,7 @@
 .cancel-button {
   display: inline-flex;
   align-items: center;
+  gap: 7px;
   justify-content: center;
   padding: 13px 20px;
   border: none;
@@ -507,6 +511,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 9px;
   min-width: 190px;
   padding: 14px 28px;
   border: none;

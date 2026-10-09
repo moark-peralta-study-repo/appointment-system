@@ -101,6 +101,11 @@
 }
 
 .admin-secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
   min-height: 44px;
   padding: 0 18px;
   border: 1px solid var(--border-cool-strong);
@@ -111,10 +116,13 @@
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .admin-secondary-button:hover {
-  background: var(--surface-2);
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-text);
 }
 
 .settings-hours {

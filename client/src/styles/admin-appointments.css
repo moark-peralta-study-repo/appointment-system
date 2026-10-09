@@ -32,10 +32,15 @@
 }
 
 .admin-primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
   border: none;
   border-radius: var(--radius-md);
   background: var(--primary);
-  color: var(--surface);
+  color: var(--primary-contrast);
   padding: 13px 20px;
   font-family: inherit;
   font-size: 14px;

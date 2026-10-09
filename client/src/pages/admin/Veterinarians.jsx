@@ -10,6 +10,10 @@ import {
 	useDeactivateVet,
 } from "../../hooks/useAdminData";
 import { isToday, initials } from "../../utils/admin";
+import { FaStethoscope } from "react-icons/fa";
+import { RxCalendar } from "react-icons/rx";
+import { PiStar } from "react-icons/pi";
+import { FiAlertTriangle, FiCheck, FiSearch } from "react-icons/fi";
 
 const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -86,7 +90,7 @@ function VetForm({ onClose }) {
 			}
 		>
 			{createVet.error && (
-				<div className="admin-form-error">⚠ {createVet.error.message}</div>
+				<div className="admin-form-error"><FiAlertTriangle size={13} /> {createVet.error.message}</div>
 			)}
 
 			<div className="admin-form-grid">
@@ -266,7 +270,7 @@ function Veterinarians() {
 			<section className="vet-summary">
 				<div className="vet-summary-card">
 					<div className="vet-summary-icon blue">
-						🩺
+						<FaStethoscope size={20} />
 					</div>
 
 					<div>
@@ -283,7 +287,7 @@ function Veterinarians() {
 
 				<div className="vet-summary-card">
 					<div className="vet-summary-icon green">
-						✓
+						<FiCheck size={20} />
 					</div>
 
 					<div>
@@ -294,7 +298,7 @@ function Veterinarians() {
 
 				<div className="vet-summary-card">
 					<div className="vet-summary-icon yellow">
-						📅
+						<RxCalendar size={20} />
 					</div>
 
 					<div>
@@ -305,7 +309,7 @@ function Veterinarians() {
 
 				<div className="vet-summary-card">
 					<div className="vet-summary-icon soft-blue">
-						✦
+						<PiStar size={20} />
 					</div>
 
 					<div>
@@ -320,7 +324,7 @@ function Veterinarians() {
 			<section className="admin-panel veterinarians-panel">
 				<div className="veterinarians-toolbar">
 					<div className="vet-search">
-						<span>⌕</span>
+						<FiSearch size={15} />
 
 						<input
 							type="text"
