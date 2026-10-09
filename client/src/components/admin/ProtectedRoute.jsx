@@ -20,6 +20,12 @@ function ProtectedRoute() {
 		return <Navigate to="/admin/login" replace />;
 	}
 
+	// Only staff (vets) get the admin dashboard — pet owners bounce to
+	// their portal instead of seeing an empty staff UI.
+	if (user.role !== "vet") {
+		return <Navigate to="/client/dashboard" replace />;
+	}
+
 	return <Outlet />;
 }
 

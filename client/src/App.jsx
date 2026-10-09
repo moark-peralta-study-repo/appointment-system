@@ -17,6 +17,7 @@ import Settings from "./pages/admin/Settings";
 import AdminLogin from "./pages/admin/AdminLogin";
 
 import ClientLogin from "./pages/client/ClientLogin";
+import ClientRegister from "./pages/client/ClientRegister";
 import ClientLayout from "./components/client/ClientLayout";
 import ClientProtectedRoute from "./components/client/ClientProtectedRoute";
 import ClientDashboard from "./pages/client/ClientDashboard";
@@ -39,6 +40,7 @@ function App() {
         verifies /auth/profile, then ClientLayout renders the page in
         its <Outlet />. */}
         <Route path="/client/login" element={<ClientLogin />} />
+        <Route path="/client/register" element={<ClientRegister />} />
         <Route element={<ClientProtectedRoute />}>
         <Route path="/client" element={<ClientLayout />}>
             <Route index element={<Navigate to="/client/dashboard" replace />} />

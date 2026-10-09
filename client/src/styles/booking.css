@@ -175,6 +175,195 @@
   background: var(--surface-2);
 }
 
+/* 4-step wizard — a completed step shows the checkmark in success color */
+.progress-step.done {
+  color: var(--success-text);
+}
+
+.progress-step.done span {
+  background: var(--success);
+  color: white;
+}
+
+/* Step 1 — register / login tabs */
+.booking-step-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  margin: 18px 0;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+
+.booking-step-tabs button {
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  border-radius: calc(var(--radius-sm) - 2px);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 120ms var(--ease), color 120ms var(--ease);
+}
+
+.booking-step-tabs button.active {
+  background: white;
+  color: var(--primary-text);
+  box-shadow: 0 1px 4px rgba(0, 52, 91, 0.12);
+}
+
+/* Friendly banner when an owner is already signed in */
+.booking-step-banner {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  background: var(--success-soft);
+  border-radius: var(--radius-sm);
+}
+
+.booking-step-banner h2 {
+  margin: 0 0 2px;
+  font-size: 16px;
+}
+
+.booking-step-banner-icon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--success);
+  color: white;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* Step 2 — pet picker */
+.booking-pet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.booking-pet-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border-cool);
+  border-radius: var(--radius-sm);
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 120ms var(--ease), box-shadow 120ms var(--ease);
+}
+
+.booking-pet-option:hover {
+  border-color: var(--primary);
+}
+
+.booking-pet-option.selected {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.booking-pet-avatar {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.booking-pet-meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.booking-pet-meta strong {
+  font-size: 15px;
+}
+
+.booking-pet-meta strong small,
+.booking-pet-meta small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.booking-pet-check {
+  color: var(--success);
+  font-weight: 800;
+}
+
+.booking-pet-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px;
+  border: 1px dashed var(--border-cool-strong);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--primary-text);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 120ms var(--ease), background 120ms var(--ease);
+}
+
+.booking-pet-add:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.booking-add-pet {
+  margin-top: 14px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-cool);
+}
+
+.booking-add-pet h3 {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+/* Step 3 — slot hint */
+.booking-slot-hint {
+  margin: 10px 0 0;
+  padding: 10px 14px;
+  background: var(--danger-soft);
+  color: var(--danger-text);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+}
+
+/* Confirmation — dual action row */
+.confirmation-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.confirmation-status {
+  color: var(--danger-text);
+}
+
 
 /* APPOINTMENT CARD */
 

@@ -1,4 +1,4 @@
-import { login, register, updateProfile } from "../services/userService.js";
+import { login, register, updateProfile, changePassword } from "../services/userService.js";
 
 export async function registerUser(req, res, next) {
 	try {
@@ -27,6 +27,16 @@ export async function updateMyProfile(req, res, next) {
 		const { name, phone, email } = req.body;
 		const user = await updateProfile(req.user, { name, phone, email });
 		res.json({ user });
+	} catch (err) {
+		next(err);
+	}
+}
+
+export async function changePasswordHandler(req, res, next) {
+	try {
+		const { currentPassword, password } = req.body;
+		const result = await changePassword(req.user, { currentPassword, password });
+		res.json(result);
 	} catch (err) {
 		next(err);
 	}

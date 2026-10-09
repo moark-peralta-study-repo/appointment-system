@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import logo from "../../assets/logo/happy-paws-logo-2.png";
 import { useAuth } from "../../context/useAuth";
 
@@ -102,6 +102,13 @@ function ClientLogin() {
                     >
                         {login?.isPending ? "Signing in…" : "Sign In to Client Portal"}
                     </button>
+
+                    <p style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: "var(--muted)" }}>
+                        New to the portal?{" "}
+                        <Link to="/client/register" style={{ color: "var(--primary)", fontWeight: 700 }}>
+                            Create an account
+                        </Link>
+                    </p>
                 </form>
 
                 {/* Client Demo Account Credentials */}

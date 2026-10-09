@@ -17,6 +17,10 @@ const appointmentSchema = new mongoose.Schema(
 		},
 		duration: { type: Number },
 		reason: { type: String },
+		// Free-text the pet owner adds on the public booking form
+		// (allergies, behavior, etc.). Kept separate from `reason` so the
+		// Reports "popular services" view can count `reason` cleanly.
+		ownerNotes: { type: String },
 		status: {
 			type: String,
 			enum: ["pending", "confirmed", "completed", "cancelled"],

@@ -5,7 +5,7 @@
 // the server scopes /appointments and /pets to the logged-in owner.
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiFetch } from "../lib/api";
+import { apiFetch, setToken } from "../lib/api";
 import { formatDate } from "../utils/admin";
 
 /** This owner's appointments (server filters by owner id). */
@@ -104,5 +104,35 @@ export function useUpdateMyProfile() {
 			qc.setQueryData(["profile"], (prev) => (prev ? { ...prev, user } : { user }));
 			qc.invalidateQueries({ queryKey: ["client"] });
 		},
+	});
+}
+
+/**
+ * Register a new pet-owner account (public flow: /client/register and the
+ * booking wizard). Same endpoint the admin's "create owner" uses — the
+ * server assigns role "user". On success the token is stored and the
+ * ["profile"] query is cached so the caller is signed in immediately.
+ */
+export function useRegister() {
+	const qc = useQueryClient();
+	return useMutation({
+		mutationFn: ({ name, email, phone, password }) =>
+			apiFetch("/auth/register", {
+				method: "POST",
+				body: { name, email, phone, password },
+			}),
+		onSuccess: ({ token, user }) => {
+			setToken(token);
+			qc.setQueryData(["profile"], { user });
+			qc.invalidateQueries({ queryKey: ["client"] });
+		},
+	});
+}
+
+/** Change the signed-in user's password. */
+export function useChangePassword() {
+	return useMutation({
+		mutationFn: ({ currentPassword, password }) =>
+			apiFetch("/auth/password", { method: "POST", body: { currentPassword, password } }),
 	});
 }

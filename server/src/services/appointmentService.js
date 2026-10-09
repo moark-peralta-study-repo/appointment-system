@@ -46,7 +46,7 @@ export async function listAppointments(user) {
 	}));
 }
 
-export async function bookAppointment(user, { vetId, petId, date: dateParam, time, reason }) {
+export async function bookAppointment(user, { vetId, petId, date: dateParam, time, reason, ownerNotes }) {
 	if (!mongoose.isValidObjectId(vetId)) throw new ApiError(404, "Vet not found");
 	if (!mongoose.isValidObjectId(petId)) throw new ApiError(404, "Pet not found");
 
@@ -92,6 +92,7 @@ export async function bookAppointment(user, { vetId, petId, date: dateParam, tim
 		date,
 		time,
 		reason,
+		ownerNotes: ownerNotes?.trim() || undefined,
 		duration: vet.schedule.find((e) => e.day === date.getDay())?.slotMinutes,
 	});
 

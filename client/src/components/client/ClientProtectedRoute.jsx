@@ -21,6 +21,11 @@ function ClientProtectedRoute() {
 		return <Navigate to="/client/login" replace />;
 	}
 
+	// Staff accounts don't use the pet-owner portal.
+	if (user.role === "vet") {
+		return <Navigate to="/admin" replace />;
+	}
+
 	return <Outlet />;
 }
 
