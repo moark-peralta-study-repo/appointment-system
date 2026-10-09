@@ -109,43 +109,45 @@ function ClientSidebar() {
 						<span>Client Account</span>
 					</div>
 
-					<button
-						className="admin-user-menu"
-						type="button"
-						aria-label="Account menu"
-						aria-expanded={menuOpen}
-						onClick={() => setMenuOpen((o) => !o)}
-					>
-						•••
-					</button>
-				</div>
-
-				{menuOpen && (
-					<div className="admin-user-dropdown" role="menu">
-						<button role="menuitem" type="button" onClick={() => go("/client/profile")}>
-							<CiUser />
-							<span>My Profile</span>
-						</button>
-						<button role="menuitem" type="button" onClick={() => go("/client/settings")}>
-							<CiSettings />
-							<span>Notifications</span>
-						</button>
-						<div className="admin-user-dropdown-divider" role="separator" />
+					<div className="admin-user-menu-wrap">
 						<button
-							role="menuitem"
+							className="admin-user-menu"
 							type="button"
-							className="danger"
-							onClick={() => {
-								setMenuOpen(false);
-								logout();
-								navigate("/client/login");
-							}}
+							aria-label="Account menu"
+							aria-expanded={menuOpen}
+							onClick={() => setMenuOpen((o) => !o)}
 						>
-							<FaSignOutAlt />
-							<span>Sign Out</span>
+							•••
 						</button>
+
+						{menuOpen && (
+							<div className="admin-user-dropdown" role="menu">
+								<button role="menuitem" type="button" onClick={() => go("/client/profile")}>
+									<CiUser />
+									<span>My Profile</span>
+								</button>
+								<button role="menuitem" type="button" onClick={() => go("/client/settings")}>
+									<CiSettings />
+									<span>Notifications</span>
+								</button>
+								<div className="admin-user-dropdown-divider" role="separator" />
+								<button
+									role="menuitem"
+									type="button"
+									className="danger"
+									onClick={() => {
+										setMenuOpen(false);
+										logout();
+										navigate("/client/login");
+									}}
+								>
+									<FaSignOutAlt />
+									<span>Sign Out</span>
+								</button>
+							</div>
+						)}
 					</div>
-				)}
+				</div>
 			</div>
 		</aside>
 	);
