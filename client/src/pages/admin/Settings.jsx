@@ -5,7 +5,10 @@ import ScheduleEditor, { defaultSchedule } from "../../components/admin/Schedule
 import { useAuth } from "../../context/useAuth";
 import { useVets, useUpdateVet } from "../../hooks/useAdminData";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
+import { FaPen } from "react-icons/fa";
 import SettingToggle from "../../components/shared/SettingToggle";
+import AccountSection from "../../components/shared/AccountSection";
+import PasswordSection from "../../components/shared/PasswordSection";
 
 const CLINIC_KEY = "mp_clinic_profile";
 const TOGGLES_KEY = "mp_clinic_toggles";
@@ -46,14 +49,18 @@ function Settings() {
 	const updateVet = useUpdateVet();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const scheduleRef = useRef(null);
+	const accountRef = useRef(null);
 
-	// ?focus=schedule — deep link from the sidebar "My Schedule" menu item:
-	// scroll the Working Hours panel into view and flash a highlight, then
-	// clean the param so a refresh doesn't re-trigger it. Re-runs while the
-	// panel is missing (vet list loads async) until the first success.
+	// ?focus=schedule / ?focus=account — deep links from the sidebar ("My
+	// Schedule") and the account card ("Edit Account"): scroll the target
+	// panel into view, flash a highlight, then clean the param so a refresh
+	// doesn't re-trigger it. Re-runs while the panel is missing (vet list
+	// loads async) until the first success.
 	useEffect(() => {
-		if (searchParams.get("focus") !== "schedule" || !scheduleRef.current) return;
-		const el = scheduleRef.current;
+		const focus = searchParams.get("focus");
+		const ref = focus === "schedule" ? scheduleRef : accountRef;
+		if (focus !== "schedule" && focus !== "account" || !ref.current) return;
+		const el = ref.current;
 		el.scrollIntoView({ behavior: "smooth", block: "start" });
 		el.classList.add("settings-panel-focus");
 		const t = setTimeout(() => el.classList.remove("settings-panel-focus"), 2200);
@@ -326,9 +333,17 @@ function Settings() {
 								checked={toggles.lowAvailabilityAlerts}
 								onChange={setToggle("lowAvailabilityAlerts")}
 							/>
-						</div>
-					</section>
-				</div>
+							</div>
+							</section>
+
+							{/* My Account — edit this staff member's own details (shared
+							with the client portal: /auth/profile + /auth/password). */}
+							<section className="settings-account-group" ref={accountRef}>
+								<AccountSection />
+
+								<PasswordSection />
+							</section>
+							</div>
 
 				{/* Account Card */}
 				<aside className="settings-sidebar-card">
@@ -352,8 +367,12 @@ function Settings() {
 						</div>
 					</div>
 
-					<button className="settings-account-button" type="button" title="Coming soon">
-						Edit Account
+					<button
+						className="settings-account-button"
+						type="button"
+						onClick={() => setSearchParams({ focus: "account" })}
+					>
+						<FaPen size={13} /> Edit Account
 					</button>
 				</aside>
 			</div>

@@ -6,10 +6,10 @@ import { useAuth } from "../../context/useAuth";
 import { useMyPets } from "../../hooks/useClientData";
 import { initials } from "../../utils/admin";
 import { SpeciesIcon } from "../../components/shared/Species";
+import AccountSection from "../../components/shared/AccountSection";
+import PasswordSection from "../../components/shared/PasswordSection";
 import ClientPetForm from "../../components/client/profile/ClientPetForm";
 import ClientPetDeleteModal from "../../components/client/profile/ClientPetDeleteModal";
-import ClientAccountSection from "../../components/client/profile/ClientAccountSection";
-import ClientPasswordSection from "../../components/client/profile/ClientPasswordSection";
 
 function ClientProfile() {
 	const { user, isSettled } = useAuth();
@@ -57,9 +57,9 @@ function ClientProfile() {
 				</dl>
 			</section>
 
-			<ClientAccountSection />
+			<AccountSection />
 
-			<ClientPasswordSection />
+			<PasswordSection />
 
 			<section className="admin-panel client-pets-panel">
 				<div className="settings-panel-header">

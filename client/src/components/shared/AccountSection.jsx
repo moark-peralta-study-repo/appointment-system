@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useAuth } from "../../../context/useAuth";
-import { useUpdateMyProfile } from "../../../hooks/useClientData";
+import { useAuth } from "../../context/useAuth";
+import { useUpdateMyProfile } from "../../hooks/useClientData";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
 
 
-function ClientAccountSection() {
+function AccountSection() {
 	const { user } = useAuth();
 	const updateProfile = useUpdateMyProfile();
 	const [saved, setSaved] = useState(false);
@@ -94,4 +94,4 @@ function ClientAccountSection() {
 }
 
 
-export default ClientAccountSection;
+export default AccountSection;

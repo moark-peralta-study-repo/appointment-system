@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useChangePassword } from "../../../hooks/useClientData";
+import { useChangePassword } from "../../hooks/useClientData";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
 
 
-function ClientPasswordSection() {
+function PasswordSection() {
 	const changePassword = useChangePassword();
 	const [form, setForm] = useState({ current: "", next: "", confirm: "" });
 	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -93,4 +93,4 @@ function ClientPasswordSection() {
 }
 
 
-export default ClientPasswordSection;
+export default PasswordSection;

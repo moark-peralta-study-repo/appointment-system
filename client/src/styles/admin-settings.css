@@ -431,3 +431,16 @@
 	text-align: center;
 	padding: 24px 8px;
 }
+
+/* "My Account" group: two independent panels (account details + password),
+   no wrapper border of their own — just spacing between them. */
+.settings-account-group {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.settings-account-group.settings-panel-focus {
+	animation: settings-panel-flash 2.2s var(--ease);
+	border-radius: var(--radius-lg);
+}
