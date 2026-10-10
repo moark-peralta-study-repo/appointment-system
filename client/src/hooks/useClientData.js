@@ -80,7 +80,8 @@ export function useCreateMyPet() {
 export function useUpdateMyPet() {
 	const onSuccess = useInvalidateClient();
 	return useMutation({
-		mutationFn: ({ id, body }) => apiFetch(`/pets/${id}`, { method: "PUT", body }),
+		mutationFn: ({ id, body }) =>
+			apiFetch(`/pets/${id}`, { method: "PUT", body }),
 		onSuccess,
 	});
 }
@@ -101,7 +102,9 @@ export function useUpdateMyProfile() {
 		mutationFn: (body) => apiFetch("/auth/profile", { method: "PATCH", body }),
 		onSuccess: ({ user }) => {
 			// Keep the auth context user in sync so the sidebar name updates.
-			qc.setQueryData(["profile"], (prev) => (prev ? { ...prev, user } : { user }));
+			qc.setQueryData(["profile"], (prev) =>
+				prev ? { ...prev, user } : { user },
+			);
 			qc.invalidateQueries({ queryKey: ["client"] });
 		},
 	});
@@ -133,6 +136,9 @@ export function useRegister() {
 export function useChangePassword() {
 	return useMutation({
 		mutationFn: ({ currentPassword, password }) =>
-			apiFetch("/auth/password", { method: "POST", body: { currentPassword, password } }),
+			apiFetch("/auth/password", {
+				method: "POST",
+				body: { currentPassword, password },
+			}),
 	});
 }

@@ -4,11 +4,7 @@
 // queries only run behind ProtectedRoute. react-query caches per-key and
 // mutations invalidate the cache — pages never hold their own fetch state.
 
-import {
-	useQuery,
-	useMutation,
-	useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../lib/api";
 
 /** All appointments (vets see everything). Populates pet + owner + vet name. */
@@ -82,8 +78,7 @@ function useInvalidateAdmin() {
 export function useBookAppointment() {
 	const onSuccess = useInvalidateAdmin();
 	return useMutation({
-		mutationFn: (body) =>
-			apiFetch("/appointments", { method: "POST", body }),
+		mutationFn: (body) => apiFetch("/appointments", { method: "POST", body }),
 		onSuccess,
 	});
 }
@@ -155,8 +150,7 @@ export function useDeletePet() {
 export function useCreateOwner() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: (body) =>
-			apiFetch("/auth/register", { method: "POST", body }),
+		mutationFn: (body) => apiFetch("/auth/register", { method: "POST", body }),
 		onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "users"] }),
 	});
 }

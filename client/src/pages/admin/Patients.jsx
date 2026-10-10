@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { PiCat, PiDog } from "react-icons/pi";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiAlertTriangle } from "react-icons/fi";
 import { IoIosArrowForward } from "react-icons/io";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import AdminModal from "../../components/admin/AdminModal";
@@ -15,12 +15,6 @@ import { PiPawPrint } from "react-icons/pi";
 import { FiSearch } from "react-icons/fi";
 import AdminPatientForm from "../../components/admin/patients/AdminPatientForm";
 import AdminPatientView from "../../components/admin/patients/AdminPatientView";
-
-/* ---------------- ADD / EDIT FORM ---------------- */
-
-/* ---------------- VIEW PANEL ---------------- */
-
-/* ---------------- PAGE ---------------- */
 
 function Patients() {
 	const { data: pets = [], isPending } = usePets();
@@ -51,8 +45,10 @@ function Patients() {
 		return pets
 			.map((p) => {
 				const owner = ownersById[p.owner];
-				const lastDate = (visitsByPet[p._id] ?? [])
-					.reduce((m, a) => Math.max(m, new Date(a.date).getTime()), 0);
+				const lastDate = (visitsByPet[p._id] ?? []).reduce(
+					(m, a) => Math.max(m, new Date(a.date).getTime()),
+					0,
+				);
 				return {
 					...p,
 					owner,
@@ -63,10 +59,17 @@ function Patients() {
 				};
 			})
 			.filter((p) => speciesFilter === "all" || p.species === speciesFilter)
-			.filter((p) => statusFilter === "all" || (statusFilter === "observation") === (p.status === "Under Observation"))
+			.filter(
+				(p) =>
+					statusFilter === "all" ||
+					(statusFilter === "observation") ===
+						(p.status === "Under Observation"),
+			)
 			.filter((p) => {
 				if (!q) return true;
-				return `${p.name} ${p.breed ?? ""} ${p.ownerName}`.toLowerCase().includes(q);
+				return `${p.name} ${p.breed ?? ""} ${p.ownerName}`
+					.toLowerCase()
+					.includes(q);
 			});
 	}, [pets, ownersById, visitsByPet, speciesFilter, statusFilter, search]);
 
@@ -89,7 +92,11 @@ function Patients() {
 				title="Patients"
 				description="View and manage all pets registered at Mutuals Paws."
 				actions={
-					<button className="admin-primary-button" type="button" onClick={() => setShowAdd(true)}>
+					<button
+						className="admin-primary-button"
+						type="button"
+						onClick={() => setShowAdd(true)}
+					>
 						+ Add Patient
 					</button>
 				}
@@ -99,7 +106,9 @@ function Patients() {
 
 			<section className="patient-summary">
 				<div className="patient-summary-card">
-					<div className="patient-summary-icon blue"><PiPawPrint size={20} /></div>
+					<div className="patient-summary-icon blue">
+						<PiPawPrint size={20} />
+					</div>
 
 					<div>
 						<span>Total Patients</span>
@@ -138,7 +147,9 @@ function Patients() {
 
 					<div>
 						<span>Under Observation</span>
-						<strong>{rows.filter((r) => r.status === "Under Observation").length}</strong>
+						<strong>
+							{rows.filter((r) => r.status === "Under Observation").length}
+						</strong>
 					</div>
 				</div>
 			</section>
@@ -159,13 +170,19 @@ function Patients() {
 					</div>
 
 					<div className="patient-filters">
-						<select value={speciesFilter} onChange={(e) => setSpeciesFilter(e.target.value)}>
+						<select
+							value={speciesFilter}
+							onChange={(e) => setSpeciesFilter(e.target.value)}
+						>
 							<option value="all">All Species</option>
 							<option value="dog">Dogs</option>
 							<option value="cat">Cats</option>
 						</select>
 
-						<select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+						<select
+							value={statusFilter}
+							onChange={(e) => setStatusFilter(e.target.value)}
+						>
 							<option value="all">All Status</option>
 							<option value="healthy">Healthy</option>
 							<option value="observation">Under Observation</option>
@@ -273,7 +290,9 @@ function Patients() {
 				{/* TABLE FOOTER */}
 
 				<div className="patients-table-footer">
-					<span>Showing {rows.length} of {pets.length} patients</span>
+					<span>
+						Showing {rows.length} of {pets.length} patients
+					</span>
 
 					<div className="patient-pagination">
 						<button type="button">‹</button>
@@ -288,14 +307,17 @@ function Patients() {
 			</section>
 
 			{showAdd && <AdminPatientForm onClose={() => setShowAdd(false)} />}
-			{editing && <AdminPatientForm pet={editing} onClose={() => setEditing(null)} />}
+			{editing && (
+				<AdminPatientForm pet={editing} onClose={() => setEditing(null)} />
+			)}
 
 			{viewing && (
 				<AdminPatientView
 					pet={viewing}
 					ownersById={ownersById}
-					visits={(visitsByPet[viewing._id] ?? [])
-						.sort((x, y) => new Date(y.date) - new Date(x.date))}
+					visits={(visitsByPet[viewing._id] ?? []).sort(
+						(x, y) => new Date(y.date) - new Date(x.date),
+					)}
 					onClose={() => setViewing(null)}
 				/>
 			)}
@@ -307,7 +329,11 @@ function Patients() {
 					onClose={() => setDeleting(null)}
 					footer={
 						<>
-							<button className="admin-secondary-button" type="button" onClick={() => setDeleting(null)}>
+							<button
+								className="admin-secondary-button"
+								type="button"
+								onClick={() => setDeleting(null)}
+							>
 								Cancel
 							</button>
 							<button
@@ -322,11 +348,13 @@ function Patients() {
 					}
 				>
 					<p className="admin-slot-note">
-						This removes {deleting.name} from the patient register. Visit history stays
-						on the appointments page.
+						This removes {deleting.name} from the patient register. Visit
+						history stays on the appointments page.
 					</p>
 					{deletePet.error && (
-						<div className="admin-form-error"><FiAlertTriangle size={13} /> {deletePet.error.message}</div>
+						<div className="admin-form-error">
+							<FiAlertTriangle size={13} /> {deletePet.error.message}
+						</div>
 					)}
 				</AdminModal>
 			)}

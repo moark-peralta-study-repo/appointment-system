@@ -78,7 +78,11 @@ function Appointments() {
 				title="Appointments"
 				description="Manage and monitor all scheduled veterinary appointments."
 				actions={
-					<button className="admin-primary-button" type="button" onClick={() => setShowNew(true)}>
+					<button
+						className="admin-primary-button"
+						type="button"
+						onClick={() => setShowNew(true)}
+					>
 						+ New Appointment
 					</button>
 				}
@@ -108,7 +112,10 @@ function Appointments() {
 					</div>
 
 					<div className="appointment-filters">
-						<select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+						<select
+							value={statusFilter}
+							onChange={(e) => setStatusFilter(e.target.value)}
+						>
 							<option value="all">All Status</option>
 							<option value="confirmed">Confirmed</option>
 							<option value="pending">Pending</option>
@@ -116,7 +123,10 @@ function Appointments() {
 							<option value="cancelled">Cancelled</option>
 						</select>
 
-						<select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}>
+						<select
+							value={dateFilter}
+							onChange={(e) => setDateFilter(e.target.value)}
+						>
 							<option value="today">Today</option>
 							<option value="week">Next 7 Days</option>
 							<option value="all">All Dates</option>
@@ -150,25 +160,37 @@ function Appointments() {
 							{rows.map((appointment) => {
 								const owner = ownersById[appointment.owner];
 								const active =
-									appointment.status === "pending" || appointment.status === "confirmed";
+									appointment.status === "pending" ||
+									appointment.status === "confirmed";
 								return (
 									<tr key={appointment._id}>
 										<td>
 											<strong>{format12h(appointment.time)}</strong>
 											<span className="table-date-sub">
-												{new Date(appointment.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+												{new Date(appointment.date).toLocaleDateString(
+													"en-US",
+													{ month: "short", day: "numeric" },
+												)}
 											</span>
 										</td>
 
 										<td>
 											<div className="table-patient">
 												<div className="table-patient-avatar">
-													{appointment.pet?.species === "cat" ? <PiCat size={18} /> : <PiDog size={18} />}
+													{appointment.pet?.species === "cat" ? (
+														<PiCat size={18} />
+													) : (
+														<PiDog size={18} />
+													)}
 												</div>
 
 												<div>
 													<strong>{appointment.pet?.name ?? "Unknown"}</strong>
-													<span>{appointment.pet?.breed ?? appointment.pet?.species ?? "—"}</span>
+													<span>
+														{appointment.pet?.breed ??
+															appointment.pet?.species ??
+															"—"}
+													</span>
 												</div>
 											</div>
 										</td>
@@ -183,7 +205,8 @@ function Appointments() {
 											<span
 												className={`appointment-status ${appointment.status.toLowerCase()}`}
 											>
-												{appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
+												{appointment.status.charAt(0).toUpperCase() +
+													appointment.status.slice(1)}
 											</span>
 										</td>
 

@@ -67,7 +67,11 @@ function ClientProfile() {
 						<h2>My Pets</h2>
 						<p>Pets you can book appointments for.</p>
 					</div>
-					<button className="admin-primary-button" type="button" onClick={() => setAddingPet(true)}>
+					<button
+						className="admin-primary-button"
+						type="button"
+						onClick={() => setAddingPet(true)}
+					>
 						<FiPlus />
 						<span>Add a pet</span>
 					</button>
@@ -83,19 +87,35 @@ function ClientProfile() {
 					<div className="client-pets-list">
 						{pets.map((p) => (
 							<article className="client-pet-card" key={p._id}>
-								<div className="client-appt-avatar"><SpeciesIcon species={p.species} /></div>
+								<div className="client-appt-avatar">
+									<SpeciesIcon species={p.species} />
+								</div>
 								<div className="client-pet-main">
 									<strong>
-										{p.name} <small className="client-pet-gender">{p.gender ?? ""}</small>
+										{p.name}{" "}
+										<small className="client-pet-gender">
+											{p.gender ?? ""}
+										</small>
 									</strong>
-									<span>{p.breed ?? p.species ?? "—"}{p.age != null ? ` · ${p.age} yrs` : ""}</span>
+									<span>
+										{p.breed ?? p.species ?? "—"}
+										{p.age != null ? ` · ${p.age} yrs` : ""}
+									</span>
 									{p.notes && <p className="client-pet-notes">{p.notes}</p>}
 								</div>
 								<div className="client-pet-actions">
-									<button className="row-action confirm" type="button" onClick={() => setEditingPet(p)}>
+									<button
+										className="row-action confirm"
+										type="button"
+										onClick={() => setEditingPet(p)}
+									>
 										Edit
 									</button>
-									<button className="row-action cancel" type="button" onClick={() => setDeletingPet(p)}>
+									<button
+										className="row-action cancel"
+										type="button"
+										onClick={() => setDeletingPet(p)}
+									>
 										Remove
 									</button>
 								</div>
@@ -105,9 +125,18 @@ function ClientProfile() {
 				)}
 			</section>
 
-			{addingPet && <ClientPetForm pet={null} onClose={() => setAddingPet(false)} />}
-			{editingPet && <ClientPetForm pet={editingPet} onClose={() => setEditingPet(null)} />}
-			{deletingPet && <ClientPetDeleteModal pet={deletingPet} onClose={() => setDeletingPet(null)} />}
+			{addingPet && (
+				<ClientPetForm pet={null} onClose={() => setAddingPet(false)} />
+			)}
+			{editingPet && (
+				<ClientPetForm pet={editingPet} onClose={() => setEditingPet(null)} />
+			)}
+			{deletingPet && (
+				<ClientPetDeleteModal
+					pet={deletingPet}
+					onClose={() => setDeletingPet(null)}
+				/>
+			)}
 		</>
 	);
 }

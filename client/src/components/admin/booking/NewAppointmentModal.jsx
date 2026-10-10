@@ -46,7 +46,10 @@ function NewAppointmentModal({ onClose }) {
 		[pets, ownerId],
 	);
 
-	const { data: vetDetail, isPending: slotsPending } = useVetFreeSlots(vetId, date);
+	const { data: vetDetail, isPending: slotsPending } = useVetFreeSlots(
+		vetId,
+		date,
+	);
 	const slots = vetDetail?.freeSlots ?? [];
 
 	const handleOwner = (id) => {
@@ -62,7 +65,8 @@ function NewAppointmentModal({ onClose }) {
 		setTime("");
 	};
 
-	const canSubmit = ownerId && petId && vetId && time && reason.trim().length >= 3;
+	const canSubmit =
+		ownerId && petId && vetId && time && reason.trim().length >= 3;
 
 	const submit = () => {
 		book.mutate(
@@ -78,7 +82,11 @@ function NewAppointmentModal({ onClose }) {
 			onClose={onClose}
 			footer={
 				<>
-					<button className="admin-secondary-button" type="button" onClick={onClose}>
+					<button
+						className="admin-secondary-button"
+						type="button"
+						onClick={onClose}
+					>
 						Cancel
 					</button>
 					<button
@@ -92,7 +100,11 @@ function NewAppointmentModal({ onClose }) {
 				</>
 			}
 		>
-			{book.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {book.error.message}</div>}
+			{book.error && (
+				<div className="admin-form-error">
+					<FiAlertTriangle size={13} /> {book.error.message}
+				</div>
+			)}
 
 			<div className="admin-form-grid">
 				<div className="admin-form-field">
@@ -157,7 +169,9 @@ function NewAppointmentModal({ onClose }) {
 					</label>
 
 					{!vetId ? (
-						<p className="admin-slot-note">Choose a veterinarian to see open slots.</p>
+						<p className="admin-slot-note">
+							Choose a veterinarian to see open slots.
+						</p>
 					) : slotsPending ? (
 						<p className="admin-slot-note">Checking availability…</p>
 					) : slots.length === 0 ? (

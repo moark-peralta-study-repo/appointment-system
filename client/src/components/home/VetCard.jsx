@@ -4,7 +4,8 @@ import { MdOutlineArrowOutward } from "react-icons/md";
 // without one fall back to a name monogram.
 function VetCard({ image, initial, name, specialty, bio }) {
 	const tagline =
-		bio || "Dedicated to providing thoughtful, personalized care for every patient.";
+		bio ||
+		"Dedicated to providing thoughtful, personalized care for every patient.";
 
 	return (
 		<div className="vet-card">

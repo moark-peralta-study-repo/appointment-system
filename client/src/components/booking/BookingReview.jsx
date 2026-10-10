@@ -27,7 +27,10 @@ function BookingReview({ booking, pet, account, onBack, onConfirm }) {
 
 					<h1>Review your appointment</h1>
 
-					<p>Please check your information before submitting your appointment request.</p>
+					<p>
+						Please check your information before submitting your appointment
+						request.
+					</p>
 				</div>
 
 				<div className="appointment-card">
@@ -83,7 +86,8 @@ function BookingReview({ booking, pet, account, onBack, onConfirm }) {
 
 					{book.error && (
 						<div className="admin-form-error">
-							<FiAlertTriangle size={13} /> {book.error.message} — pick a different time or date.
+							<FiAlertTriangle size={13} /> {book.error.message} — pick a
+							different time or date.
 						</div>
 					)}
 
@@ -110,7 +114,8 @@ function BookingReview({ booking, pet, account, onBack, onConfirm }) {
 								)
 							}
 						>
-							{book.isPending ? "Booking…" : "Confirm Appointment"} <FaArrowRight />
+							{book.isPending ? "Booking…" : "Confirm Appointment"}{" "}
+							<FaArrowRight />
 						</button>
 					</div>
 				</div>

@@ -42,7 +42,10 @@ function ScheduleEditor({ value, onChange }) {
 			{rows.map((row, i) => {
 				const open = row.open !== false;
 				return (
-					<div className={`schedule-row${open ? "" : " disabled"}`} key={row.day}>
+					<div
+						className={`schedule-row${open ? "" : " disabled"}`}
+						key={row.day}
+					>
 						<strong>{DAY_NAMES[row.day]}</strong>
 
 						<input
@@ -65,14 +68,20 @@ function ScheduleEditor({ value, onChange }) {
 							step="5"
 							value={row.slotMinutes}
 							disabled={!open}
-							onChange={(e) => setRow(i, { slotMinutes: Number(e.target.value) })}
+							onChange={(e) =>
+								setRow(i, { slotMinutes: Number(e.target.value) })
+							}
 						/>
 
 						<input
 							type="checkbox"
 							checked={open}
 							onChange={(e) => toggleRow(i, e.target.checked)}
-							title={open ? "Open — uncheck to close this day" : "Closed — check to open"}
+							title={
+								open
+									? "Open — uncheck to close this day"
+									: "Closed — check to open"
+							}
 						/>
 					</div>
 				);

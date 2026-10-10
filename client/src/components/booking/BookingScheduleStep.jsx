@@ -126,14 +126,20 @@ function BookingScheduleStep({ onDone, onBack }) {
 					</div>
 				</div>
 
-				{vetsPending && <p className="admin-panel-empty">Loading veterinarians…</p>}
-
-				{selectedVet && date && slots.length === 0 && !slotsPending && !slotsError && (
-					<p className="booking-slot-hint">
-						{selectedVet.name} isn't working that day — try another date or a
-						different vet.
-					</p>
+				{vetsPending && (
+					<p className="admin-panel-empty">Loading veterinarians…</p>
 				)}
+
+				{selectedVet &&
+					date &&
+					slots.length === 0 &&
+					!slotsPending &&
+					!slotsError && (
+						<p className="booking-slot-hint">
+							{selectedVet.name} isn't working that day — try another date or a
+							different vet.
+						</p>
+					)}
 
 				<section className="form-section">
 					<h2>Additional notes</h2>
@@ -162,7 +168,8 @@ function BookingScheduleStep({ onDone, onBack }) {
 					className="continue-button"
 					disabled={!canContinue}
 					onClick={() =>
-						canContinue && onDone({ service, vetId, date, time, notes: notes.trim() })
+						canContinue &&
+						onDone({ service, vetId, date, time, notes: notes.trim() })
 					}
 				>
 					Review booking <FaArrowRight />

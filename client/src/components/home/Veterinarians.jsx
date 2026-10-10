@@ -23,7 +23,11 @@ function Veterinarians() {
 				</div>
 
 				<div className="vet-grid">
-					{isPending && <p className="admin-panel-empty" style={{ gridColumn: "1/-1" }}>Loading veterinarians…</p>}
+					{isPending && (
+						<p className="admin-panel-empty" style={{ gridColumn: "1/-1" }}>
+							Loading veterinarians…
+						</p>
+					)}
 
 					{vets.map((v) => (
 						<VetCard

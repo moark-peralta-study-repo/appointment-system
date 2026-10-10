@@ -3,7 +3,6 @@ import { useCancelMyAppointment } from "../../../hooks/useClientData";
 import { format12h, formatDate } from "../../../utils/admin";
 import { FiAlertTriangle } from "react-icons/fi";
 
-
 function ClientCancelModal({ appointment, onClose }) {
 	const cancel = useCancelMyAppointment();
 
@@ -22,7 +21,11 @@ function ClientCancelModal({ appointment, onClose }) {
 			onClose={onClose}
 			footer={
 				<>
-					<button className="admin-secondary-button" type="button" onClick={onClose}>
+					<button
+						className="admin-secondary-button"
+						type="button"
+						onClick={onClose}
+					>
 						Keep appointment
 					</button>
 					<button
@@ -45,10 +48,13 @@ function ClientCancelModal({ appointment, onClose }) {
 				Cancelling frees the slot so another pet can book it. You can always
 				schedule a new visit afterwards.
 			</p>
-			{cancel.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {cancel.error.message}</div>}
+			{cancel.error && (
+				<div className="admin-form-error">
+					<FiAlertTriangle size={13} /> {cancel.error.message}
+				</div>
+			)}
 		</AdminModal>
 	);
 }
-
 
 export default ClientCancelModal;

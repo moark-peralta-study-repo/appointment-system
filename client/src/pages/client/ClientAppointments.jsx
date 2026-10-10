@@ -1,12 +1,9 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PiCat, PiDog } from "react-icons/pi";
 import { FiPlus } from "react-icons/fi";
 import ClientHeader from "../../components/client/ClientHeader";
 import DogLoader from "../../components/admin/DogLoader";
-import {
-	useMyAppointments,
-} from "../../hooks/useClientData";
+import { useMyAppointments } from "../../hooks/useClientData";
 import { isToday, formatDate, format12h } from "../../utils/admin";
 import { SpeciesIcon } from "../../components/shared/Species";
 import ClientCancelModal from "../../components/client/appointments/ClientCancelModal";
@@ -45,8 +42,13 @@ function ClientAppointments() {
 			});
 	}, [appointments, statusFilter, search]);
 
-	const todayCount = appointments.filter((a) => isToday(a.date) && (a.status === "confirmed" || a.status === "pending")).length;
-	const upcomingCount = appointments.filter((a) => a.status === "pending" || a.status === "confirmed").length;
+	const todayCount = appointments.filter(
+		(a) =>
+			isToday(a.date) && (a.status === "confirmed" || a.status === "pending"),
+	).length;
+	const upcomingCount = appointments.filter(
+		(a) => a.status === "pending" || a.status === "confirmed",
+	).length;
 	const canCancel = (a) => a.status === "pending" || a.status === "confirmed";
 
 	return (
@@ -55,7 +57,11 @@ function ClientAppointments() {
 				title="My Appointments"
 				subtitle="Upcoming visits and your appointment history."
 				actions={
-					<button className="admin-primary-button" type="button" onClick={() => navigate("/book-appointment")}>
+					<button
+						className="admin-primary-button"
+						type="button"
+						onClick={() => navigate("/book-appointment")}
+					>
 						<FiPlus />
 						<span>Book an appointment</span>
 					</button>
@@ -108,7 +114,9 @@ function ClientAppointments() {
 					{statusFilter === "upcoming" && todayCount > 0 && (
 						<div className="client-today-banner">
 							<span>⏰</span>
-							<strong>You have {todayCount} visit{todayCount === 1 ? "" : "s"} today</strong>
+							<strong>
+								You have {todayCount} visit{todayCount === 1 ? "" : "s"} today
+							</strong>
 							<em>Please arrive 10 minutes early.</em>
 						</div>
 					)}
@@ -134,11 +142,14 @@ function ClientAppointments() {
 										</div>
 
 										<div className="client-appt-who">
-											<div className="client-appt-avatar"><SpeciesIcon species={pet?.species} /></div>
+											<div className="client-appt-avatar">
+												<SpeciesIcon species={pet?.species} />
+											</div>
 											<div>
 												<strong>{pet?.name ?? "Unknown pet"}</strong>
 												<span>
-													{pet?.breed ?? pet?.species ?? "—"} · {a.reason ?? "Visit"}
+													{pet?.breed ?? pet?.species ?? "—"} ·{" "}
+													{a.reason ?? "Visit"}
 												</span>
 											</div>
 										</div>
@@ -171,7 +182,12 @@ function ClientAppointments() {
 				</section>
 			)}
 
-			{canceling && <ClientCancelModal appointment={canceling} onClose={() => setCanceling(null)} />}
+			{canceling && (
+				<ClientCancelModal
+					appointment={canceling}
+					onClose={() => setCanceling(null)}
+				/>
+			)}
 		</>
 	);
 }

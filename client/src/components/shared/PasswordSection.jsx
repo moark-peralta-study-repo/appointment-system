@@ -11,7 +11,10 @@ function PasswordSection() {
 
 	const mismatch = form.confirm && form.confirm !== form.next;
 	const canSubmit =
-		form.current && form.next.length >= 6 && form.confirm === form.next && !changePassword.isPending;
+		form.current &&
+		form.next.length >= 6 &&
+		form.confirm === form.next &&
+		!changePassword.isPending;
 
 	const submit = (e) => {
 		e.preventDefault();
@@ -33,9 +36,16 @@ function PasswordSection() {
 			<div className="settings-panel-header">
 				<div>
 					<h2>Password</h2>
-					<p>Use at least 6 characters. Your session stays signed in after the change.</p>
+					<p>
+						Use at least 6 characters. Your session stays signed in after the
+						change.
+					</p>
 				</div>
-				{done ? <span className="client-save-badge"><FiCheck size={12} /> Updated</span> : null}
+				{done ? (
+					<span className="client-save-badge">
+						<FiCheck size={12} /> Updated
+					</span>
+				) : null}
 			</div>
 
 			<form onSubmit={submit} className="admin-form-grid">
@@ -71,11 +81,17 @@ function PasswordSection() {
 						autoComplete="new-password"
 						required
 					/>
-					{mismatch && <small style={{ color: "var(--danger)" }}>Passwords do not match.</small>}
+					{mismatch && (
+						<small style={{ color: "var(--danger)" }}>
+							Passwords do not match.
+						</small>
+					)}
 				</div>
 
 				{changePassword.error && (
-					<div className="admin-form-error full"><FiAlertTriangle size={13} /> {changePassword.error.message}</div>
+					<div className="admin-form-error full">
+						<FiAlertTriangle size={13} /> {changePassword.error.message}
+					</div>
 				)}
 
 				<div className="settings-actions full">

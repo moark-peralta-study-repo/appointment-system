@@ -4,7 +4,6 @@ import { useAddVisitNote } from "../../../hooks/useAdminData";
 import { formatDate } from "../../../utils/admin";
 import { FiAlertTriangle } from "react-icons/fi";
 
-
 function AdminVisitNoteForm({ appointments, onClose }) {
 	const addNote = useAddVisitNote();
 
@@ -20,7 +19,10 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 	const canSubmit = Boolean(selected) && notes.trim().length > 0;
 
 	const submit = () => {
-		addNote.mutate({ id: selected._id, vetNotes: notes.trim() }, { onSuccess: onClose });
+		addNote.mutate(
+			{ id: selected._id, vetNotes: notes.trim() },
+			{ onSuccess: onClose },
+		);
 	};
 
 	return (
@@ -30,7 +32,11 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 			onClose={onClose}
 			footer={
 				<>
-					<button className="admin-secondary-button" type="button" onClick={onClose}>
+					<button
+						className="admin-secondary-button"
+						type="button"
+						onClick={onClose}
+					>
 						Cancel
 					</button>
 					<button
@@ -44,12 +50,16 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 				</>
 			}
 		>
-			{addNote.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {addNote.error.message}</div>}
+			{addNote.error && (
+				<div className="admin-form-error">
+					<FiAlertTriangle size={13} /> {addNote.error.message}
+				</div>
+			)}
 
 			{eligible.length === 0 ? (
 				<p className="admin-slot-note">
-					No pending or confirmed visits to record. Mark a visit Complete
-					first — or add a note via the Appointments page.
+					No pending or confirmed visits to record. Mark a visit Complete first
+					— or add a note via the Appointments page.
 				</p>
 			) : (
 				<div className="admin-form-grid">
@@ -58,20 +68,23 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 						<select value={apptId} onChange={(e) => setApptId(e.target.value)}>
 							{eligible.map((a) => (
 								<option key={a._id} value={a._id}>
-									{formatDate(a.date)} — {a.pet?.name ?? "Unknown"} — {a.reason ?? "Visit"} ({a.status})
+									{formatDate(a.date)} — {a.pet?.name ?? "Unknown"} —{" "}
+									{a.reason ?? "Visit"} ({a.status})
 								</option>
 							))}
 						</select>
 						{selected && (
 							<p className="admin-slot-note">
-								Saving marks this visit as <strong>Completed</strong> and stores the note
-								below.
+								Saving marks this visit as <strong>Completed</strong> and stores
+								the note below.
 							</p>
 						)}
 					</div>
 
 					<div className="admin-form-field full">
-						<label>Visit Notes <span>*</span></label>
+						<label>
+							Visit Notes <span>*</span>
+						</label>
 						<textarea
 							rows="5"
 							value={notes}
@@ -84,6 +97,5 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 		</AdminModal>
 	);
 }
-
 
 export default AdminVisitNoteForm;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
-import ScheduleEditor, { defaultSchedule } from "../../components/admin/ScheduleEditor";
+import ScheduleEditor, {} from "../../components/admin/ScheduleEditor";
 import { useAuth } from "../../context/useAuth";
 import { useVets, useUpdateVet } from "../../hooks/useAdminData";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
@@ -63,7 +63,10 @@ function Settings() {
 		const el = ref.current;
 		el.scrollIntoView({ behavior: "smooth", block: "start" });
 		el.classList.add("settings-panel-focus");
-		const t = setTimeout(() => el.classList.remove("settings-panel-focus"), 2200);
+		const t = setTimeout(
+			() => el.classList.remove("settings-panel-focus"),
+			2200,
+		);
 		setSearchParams({}, { replace: true });
 		return () => clearTimeout(t);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,7 +93,8 @@ function Settings() {
 	);
 	const [clinicDraft, setClinicDraft] = useState(clinic);
 	const [clinicSaved, clinicFlash] = useSavedFlash();
-	const setClinicField = (k) => (e) => setClinicDraft((c) => ({ ...c, [k]: e.target.value }));
+	const setClinicField = (k) => (e) =>
+		setClinicDraft((c) => ({ ...c, [k]: e.target.value }));
 
 	const saveClinic = () => {
 		localStorage.setItem(CLINIC_KEY, JSON.stringify(clinicDraft));
@@ -161,8 +165,15 @@ function Settings() {
 		localStorage.setItem(TOGGLES_KEY, JSON.stringify(next));
 	};
 
-	const roleLabel = user?.role === "vet" ? "Veterinarian" : "Clinic Administrator";
-	const initials = user?.name?.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase() || "A";
+	const roleLabel =
+		user?.role === "vet" ? "Veterinarian" : "Clinic Administrator";
+	const initials =
+		user?.name
+			?.split(" ")
+			.map((w) => w[0])
+			.slice(0, 2)
+			.join("")
+			.toUpperCase() || "A";
 
 	return (
 		<>
@@ -181,8 +192,8 @@ function Settings() {
 							<div>
 								<h2>Clinic Profile</h2>
 								<p>
-									Display information for the clinic. (Stored locally — a
-									shared clinic model isn't in the API yet.)
+									Display information for the clinic. (Stored locally — a shared
+									clinic model isn't in the API yet.)
 								</p>
 							</div>
 						</div>
@@ -190,27 +201,47 @@ function Settings() {
 						<div className="settings-form-grid">
 							<div className="settings-field settings-full">
 								<label>Clinic Name</label>
-								<input type="text" value={clinicDraft.name} onChange={setClinicField("name")} />
+								<input
+									type="text"
+									value={clinicDraft.name}
+									onChange={setClinicField("name")}
+								/>
 							</div>
 
 							<div className="settings-field">
 								<label>Email Address</label>
-								<input type="email" value={clinicDraft.email} onChange={setClinicField("email")} />
+								<input
+									type="email"
+									value={clinicDraft.email}
+									onChange={setClinicField("email")}
+								/>
 							</div>
 
 							<div className="settings-field">
 								<label>Phone Number</label>
-								<input type="text" value={clinicDraft.phone} onChange={setClinicField("phone")} />
+								<input
+									type="text"
+									value={clinicDraft.phone}
+									onChange={setClinicField("phone")}
+								/>
 							</div>
 
 							<div className="settings-field settings-full">
 								<label>Clinic Address</label>
-								<input type="text" value={clinicDraft.address} onChange={setClinicField("address")} />
+								<input
+									type="text"
+									value={clinicDraft.address}
+									onChange={setClinicField("address")}
+								/>
 							</div>
 
 							<div className="settings-field settings-full">
 								<label>About the Clinic</label>
-								<textarea rows="4" value={clinicDraft.about} onChange={setClinicField("about")} />
+								<textarea
+									rows="4"
+									value={clinicDraft.about}
+									onChange={setClinicField("about")}
+								/>
 							</div>
 						</div>
 
@@ -227,7 +258,13 @@ function Settings() {
 								type="button"
 								onClick={saveClinic}
 							>
-								{clinicSaved ? (<><FiCheck size={13} /> Saved</>) : "Save Changes"}
+								{clinicSaved ? (
+									<>
+										<FiCheck size={13} /> Saved
+									</>
+								) : (
+									"Save Changes"
+								)}
 							</button>
 						</div>
 					</section>
@@ -247,14 +284,21 @@ function Settings() {
 						{myVet ? (
 							<ScheduleEditor value={schedule} onChange={setSchedule} />
 						) : vetsLoading ? (
-							<div className="settings-schedule-loading">Loading your schedule…</div>
+							<div className="settings-schedule-loading">
+								Loading your schedule…
+							</div>
 						) : (
 							<div className="admin-panel-empty">
-								No vet profile is linked to this account, so there's no schedule to edit yet.
+								No vet profile is linked to this account, so there's no schedule
+								to edit yet.
 							</div>
 						)}
 
-						{hoursError && <div className="admin-form-error"><FiAlertTriangle size={13} /> {hoursError}</div>}
+						{hoursError && (
+							<div className="admin-form-error">
+								<FiAlertTriangle size={13} /> {hoursError}
+							</div>
+						)}
 
 						<div className="settings-actions">
 							<button
@@ -263,7 +307,15 @@ function Settings() {
 								onClick={saveHours}
 								disabled={vetsLoading || updateVet.isPending || !myVet}
 							>
-								{updateVet.isPending ? "Saving…" : hoursSaved ? (<><FiCheck size={13} /> Saved</>) : "Save Hours"}
+								{updateVet.isPending ? (
+									"Saving…"
+								) : hoursSaved ? (
+									<>
+										<FiCheck size={13} /> Saved
+									</>
+								) : (
+									"Save Hours"
+								)}
 							</button>
 						</div>
 					</section>
@@ -310,7 +362,9 @@ function Settings() {
 						<div className="settings-panel-header">
 							<div>
 								<h2>Notifications</h2>
-								<p>Choose which system notifications the administrator receives.</p>
+								<p>
+									Choose which system notifications the administrator receives.
+								</p>
 							</div>
 						</div>
 

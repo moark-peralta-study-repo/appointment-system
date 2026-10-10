@@ -10,6 +10,5 @@ export const C = {
 	surface: "#ffffff",
 };
 
-
 // Shared axis tick style (fontSize/fill) for every chart on the page.
 export const AXIS_TICK = { fontSize: 11, fill: C.axis };

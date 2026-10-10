@@ -15,7 +15,12 @@ function BookingAccountStep({ onDone }) {
 	const register = useRegister();
 
 	const [mode, setMode] = useState("register"); // "register" | "login"
-	const [form, setForm] = useState({ name: "", email: "", phone: "", password: "" });
+	const [form, setForm] = useState({
+		name: "",
+		email: "",
+		phone: "",
+		password: "",
+	});
 	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
 	// Already a signed-in owner → no forms needed.
@@ -24,7 +29,9 @@ function BookingAccountStep({ onDone }) {
 			<div className="appointment-card">
 				<section className="form-section">
 					<div className="booking-step-banner">
-						<span className="booking-step-banner-icon"><FaCheck size={16} /></span>
+						<span className="booking-step-banner-icon">
+							<FaCheck size={16} />
+						</span>
 						<div>
 							<h2>Welcome back, {user.name}</h2>
 							<p className="form-description">
@@ -47,7 +54,8 @@ function BookingAccountStep({ onDone }) {
 		);
 	}
 
-	const error = mode === "register" ? register.error?.message : login.error?.message;
+	const error =
+		mode === "register" ? register.error?.message : login.error?.message;
 	const busy = mode === "register" ? register.isPending : login.isPending;
 
 	function submit(e) {
@@ -63,7 +71,10 @@ function BookingAccountStep({ onDone }) {
 				{ onSuccess: onDone },
 			);
 		} else {
-			login.mutate({ email: form.email.trim(), password: form.password }, { onSuccess: onDone });
+			login.mutate(
+				{ email: form.email.trim(), password: form.password },
+				{ onSuccess: onDone },
+			);
 		}
 	}
 
@@ -152,13 +163,21 @@ function BookingAccountStep({ onDone }) {
 							name="password"
 							value={form.password}
 							onChange={set("password")}
-							placeholder={mode === "register" ? "At least 6 characters" : "Your password"}
-							autoComplete={mode === "register" ? "new-password" : "current-password"}
+							placeholder={
+								mode === "register" ? "At least 6 characters" : "Your password"
+							}
+							autoComplete={
+								mode === "register" ? "new-password" : "current-password"
+							}
 							required
 						/>
 					</div>
 
-					{error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {error}</div>}
+					{error && (
+						<div className="admin-form-error">
+							<FiAlertTriangle size={13} /> {error}
+						</div>
+					)}
 
 					<div className="appointment-actions">
 						<a href="/" className="cancel-button">

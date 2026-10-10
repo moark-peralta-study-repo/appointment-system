@@ -72,7 +72,11 @@ function AdminDashboard() {
 				</div>
 
 				<div className="admin-header-actions">
-					<button className="admin-notification" type="button" aria-label="Notifications">
+					<button
+						className="admin-notification"
+						type="button"
+						aria-label="Notifications"
+					>
 						<FaBell size={16} />
 					</button>
 				</div>
@@ -128,7 +132,11 @@ function AdminDashboard() {
 
 										<div className="appointment-pet">
 											<div className="appointment-avatar">
-												{a.pet?.species === "cat" ? <PiCat size={20} /> : <PiDog size={20} />}
+												{a.pet?.species === "cat" ? (
+													<PiCat size={20} />
+												) : (
+													<PiDog size={20} />
+												)}
 											</div>
 
 											<div>
@@ -168,7 +176,9 @@ function AdminDashboard() {
 									type="button"
 									onClick={() => (location.href = "/admin/appointments")}
 								>
-									<span className="quick-ic"><RxCalendar size={18} /></span>
+									<span className="quick-ic">
+										<RxCalendar size={18} />
+									</span>
 									<div>
 										<strong>Manage Appointments</strong>
 										<small>Confirm, complete or cancel visits</small>
@@ -179,7 +189,9 @@ function AdminDashboard() {
 									type="button"
 									onClick={() => (location.href = "/admin/patients")}
 								>
-									<span className="quick-ic"><PiPawPrint size={18} /></span>
+									<span className="quick-ic">
+										<PiPawPrint size={18} />
+									</span>
 									<div>
 										<strong>Patients</strong>
 										<small>Browse the patient register</small>
@@ -190,7 +202,9 @@ function AdminDashboard() {
 									type="button"
 									onClick={() => (location.href = "/admin/medical-records")}
 								>
-									<span className="quick-ic"><FaClipboardList size={18} /></span>
+									<span className="quick-ic">
+										<FaClipboardList size={18} />
+									</span>
 									<div>
 										<strong>Medical Records</strong>
 										<small>Completed visit notes</small>
@@ -219,7 +233,11 @@ function AdminDashboard() {
 										role="img"
 										aria-label={p.name}
 									>
-										{p.species === "cat" ? <PiCat size={20} /> : <PiDog size={20} />}
+										{p.species === "cat" ? (
+											<PiCat size={20} />
+										) : (
+											<PiDog size={20} />
+										)}
 									</div>
 
 									<div>
