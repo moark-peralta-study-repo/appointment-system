@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMyPets, useMyAppointments, useNotifications } from "../../hooks/useClientData";
-import { isToday, isWithinDays, format12h, formatDate } from "../../utils/admin";
+import {
+	useMyPets,
+	useMyAppointments,
+	useNotifications,
+} from "../../hooks/useClientData";
+import {
+	isToday,
+	isWithinDays,
+	format12h,
+	formatDate,
+} from "../../utils/admin";
 import { useAuth } from "../../context/useAuth";
 import ClientHeader from "../../components/client/ClientHeader";
 import DogLoader from "../../components/admin/DogLoader";
@@ -13,7 +22,8 @@ function ClientDashboard() {
 	const navigate = useNavigate();
 	const { user } = useAuth();
 	const { data: pets = [], isPending: petsLoading } = useMyPets();
-	const { data: appointments = [], isPending: apptsLoading } = useMyAppointments();
+	const { data: appointments = [], isPending: apptsLoading } =
+		useMyAppointments();
 	const notifications = useNotifications();
 	const [bellOpen, setBellOpen] = useState(false);
 
@@ -21,7 +31,7 @@ function ClientDashboard() {
 	const upcoming = appointments
 		.filter((a) => a.status !== "completed" && a.status !== "cancelled")
 		.filter((a) => isWithinDays(a.date, 14))
-		.sort((x, y) => `${x.date} ${x.time}` > `${y.date} ${y.time}` ? 1 : -1);
+		.sort((x, y) => (`${x.date} ${x.time}` > `${y.date} ${y.time}` ? 1 : -1));
 
 	const todayList = upcoming.filter((a) => isToday(a.date));
 	const nextAppt = upcoming[0] ?? null;
@@ -36,7 +46,9 @@ function ClientDashboard() {
 		{
 			label: "Today's Appointments",
 			value: todayList.length,
-			sub: todayList.length ? "see below for details" : "nothing scheduled today",
+			sub: todayList.length
+				? "see below for details"
+				: "nothing scheduled today",
 			icon: <FaClock size={20} />,
 		},
 		{
@@ -73,7 +85,9 @@ function ClientDashboard() {
 							>
 								<FaBell size={16} />
 								{notifications.items.length > 0 && (
-									<span className="client-bell-badge">{notifications.items.length}</span>
+									<span className="client-bell-badge">
+										{notifications.items.length}
+									</span>
 								)}
 							</button>
 
@@ -86,12 +100,16 @@ function ClientDashboard() {
 
 									{notifications.items.length === 0 ? (
 										<p className="client-bell-empty">
-											You're all caught up. We'll flag bookings that need
-											your attention here.
+											You're all caught up. We'll flag bookings that need your
+											attention here.
 										</p>
 									) : (
 										notifications.items.map((n) => (
-											<div className="client-bell-item" key={n.id} role="menuitem">
+											<div
+												className="client-bell-item"
+												key={n.id}
+												role="menuitem"
+											>
 												<span className={`client-bell-dot ${n.kind}`} />
 												<div>
 													<p>{n.text}</p>
@@ -166,13 +184,18 @@ function ClientDashboard() {
 
 										<div className="appointment-pet">
 											<div className="appointment-avatar">
-												{nextAppt.pet?.species === "cat" ? <PiCat size={18} /> : <PiDog size={18} />}
+												{nextAppt.pet?.species === "cat" ? (
+													<PiCat size={18} />
+												) : (
+													<PiDog size={18} />
+												)}
 											</div>
 
 											<div>
 												<strong>{nextAppt.pet?.name ?? "Unknown pet"}</strong>
 												<span>
-													{nextAppt.pet?.breed ?? nextAppt.pet?.species ?? "—"} • {nextAppt.reason}
+													{nextAppt.pet?.breed ?? nextAppt.pet?.species ?? "—"}{" "}
+													• {nextAppt.reason}
 												</span>
 											</div>
 										</div>
@@ -185,7 +208,8 @@ function ClientDashboard() {
 										<span
 											className={`status ${nextAppt.status === "confirmed" ? "confirmed" : "pending"}`}
 										>
-											{nextAppt.status.charAt(0).toUpperCase() + nextAppt.status.slice(1)}
+											{nextAppt.status.charAt(0).toUpperCase() +
+												nextAppt.status.slice(1)}
 										</span>
 									</div>
 								</div>
@@ -206,7 +230,9 @@ function ClientDashboard() {
 									type="button"
 									onClick={() => navigate("/book-appointment")}
 								>
-									<span className="quick-ic"><RxCalendar size={16} /></span>
+									<span className="quick-ic">
+										<RxCalendar size={16} />
+									</span>
 									<div>
 										<strong>Book appointment</strong>
 										<small>Schedule a clinic visit</small>
@@ -217,7 +243,9 @@ function ClientDashboard() {
 									type="button"
 									onClick={() => navigate("/client/appointments")}
 								>
-									<span className="quick-ic"><PiPawPrint size={16} /></span>
+									<span className="quick-ic">
+										<PiPawPrint size={16} />
+									</span>
 									<div>
 										<strong>My appointments</strong>
 										<small>View or cancel upcoming visits</small>
@@ -228,7 +256,9 @@ function ClientDashboard() {
 									type="button"
 									onClick={() => navigate("/client/medical-records")}
 								>
-									<span className="quick-ic"><FaClipboardList size={16} /></span>
+									<span className="quick-ic">
+										<FaClipboardList size={16} />
+									</span>
 									<div>
 										<strong>Medical records</strong>
 										<small>Completed visit notes</small>
@@ -243,7 +273,9 @@ function ClientDashboard() {
 						<div className="admin-panel-header">
 							<div>
 								<h2>My Pets</h2>
-								<p>{pets.length} registered pet{pets.length === 1 ? "" : "s"}</p>
+								<p>
+									{pets.length} registered pet{pets.length === 1 ? "" : "s"}
+								</p>
 							</div>
 						</div>
 
@@ -255,8 +287,16 @@ function ClientDashboard() {
 							<div className="recent-patients">
 								{pets.slice(0, 3).map((p) => (
 									<div className="recent-patient" key={p._id}>
-										<div className="recent-patient-avatar" role="img" aria-label={p.name}>
-											{p.species === "cat" ? <PiCat size={18} /> : <PiDog size={18} />}
+										<div
+											className="recent-patient-avatar"
+											role="img"
+											aria-label={p.name}
+										>
+											{p.species === "cat" ? (
+												<PiCat size={18} />
+											) : (
+												<PiDog size={18} />
+											)}
 										</div>
 
 										<div>
@@ -264,7 +304,9 @@ function ClientDashboard() {
 											<span>{p.breed ?? p.species ?? "—"}</span>
 										</div>
 
-										<small>{p.age} yr{p.age === 1 ? "" : "s"}</small>
+										<small>
+											{p.age} yr{p.age === 1 ? "" : "s"}
+										</small>
 									</div>
 								))}
 							</div>

@@ -12,12 +12,20 @@ function ClientRegister() {
 	const { isAuthed } = useAuth();
 	const register = useRegister();
 
-	const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", confirm: "" });
+	const [form, setForm] = useState({
+		name: "",
+		email: "",
+		phone: "",
+		password: "",
+		confirm: "",
+	});
 	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
 	const error = register.error?.message || "";
 	const mismatch =
-		form.confirm && form.confirm !== form.password ? "Passwords do not match." : "";
+		form.confirm && form.confirm !== form.password
+			? "Passwords do not match."
+			: "";
 	const showFormError = error || mismatch;
 
 	const handleRegister = (e) => {
@@ -43,7 +51,11 @@ function ClientRegister() {
 	return (
 		<div
 			className="admin-login-page"
-			style={{ display: "flex", flexDirection: "row-reverse !important", flexWrap: "nowrap" }}
+			style={{
+				display: "flex",
+				flexDirection: "row-reverse !important",
+				flexWrap: "nowrap",
+			}}
 		>
 			<div className="admin-login-card" style={{ order: 2 }}>
 				<div className="admin-login-brand">
@@ -133,7 +145,9 @@ function ClientRegister() {
 						/>
 					</div>
 
-					{showFormError && <div className="admin-login-error">{showFormError}</div>}
+					{showFormError && (
+						<div className="admin-login-error">{showFormError}</div>
+					)}
 
 					<button
 						type="submit"
@@ -144,7 +158,14 @@ function ClientRegister() {
 					</button>
 				</form>
 
-				<p style={{ textAlign: "center", marginTop: 14, fontSize: 13, color: "var(--muted)" }}>
+				<p
+					style={{
+						textAlign: "center",
+						marginTop: 14,
+						fontSize: 13,
+						color: "var(--muted)",
+					}}
+				>
 					Already have an account?{" "}
 					<button
 						type="button"
@@ -163,7 +184,11 @@ function ClientRegister() {
 					</button>
 				</p>
 
-				<button type="button" className="admin-back-button" onClick={() => navigate("/")}>
+				<button
+					type="button"
+					className="admin-back-button"
+					onClick={() => navigate("/")}
+				>
 					← Back to main website
 				</button>
 			</div>

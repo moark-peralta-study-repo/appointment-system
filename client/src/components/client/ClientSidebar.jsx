@@ -19,7 +19,8 @@ function ClientSidebar() {
 	useEffect(() => {
 		if (!menuOpen) return;
 		const onClick = (e) => {
-			if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+			if (menuRef.current && !menuRef.current.contains(e.target))
+				setMenuOpen(false);
 		};
 		const onKey = (e) => e.key === "Escape" && setMenuOpen(false);
 		document.addEventListener("mousedown", onClick);
@@ -122,11 +123,19 @@ function ClientSidebar() {
 
 						{menuOpen && (
 							<div className="admin-user-dropdown" role="menu">
-								<button role="menuitem" type="button" onClick={() => go("/client/profile")}>
+								<button
+									role="menuitem"
+									type="button"
+									onClick={() => go("/client/profile")}
+								>
 									<CiUser />
 									<span>My Profile</span>
 								</button>
-								<button role="menuitem" type="button" onClick={() => go("/client/settings")}>
+								<button
+									role="menuitem"
+									type="button"
+									onClick={() => go("/client/settings")}
+								>
 									<CiSettings />
 									<span>Notifications</span>
 								</button>

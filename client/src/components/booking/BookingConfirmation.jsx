@@ -10,7 +10,9 @@ function BookingConfirmation({ appointment }) {
 
 			<main className="booking-main">
 				<div className="appointment-card confirmation-card">
-					<div className="confirmation-icon"><FaCheck size={22} /></div>
+					<div className="confirmation-icon">
+						<FaCheck size={22} />
+					</div>
 
 					<span className="confirmation-label">APPOINTMENT REQUESTED</span>
 
@@ -56,13 +58,18 @@ function BookingConfirmation({ appointment }) {
 							<span>Status</span>
 
 							<strong className="confirmation-status">
-								{appointment?.status ? appointment.status.toUpperCase() : "PENDING"}
+								{appointment?.status
+									? appointment.status.toUpperCase()
+									: "PENDING"}
 							</strong>
 						</div>
 					</div>
 
 					<div className="confirmation-actions">
-						<Link to="/client/dashboard" className="continue-button confirmation-home">
+						<Link
+							to="/client/dashboard"
+							className="continue-button confirmation-home"
+						>
 							Manage in Client Portal
 						</Link>
 

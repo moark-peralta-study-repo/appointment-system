@@ -3,7 +3,6 @@ import AdminModal from "../AdminModal";
 import { useCreateOwner } from "../../../hooks/useAdminData";
 import { FiAlertTriangle } from "react-icons/fi";
 
-
 function AdminOwnerForm({ onClose }) {
 	const register = useCreateOwner();
 
@@ -15,7 +14,8 @@ function AdminOwnerForm({ onClose }) {
 	});
 	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
-	const canSubmit = form.name.trim() && form.email.trim() && form.password.length >= 6;
+	const canSubmit =
+		form.name.trim() && form.email.trim() && form.password.length >= 6;
 
 	const submit = () => {
 		register.mutate(
@@ -36,7 +36,11 @@ function AdminOwnerForm({ onClose }) {
 			onClose={onClose}
 			footer={
 				<>
-					<button className="admin-secondary-button" type="button" onClick={onClose}>
+					<button
+						className="admin-secondary-button"
+						type="button"
+						onClick={onClose}
+					>
 						Cancel
 					</button>
 					<button
@@ -51,33 +55,56 @@ function AdminOwnerForm({ onClose }) {
 			}
 		>
 			{register.error && (
-				<div className="admin-form-error"><FiAlertTriangle size={13} /> {register.error.message}</div>
+				<div className="admin-form-error">
+					<FiAlertTriangle size={13} /> {register.error.message}
+				</div>
 			)}
 
 			<div className="admin-form-grid">
 				<div className="admin-form-field full">
-					<label>Full Name <span>*</span></label>
-					<input type="text" value={form.name} onChange={set("name")} placeholder="e.g. Maria Lopez" />
+					<label>
+						Full Name <span>*</span>
+					</label>
+					<input
+						type="text"
+						value={form.name}
+						onChange={set("name")}
+						placeholder="e.g. Maria Lopez"
+					/>
 				</div>
 
 				<div className="admin-form-field">
-					<label>Email <span>*</span></label>
-					<input type="email" value={form.email} onChange={set("email")} placeholder="owner@email.com" />
+					<label>
+						Email <span>*</span>
+					</label>
+					<input
+						type="email"
+						value={form.email}
+						onChange={set("email")}
+						placeholder="owner@email.com"
+					/>
 				</div>
 
 				<div className="admin-form-field">
 					<label>Phone</label>
-					<input type="text" value={form.phone} onChange={set("phone")} placeholder="+63 917 000 0000" />
+					<input
+						type="text"
+						value={form.phone}
+						onChange={set("phone")}
+						placeholder="+63 917 000 0000"
+					/>
 				</div>
 
 				<div className="admin-form-field full">
-					<label>Portal Password <span>* (min 6 chars — the owner uses this to sign in)</span></label>
+					<label>
+						Portal Password{" "}
+						<span>* (min 6 chars — the owner uses this to sign in)</span>
+					</label>
 					<input type="text" value={form.password} onChange={set("password")} />
 				</div>
 			</div>
 		</AdminModal>
 	);
 }
-
 
 export default AdminOwnerForm;

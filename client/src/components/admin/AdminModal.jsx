@@ -15,14 +15,23 @@ function AdminModal({ eyebrow, title, onClose, footer, children, wide }) {
 			className="admin-modal-overlay"
 			onMouseDown={(e) => e.target === e.currentTarget && onClose?.()}
 		>
-			<div className={`admin-modal${wide ? " admin-modal-wide" : ""}`} role="dialog" aria-modal="true">
+			<div
+				className={`admin-modal${wide ? " admin-modal-wide" : ""}`}
+				role="dialog"
+				aria-modal="true"
+			>
 				<div className="admin-modal-header">
 					<div>
 						{eyebrow && <p className="admin-eyebrow">{eyebrow}</p>}
 						<h2>{title}</h2>
 					</div>
 
-					<button className="admin-modal-close" type="button" onClick={onClose} aria-label="Close">
+					<button
+						className="admin-modal-close"
+						type="button"
+						onClick={onClose}
+						aria-label="Close"
+					>
 						<FiX size={15} />
 					</button>
 				</div>

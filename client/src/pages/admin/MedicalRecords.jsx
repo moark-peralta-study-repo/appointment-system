@@ -6,7 +6,7 @@ import AdminVisitNoteForm from "../../components/admin/medical/VisitNoteForm";
 import MedicalRecordView from "../../components/admin/medical/MedicalRecordView";
 import { FaClipboardList } from "react-icons/fa";
 import { PiStar } from "react-icons/pi";
-import { FiAlertTriangle, FiCheck, FiSearch } from "react-icons/fi";
+import { FiCheck, FiSearch } from "react-icons/fi";
 
 const REASONS = [
 	"General Check-up",
@@ -16,12 +16,6 @@ const REASONS = [
 	"Surgery Follow-up",
 	"Wellness Exam",
 ];
-
-/* ---------------- NEW RECORD (visit note) ---------------- */
-
-/* ---------------- RECORD VIEW ---------------- */
-
-/* ---------------- PAGE ---------------- */
 
 function MedicalRecords() {
 	const { data: appointments = [], isPending } = useAppointments();
@@ -41,7 +35,10 @@ function MedicalRecords() {
 		const q = search.trim().toLowerCase();
 		return appointments
 			.filter((a) => a.status === "completed")
-			.filter((a) => typeFilter === "all" || (a.reason ?? "").toLowerCase() === typeFilter)
+			.filter(
+				(a) =>
+					typeFilter === "all" || (a.reason ?? "").toLowerCase() === typeFilter,
+			)
 			.map((a) => ({
 				_id: a._id,
 				patient: a.pet?.name ?? "Unknown",
@@ -55,19 +52,27 @@ function MedicalRecords() {
 			}))
 			.filter((r) => {
 				if (!q) return true;
-				return `${r.patient} ${r.owner} ${r.veterinarian} ${r.recordType}`.toLowerCase().includes(q);
+				return `${r.patient} ${r.owner} ${r.veterinarian} ${r.recordType}`
+					.toLowerCase()
+					.includes(q);
 			})
 			.sort((x, y) => new Date(y.date) - new Date(x.date));
 	}, [appointments, ownersById, typeFilter, search]);
 
-	const completedCount = appointments.filter((a) => a.status === "completed").length;
-	const withNotes = appointments.filter((a) => a.status === "completed" && a.vetNotes).length;
+	const completedCount = appointments.filter(
+		(a) => a.status === "completed",
+	).length;
+	const withNotes = appointments.filter(
+		(a) => a.status === "completed" && a.vetNotes,
+	).length;
 	const thisMonth = (() => {
 		const now = new Date();
 		return appointments.filter((a) => {
 			if (a.status !== "completed") return false;
 			const d = new Date(a.date);
-			return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+			return (
+				d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
+			);
 		}).length;
 	})();
 
@@ -78,7 +83,11 @@ function MedicalRecords() {
 				title="Medical Records"
 				description="Review and manage medical records for registered patients."
 				actions={
-					<button className="admin-primary-button" type="button" onClick={() => setShowNew(true)}>
+					<button
+						className="admin-primary-button"
+						type="button"
+						onClick={() => setShowNew(true)}
+					>
 						+ New Medical Record
 					</button>
 				}
@@ -88,7 +97,9 @@ function MedicalRecords() {
 
 			<section className="medical-summary">
 				<div className="medical-summary-card">
-					<div className="medical-summary-icon blue"><FaClipboardList size={20} /></div>
+					<div className="medical-summary-icon blue">
+						<FaClipboardList size={20} />
+					</div>
 
 					<div>
 						<span>Total Records</span>
@@ -99,7 +110,9 @@ function MedicalRecords() {
 				</div>
 
 				<div className="medical-summary-card">
-					<div className="medical-summary-icon green"><FiCheck size={20} /></div>
+					<div className="medical-summary-icon green">
+						<FiCheck size={20} />
+					</div>
 
 					<div>
 						<span>With Visit Notes</span>
@@ -117,7 +130,9 @@ function MedicalRecords() {
 				</div>
 
 				<div className="medical-summary-card">
-					<div className="medical-summary-icon soft-blue"><PiStar size={20} /></div>
+					<div className="medical-summary-icon soft-blue">
+						<PiStar size={20} />
+					</div>
 
 					<div>
 						<span>Completed Visits</span>
@@ -142,7 +157,10 @@ function MedicalRecords() {
 					</div>
 
 					<div className="medical-filters">
-						<select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+						<select
+							value={typeFilter}
+							onChange={(e) => setTypeFilter(e.target.value)}
+						>
 							<option value="all">All Record Types</option>
 							{REASONS.map((r) => (
 								<option key={r} value={r.toLowerCase()}>
@@ -227,8 +245,8 @@ function MedicalRecords() {
 							{records.length === 0 && !isPending && (
 								<tr>
 									<td colSpan={7} className="admin-panel-empty">
-										No completed visits yet. Records appear once an
-										appointment is marked completed.
+										No completed visits yet. Records appear once an appointment
+										is marked completed.
 									</td>
 								</tr>
 							)}
@@ -237,7 +255,9 @@ function MedicalRecords() {
 				</div>
 
 				<div className="medical-table-footer">
-					<span>Showing {records.length} of {completedCount} medical records</span>
+					<span>
+						Showing {records.length} of {completedCount} medical records
+					</span>
 
 					<div className="medical-pagination">
 						<button type="button">‹</button>
@@ -252,10 +272,15 @@ function MedicalRecords() {
 			</section>
 
 			{showNew && (
-				<AdminVisitNoteForm appointments={appointments} onClose={() => setShowNew(false)} />
+				<AdminVisitNoteForm
+					appointments={appointments}
+					onClose={() => setShowNew(false)}
+				/>
 			)}
 
-			{viewing && <MedicalRecordView record={viewing} onClose={() => setViewing(null)} />}
+			{viewing && (
+				<MedicalRecordView record={viewing} onClose={() => setViewing(null)} />
+			)}
 		</>
 	);
 }

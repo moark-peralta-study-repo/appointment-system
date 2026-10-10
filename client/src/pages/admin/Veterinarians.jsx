@@ -1,25 +1,14 @@
 import { useMemo, useState } from "react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
-import {
-	useVets,
-	useAppointments,
-	useUsers,
-} from "../../hooks/useAdminData";
+import { useVets, useAppointments } from "../../hooks/useAdminData";
 import { isToday, initials } from "../../utils/admin";
 import { scheduleLabel } from "../../utils/schedule";
 import { FaStethoscope } from "react-icons/fa";
 import { RxCalendar } from "react-icons/rx";
 import { PiStar } from "react-icons/pi";
 import { FiCheck, FiSearch } from "react-icons/fi";
-import ScheduleEditor from "../../components/admin/ScheduleEditor";
 import AdminVetForm from "../../components/admin/vets/AdminVetForm";
 import AdminVetView from "../../components/admin/vets/AdminVetView";
-
-/* ---------------- ADD VET FORM ---------------- */
-
-/* ---------------- VET PROFILE VIEW ---------------- */
-
-/* ---------------- PAGE ---------------- */
 
 function Veterinarians() {
 	const { data: vets = [], isPending } = useVets();
@@ -49,15 +38,21 @@ function Veterinarians() {
 				status: todayByVet[v.name] ? "In Consultation" : "Available",
 				initials: initials(v.name),
 			}))
-			.filter((v) => specialtyFilter === "all" || v.specialty === specialtyFilter)
-			.filter((v) => availabilityFilter === "all" || v.status === availabilityFilter)
+			.filter(
+				(v) => specialtyFilter === "all" || v.specialty === specialtyFilter,
+			)
+			.filter(
+				(v) => availabilityFilter === "all" || v.status === availabilityFilter,
+			)
 			.filter((v) => {
 				if (!q) return true;
 				return `${v.name} ${v.specialty ?? ""}`.toLowerCase().includes(q);
 			});
 	}, [vets, todayByVet, specialtyFilter, availabilityFilter, search]);
 
-	const specialties = [...new Set(vets.map((v) => v.specialty).filter(Boolean))];
+	const specialties = [
+		...new Set(vets.map((v) => v.specialty).filter(Boolean)),
+	];
 
 	return (
 		<>
@@ -66,7 +61,11 @@ function Veterinarians() {
 				title="Veterinarians"
 				description="Manage the veterinary team and monitor their availability."
 				actions={
-					<button className="admin-primary-button" type="button" onClick={() => setShowAdd(true)}>
+					<button
+						className="admin-primary-button"
+						type="button"
+						onClick={() => setShowAdd(true)}
+					>
 						+ Add Veterinarian
 					</button>
 				}
@@ -83,11 +82,7 @@ function Veterinarians() {
 					<div>
 						<span>Total Veterinarians</span>
 						<strong>
-							{isPending ? (
-								<span className="mini-spinner" />
-							) : (
-								vets.length
-							)}
+							{isPending ? <span className="mini-spinner" /> : vets.length}
 						</strong>
 					</div>
 				</div>
@@ -99,7 +94,9 @@ function Veterinarians() {
 
 					<div>
 						<span>Available Now</span>
-						<strong>{rows.filter((r) => r.status === "Available").length}</strong>
+						<strong>
+							{rows.filter((r) => r.status === "Available").length}
+						</strong>
 					</div>
 				</div>
 
@@ -110,7 +107,9 @@ function Veterinarians() {
 
 					<div>
 						<span>Appointments Today</span>
-						<strong>{Object.values(todayByVet).reduce((a, b) => a + b, 0)}</strong>
+						<strong>
+							{Object.values(todayByVet).reduce((a, b) => a + b, 0)}
+						</strong>
 					</div>
 				</div>
 
@@ -142,7 +141,10 @@ function Veterinarians() {
 					</div>
 
 					<div className="vet-filters">
-						<select value={specialtyFilter} onChange={(e) => setSpecialtyFilter(e.target.value)}>
+						<select
+							value={specialtyFilter}
+							onChange={(e) => setSpecialtyFilter(e.target.value)}
+						>
 							<option value="all">All Specialties</option>
 							{specialties.map((s) => (
 								<option key={s} value={s}>
@@ -151,12 +153,13 @@ function Veterinarians() {
 							))}
 						</select>
 
-						<select value={availabilityFilter} onChange={(e) => setAvailabilityFilter(e.target.value)}>
+						<select
+							value={availabilityFilter}
+							onChange={(e) => setAvailabilityFilter(e.target.value)}
+						>
 							<option value="all">All Availability</option>
 							<option value="Available">Available</option>
-							<option value="In Consultation">
-								In Consultation
-							</option>
+							<option value="In Consultation">In Consultation</option>
 						</select>
 					</div>
 				</div>
@@ -173,9 +176,7 @@ function Veterinarians() {
 					{rows.map((vet) => (
 						<div className="veterinarian-card" key={vet._id}>
 							<div className="vet-card-top">
-								<div className="vet-avatar">
-									{vet.initials}
-								</div>
+								<div className="vet-avatar">{vet.initials}</div>
 
 								<button
 									className="vet-more-button"
@@ -190,13 +191,9 @@ function Veterinarians() {
 							<div className="vet-card-info">
 								<h3>{vet.name}</h3>
 
-								<p className="vet-specialty">
-									{vet.specialty ?? "General"}
-								</p>
+								<p className="vet-specialty">{vet.specialty ?? "General"}</p>
 
-								<p className="vet-experience">
-									{scheduleLabel(vet.schedule)}
-								</p>
+								<p className="vet-experience">{scheduleLabel(vet.schedule)}</p>
 							</div>
 
 							<div className="vet-card-divider"></div>

@@ -12,10 +12,9 @@ const iconFor = (s) =>
 		cat: <PiCat size={22} />,
 		bird: <PiBird size={22} />,
 		rabbit: <PiRabbit size={22} />,
-	}[s] ?? <PiPawPrint size={22} />);
+	})[s] ?? <PiPawPrint size={22} />;
 
-const typeLabel = (s) =>
-	PET_TYPES.find((t) => t.id === s)?.label ?? s ?? "—";
+const typeLabel = (s) => PET_TYPES.find((t) => t.id === s)?.label ?? s ?? "—";
 
 // Step 2 — pick which pet the visit is for, or add a new one on the spot.
 function BookingPetStep({ onDone, onBack }) {
@@ -24,7 +23,14 @@ function BookingPetStep({ onDone, onBack }) {
 
 	const [selected, setSelected] = useState(null); // pet object
 	const [adding, setAdding] = useState(false);
-	const [form, setForm] = useState({ name: "", species: "dog", breed: "", age: "", gender: "male", notes: "" });
+	const [form, setForm] = useState({
+		name: "",
+		species: "dog",
+		breed: "",
+		age: "",
+		gender: "male",
+		notes: "",
+	});
 	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
 	// If there's exactly one pet and nothing picked yet, pre-select it.
@@ -63,7 +69,8 @@ function BookingPetStep({ onDone, onBack }) {
 				<h2>Who's coming in?</h2>
 
 				<p className="form-description">
-					Pick the pet this appointment is for, or add a new one to your account.
+					Pick the pet this appointment is for, or add a new one to your
+					account.
 				</p>
 
 				{isPending ? (
@@ -91,7 +98,11 @@ function BookingPetStep({ onDone, onBack }) {
 									</small>
 								</span>
 
-								{selected?._id === p._id && <span className="booking-pet-check"><FiCheck size={15} /></span>}
+								{selected?._id === p._id && (
+									<span className="booking-pet-check">
+										<FiCheck size={15} />
+									</span>
+								)}
 							</button>
 						))}
 
@@ -102,13 +113,19 @@ function BookingPetStep({ onDone, onBack }) {
 								onClick={() => setAdding((v) => !v)}
 							>
 								<FaPlus />
-								{adding ? "Close" : `Add ${pets.length === 1 ? "another" : "a new"} pet`}
+								{adding
+									? "Close"
+									: `Add ${pets.length === 1 ? "another" : "a new"} pet`}
 							</button>
 						)}
 					</div>
 				)}
 
-				{createPet.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {createPet.error.message}</div>}
+				{createPet.error && (
+					<div className="admin-form-error">
+						<FiAlertTriangle size={13} /> {createPet.error.message}
+					</div>
+				)}
 
 				{/* INLINE ADD-PET FORM */}
 				{(adding || pets.length === 0) && (
@@ -118,7 +135,13 @@ function BookingPetStep({ onDone, onBack }) {
 						<div className="date-time-form">
 							<div className="appointment-field">
 								<label>Pet name *</label>
-								<input value={form.name} onChange={set("name")} placeholder="e.g. Mochi" required autoFocus />
+								<input
+									value={form.name}
+									onChange={set("name")}
+									placeholder="e.g. Mochi"
+									required
+									autoFocus
+								/>
 							</div>
 
 							<div className="appointment-field">
@@ -137,7 +160,11 @@ function BookingPetStep({ onDone, onBack }) {
 						<div className="date-time-form">
 							<div className="appointment-field">
 								<label>Breed</label>
-								<input value={form.breed} onChange={set("breed")} placeholder="e.g. Beagle" />
+								<input
+									value={form.breed}
+									onChange={set("breed")}
+									placeholder="e.g. Beagle"
+								/>
 							</div>
 
 							<div className="appointment-field">

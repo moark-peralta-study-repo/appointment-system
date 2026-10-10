@@ -1,9 +1,13 @@
 import AdminModal from "../AdminModal";
 
-
 function MedicalRecordView({ record, onClose }) {
 	return (
-		<AdminModal eyebrow="MEDICAL RECORD" title={`${record.patient} — ${record.recordType}`} onClose={onClose} wide>
+		<AdminModal
+			eyebrow="MEDICAL RECORD"
+			title={`${record.patient} — ${record.recordType}`}
+			onClose={onClose}
+			wide
+		>
 			<div className="admin-detail-grid">
 				<div className="admin-detail-item">
 					<span>PATIENT</span>
@@ -28,7 +32,13 @@ function MedicalRecordView({ record, onClose }) {
 				</div>
 				<div className="admin-detail-item full">
 					<span>VISIT NOTES</span>
-					<strong style={{ whiteSpace: "pre-wrap", fontFamily: "'Baloo Thambi 2', sans-serif", fontSize: 15 }}>
+					<strong
+						style={{
+							whiteSpace: "pre-wrap",
+							fontFamily: "'Baloo Thambi 2', sans-serif",
+							fontSize: 15,
+						}}
+					>
 						{record.notes || "No notes recorded for this visit."}
 					</strong>
 				</div>
@@ -36,6 +46,5 @@ function MedicalRecordView({ record, onClose }) {
 		</AdminModal>
 	);
 }
-
 
 export default MedicalRecordView;

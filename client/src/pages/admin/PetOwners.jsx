@@ -1,22 +1,12 @@
 import { useMemo, useState } from "react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
-import {
-	useUsers,
-	usePets,
-	useAppointments,
-} from "../../hooks/useAdminData";
+import { useUsers, usePets, useAppointments } from "../../hooks/useAdminData";
 import { formatDate, initials } from "../../utils/admin";
 import { FaUsers } from "react-icons/fa";
 import { PiPawPrint, PiStar } from "react-icons/pi";
 import { FiCheck, FiSearch } from "react-icons/fi";
 import AdminOwnerForm from "../../components/admin/owners/AdminOwnerForm";
 import AdminOwnerView from "../../components/admin/owners/AdminOwnerView";
-
-/* ---------------- ADD OWNER FORM ---------------- */
-
-/* ---------------- OWNER DETAIL ---------------- */
-
-/* ---------------- PAGE ---------------- */
 
 function PetOwners() {
 	const { data: users = [], isPending } = useUsers();
@@ -44,14 +34,18 @@ function PetOwners() {
 			.map((u) => ({
 				...u,
 				pets: petCount[u._id] || 0,
-				lastAppointment: lastAppt[u._id] ? formatDate(lastAppt[u._id]) : "No visits yet",
+				lastAppointment: lastAppt[u._id]
+					? formatDate(lastAppt[u._id])
+					: "No visits yet",
 				initials: initials(u.name),
 				status: "Active",
 			}))
 			.filter((o) => statusFilter === "all" || o.status === statusFilter)
 			.filter((o) => {
 				if (!q) return true;
-				return `${o.name} ${o.email} ${o.phone ?? ""}`.toLowerCase().includes(q);
+				return `${o.name} ${o.email} ${o.phone ?? ""}`
+					.toLowerCase()
+					.includes(q);
 			});
 	}, [users, petCount, lastAppt, statusFilter, search]);
 
@@ -64,7 +58,11 @@ function PetOwners() {
 				title="Pet Owners"
 				description="Manage client information and their registered pets."
 				actions={
-					<button className="admin-primary-button" type="button" onClick={() => setShowAdd(true)}>
+					<button
+						className="admin-primary-button"
+						type="button"
+						onClick={() => setShowAdd(true)}
+					>
 						+ Add Pet Owner
 					</button>
 				}
@@ -81,11 +79,7 @@ function PetOwners() {
 					<div>
 						<span>Total Pet Owners</span>
 						<strong>
-							{isPending ? (
-								<span className="mini-spinner" />
-							) : (
-								totalOwners
-							)}
+							{isPending ? <span className="mini-spinner" /> : totalOwners}
 						</strong>
 					</div>
 				</div>
@@ -108,9 +102,7 @@ function PetOwners() {
 
 					<div>
 						<span>With Appointments</span>
-						<strong>
-							{owners.filter((o) => o.pets > 0).length}
-						</strong>
+						<strong>{owners.filter((o) => o.pets > 0).length}</strong>
 					</div>
 				</div>
 
@@ -142,7 +134,10 @@ function PetOwners() {
 					</div>
 
 					<div className="owner-filters">
-						<select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+						<select
+							value={statusFilter}
+							onChange={(e) => setStatusFilter(e.target.value)}
+						>
 							<option value="all">All Status</option>
 							<option value="Active">Active</option>
 						</select>
@@ -175,9 +170,7 @@ function PetOwners() {
 								<tr key={owner._id}>
 									<td>
 										<div className="owner-table-info">
-											<div className="owner-avatar">
-												{owner.initials}
-											</div>
+											<div className="owner-avatar">{owner.initials}</div>
 
 											<div>
 												<strong>{owner.name}</strong>
@@ -187,9 +180,7 @@ function PetOwners() {
 									</td>
 
 									<td>
-										<span className="owner-phone">
-											{owner.phone || "—"}
-										</span>
+										<span className="owner-phone">{owner.phone || "—"}</span>
 									</td>
 
 									<td>
@@ -203,9 +194,7 @@ function PetOwners() {
 									<td>
 										<span
 											className={`owner-status ${
-												owner.status === "Active"
-													? "active"
-													: "inactive"
+												owner.status === "Active" ? "active" : "inactive"
 											}`}
 										>
 											{owner.status}
@@ -238,7 +227,9 @@ function PetOwners() {
 				{/* FOOTER */}
 
 				<div className="owners-table-footer">
-					<span>Showing {owners.length} of {owners.length} pet owners</span>
+					<span>
+						Showing {owners.length} of {owners.length} pet owners
+					</span>
 
 					<div className="owner-pagination">
 						<button type="button">‹</button>

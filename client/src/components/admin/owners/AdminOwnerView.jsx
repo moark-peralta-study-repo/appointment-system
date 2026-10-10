@@ -3,7 +3,6 @@ import { formatDate } from "../../../utils/admin";
 import { PiCat, PiDog } from "react-icons/pi";
 import { SpeciesIcon } from "../../shared/Species";
 
-
 function AdminOwnerView({ owner, pets, visits, onClose }) {
 	return (
 		<AdminModal
@@ -43,7 +42,12 @@ function AdminOwnerView({ owner, pets, visits, onClose }) {
 						<div className="admin-detail-item" key={p._id}>
 							<span>SPECIES</span>
 							<strong>
-								{p.species === "cat" ? <PiCat size={15} /> : <PiDog size={15} />} {p.name}
+								{p.species === "cat" ? (
+									<PiCat size={15} />
+								) : (
+									<PiDog size={15} />
+								)}{" "}
+								{p.name}
 							</strong>
 							<small>
 								{p.breed ?? p.species}
@@ -77,6 +81,5 @@ function AdminOwnerView({ owner, pets, visits, onClose }) {
 		</AdminModal>
 	);
 }
-
 
 export default AdminOwnerView;

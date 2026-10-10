@@ -22,7 +22,13 @@ function BookAppointment() {
 	const { user } = useAuth();
 	const [step, setStep] = useState(1);
 	const [pet, setPet] = useState(null);
-	const [booking, setBooking] = useState({ service: "", vetId: "", date: "", time: "", notes: "" });
+	const [booking, setBooking] = useState({
+		service: "",
+		vetId: "",
+		date: "",
+		time: "",
+		notes: "",
+	});
 	const [confirmed, setConfirmed] = useState(null);
 
 	const account = user?.role !== "vet" ? user : null;

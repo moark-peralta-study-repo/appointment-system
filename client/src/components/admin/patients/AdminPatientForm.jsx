@@ -1,9 +1,12 @@
 import { useState } from "react";
 import AdminModal from "../AdminModal";
-import { useUsers, useCreatePet, useUpdatePet } from "../../../hooks/useAdminData";
+import {
+	useUsers,
+	useCreatePet,
+	useUpdatePet,
+} from "../../../hooks/useAdminData";
 import { SPECIES_OPTIONS, GENDERS } from "../../shared/Species";
 import { FiAlertTriangle } from "react-icons/fi";
-
 
 function AdminPatientForm({ pet, onClose }) {
 	const { data: users = [] } = useUsers();
@@ -50,7 +53,11 @@ function AdminPatientForm({ pet, onClose }) {
 			onClose={onClose}
 			footer={
 				<>
-					<button className="admin-secondary-button" type="button" onClick={onClose}>
+					<button
+						className="admin-secondary-button"
+						type="button"
+						onClick={onClose}
+					>
 						Cancel
 					</button>
 					<button
@@ -62,18 +69,26 @@ function AdminPatientForm({ pet, onClose }) {
 						{mutation.isPending
 							? "Saving…"
 							: pet
-							? "Save Changes"
-							: "Register Patient"}
+								? "Save Changes"
+								: "Register Patient"}
 					</button>
 				</>
 			}
 		>
-			{error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {error.message}</div>}
+			{error && (
+				<div className="admin-form-error">
+					<FiAlertTriangle size={13} /> {error.message}
+				</div>
+			)}
 
 			<div className="admin-form-grid">
 				<div className="admin-form-field full">
 					<label>Pet Owner</label>
-					<select value={form.ownerId} onChange={set("ownerId")} disabled={Boolean(pet)}>
+					<select
+						value={form.ownerId}
+						onChange={set("ownerId")}
+						disabled={Boolean(pet)}
+					>
 						<option value="">Select an owner…</option>
 						{owners.map((o) => (
 							<option key={o._id} value={o._id}>
@@ -81,12 +96,23 @@ function AdminPatientForm({ pet, onClose }) {
 							</option>
 						))}
 					</select>
-					{pet && <small className="admin-slot-note">Owner is fixed once a patient is registered.</small>}
+					{pet && (
+						<small className="admin-slot-note">
+							Owner is fixed once a patient is registered.
+						</small>
+					)}
 				</div>
 
 				<div className="admin-form-field">
-					<label>Pet Name <span>*</span></label>
-					<input type="text" value={form.name} onChange={set("name")} placeholder="e.g. Mochi" />
+					<label>
+						Pet Name <span>*</span>
+					</label>
+					<input
+						type="text"
+						value={form.name}
+						onChange={set("name")}
+						placeholder="e.g. Mochi"
+					/>
 				</div>
 
 				<div className="admin-form-field">
@@ -102,12 +128,23 @@ function AdminPatientForm({ pet, onClose }) {
 
 				<div className="admin-form-field">
 					<label>Breed</label>
-					<input type="text" value={form.breed} onChange={set("breed")} placeholder="e.g. Golden Retriever" />
+					<input
+						type="text"
+						value={form.breed}
+						onChange={set("breed")}
+						placeholder="e.g. Golden Retriever"
+					/>
 				</div>
 
 				<div className="admin-form-field">
 					<label>Age (years)</label>
-					<input type="number" min="0" max="30" value={form.age} onChange={set("age")} />
+					<input
+						type="number"
+						min="0"
+						max="30"
+						value={form.age}
+						onChange={set("age")}
+					/>
 				</div>
 
 				<div className="admin-form-field">
@@ -122,7 +159,9 @@ function AdminPatientForm({ pet, onClose }) {
 				</div>
 
 				<div className="admin-form-field full">
-					<label>Medical Notes <span>(optional)</span></label>
+					<label>
+						Medical Notes <span>(optional)</span>
+					</label>
 					<textarea
 						rows="3"
 						value={form.notes}
@@ -134,6 +173,5 @@ function AdminPatientForm({ pet, onClose }) {
 		</AdminModal>
 	);
 }
-
 
 export default AdminPatientForm;

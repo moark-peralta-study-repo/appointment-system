@@ -20,13 +20,21 @@ function PetPortal() {
 					</p>
 
 					<ul>
-						<li><FaCheck size={13} /> View medical records</li>
+						<li>
+							<FaCheck size={13} /> View medical records
+						</li>
 
-						<li><FaCheck size={13} /> Keep track of vaccinations</li>
+						<li>
+							<FaCheck size={13} /> Keep track of vaccinations
+						</li>
 
-						<li><FaCheck size={13} /> Manage upcoming appointments</li>
+						<li>
+							<FaCheck size={13} /> Manage upcoming appointments
+						</li>
 
-						<li><FaCheck size={13} /> Update your pet's information</li>
+						<li>
+							<FaCheck size={13} /> Update your pet's information
+						</li>
 					</ul>
 
 					<button type="button" className="primary-button">

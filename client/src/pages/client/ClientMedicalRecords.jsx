@@ -31,7 +31,9 @@ function ClientMedicalRecords() {
 			.sort((x, y) => new Date(y.date) - new Date(x.date));
 	}, [appointments, search]);
 
-	const withNotes = appointments.filter((a) => a.status === "completed" && a.vetNotes).length;
+	const withNotes = appointments.filter(
+		(a) => a.status === "completed" && a.vetNotes,
+	).length;
 
 	return (
 		<>
@@ -49,21 +51,29 @@ function ClientMedicalRecords() {
 				<>
 					<section className="client-records-summary">
 						<div className="medical-summary-card">
-							<div className="medical-summary-icon blue"><FaClipboardList size={20} /></div>
+							<div className="medical-summary-icon blue">
+								<FaClipboardList size={20} />
+							</div>
 							<div>
 								<span>Completed Visits</span>
-								<strong>{appointments.filter((a) => a.status === "completed").length}</strong>
+								<strong>
+									{appointments.filter((a) => a.status === "completed").length}
+								</strong>
 							</div>
 						</div>
 						<div className="medical-summary-card">
-							<div className="medical-summary-icon green"><FiCheck size={20} /></div>
+							<div className="medical-summary-icon green">
+								<FiCheck size={20} />
+							</div>
 							<div>
 								<span>With Visit Notes</span>
 								<strong>{withNotes}</strong>
 							</div>
 						</div>
 						<div className="medical-summary-card">
-							<div className="medical-summary-icon soft-blue"><PiPawPrint size={20} /></div>
+							<div className="medical-summary-icon soft-blue">
+								<PiPawPrint size={20} />
+							</div>
 							<div>
 								<span>My Pets</span>
 								<strong>{pets.length}</strong>
@@ -84,8 +94,8 @@ function ClientMedicalRecords() {
 
 						{records.length === 0 ? (
 							<p className="admin-panel-empty">
-								No completed visits yet. Records appear here once your vet
-								marks a visit as complete.
+								No completed visits yet. Records appear here once your vet marks
+								a visit as complete.
 							</p>
 						) : (
 							<div className="client-records-list">
@@ -93,7 +103,9 @@ function ClientMedicalRecords() {
 									const pet = a.pet;
 									return (
 										<article className="client-record-card" key={a._id}>
-											<div className="client-appt-avatar"><SpeciesIcon species={pet?.species} /></div>
+											<div className="client-appt-avatar">
+												<SpeciesIcon species={pet?.species} />
+											</div>
 
 											<div className="client-record-main">
 												<strong>
@@ -111,7 +123,9 @@ function ClientMedicalRecords() {
 														: a.vetNotes}
 												</p>
 											) : (
-												<span className="client-record-nonotes">No notes recorded</span>
+												<span className="client-record-nonotes">
+													No notes recorded
+												</span>
 											)}
 
 											<button
@@ -130,7 +144,9 @@ function ClientMedicalRecords() {
 				</>
 			)}
 
-			{viewing && <ClientRecordView record={viewing} onClose={() => setViewing(null)} />}
+			{viewing && (
+				<ClientRecordView record={viewing} onClose={() => setViewing(null)} />
+			)}
 		</>
 	);
 }

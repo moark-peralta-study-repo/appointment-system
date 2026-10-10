@@ -1,10 +1,14 @@
 import AdminModal from "../AdminModal";
 import { formatDate } from "../../../utils/admin";
 
-
 function AdminPatientView({ pet, ownersById, visits, onClose }) {
 	return (
-		<AdminModal eyebrow="PATIENT RECORD" title={pet.name} onClose={onClose} wide>
+		<AdminModal
+			eyebrow="PATIENT RECORD"
+			title={pet.name}
+			onClose={onClose}
+			wide
+		>
 			<div className="admin-detail-grid">
 				<div className="admin-detail-item">
 					<span>OWNER</span>
@@ -24,7 +28,9 @@ function AdminPatientView({ pet, ownersById, visits, onClose }) {
 				</div>
 				<div className="admin-detail-item">
 					<span>GENDER</span>
-					<strong>{pet.gender?.charAt(0).toUpperCase() + pet.gender?.slice(1) ?? "—"}</strong>
+					<strong>
+						{pet.gender?.charAt(0).toUpperCase() + pet.gender?.slice(1) ?? "—"}
+					</strong>
 				</div>
 				<div className="admin-detail-item full">
 					<span>STATUS</span>
@@ -56,6 +62,5 @@ function AdminPatientView({ pet, ownersById, visits, onClose }) {
 		</AdminModal>
 	);
 }
-
 
 export default AdminPatientView;

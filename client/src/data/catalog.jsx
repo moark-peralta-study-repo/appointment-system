@@ -44,14 +44,16 @@ export const SERVICES = [
 	{
 		id: "diagnostics",
 		label: "Diagnostics",
-		short: "Bloodwork and testing to help our veterinarians understand your pet.",
+		short:
+			"Bloodwork and testing to help our veterinarians understand your pet.",
 		price: "20+ Tests",
 		icon: <FaMicroscope size={22} />,
 	},
 	{
 		id: "surgery",
 		label: "Surgery",
-		short: "Specialized procedures supported by careful monitoring and aftercare.",
+		short:
+			"Specialized procedures supported by careful monitoring and aftercare.",
 		price: "Consultation",
 		icon: <FaStethoscope size={22} />,
 	},

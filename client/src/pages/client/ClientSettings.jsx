@@ -90,7 +90,10 @@ function ClientSettings() {
 				<div className="settings-panel-header">
 					<div>
 						<h2>Account</h2>
-						<p>Name, contact details and your registered pets live on the profile page.</p>
+						<p>
+							Name, contact details and your registered pets live on the profile
+							page.
+						</p>
 					</div>
 					<Link className="admin-secondary-button" to="/client/profile">
 						Open Profile

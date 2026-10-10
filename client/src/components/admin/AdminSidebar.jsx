@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { RxDashboard, RxCalendar, RxPeople, RxPerson } from "react-icons/rx";
-import { CiMedicalCase, CiMedicalClipboard, CiSettings, CiUser } from "react-icons/ci";
+import {
+	CiMedicalCase,
+	CiMedicalClipboard,
+	CiSettings,
+	CiUser,
+} from "react-icons/ci";
 import { FaChartBar, FaSignOutAlt } from "react-icons/fa";
 import logo from "../../assets/logo/happy-paws-logo.png";
 import { useAuth } from "../../context/useAuth";
@@ -16,7 +21,8 @@ function AdminSidebar() {
 	useEffect(() => {
 		if (!menuOpen) return;
 		const onClick = (e) => {
-			if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+			if (menuRef.current && !menuRef.current.contains(e.target))
+				setMenuOpen(false);
 		};
 		const onKey = (e) => e.key === "Escape" && setMenuOpen(false);
 		document.addEventListener("mousedown", onClick);
@@ -146,11 +152,19 @@ function AdminSidebar() {
 
 						{menuOpen && (
 							<div className="admin-user-dropdown" role="menu">
-								<button role="menuitem" type="button" onClick={() => go("/admin/settings")}>
+								<button
+									role="menuitem"
+									type="button"
+									onClick={() => go("/admin/settings")}
+								>
 									<CiUser />
 									<span>My Profile</span>
 								</button>
-								<button role="menuitem" type="button" onClick={() => go("/admin/settings?focus=schedule")}>
+								<button
+									role="menuitem"
+									type="button"
+									onClick={() => go("/admin/settings?focus=schedule")}
+								>
 									<RxCalendar />
 									<span>My Schedule</span>
 								</button>

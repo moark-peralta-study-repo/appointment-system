@@ -3,7 +3,6 @@ import { useAuth } from "../../../context/useAuth";
 import { useUpdateMyProfile } from "../../../hooks/useClientData";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
 
-
 function ClientAccountSection() {
 	const { user } = useAuth();
 	const updateProfile = useUpdateMyProfile();
@@ -58,18 +57,26 @@ function ClientAccountSection() {
 				{updateProfile.isPending ? (
 					<span className="client-save-badge">Saving…</span>
 				) : saved ? (
-					<span className="client-save-badge"><FiCheck size={12} /> Saved</span>
+					<span className="client-save-badge">
+						<FiCheck size={12} /> Saved
+					</span>
 				) : null}
 			</div>
 
 			<div className="admin-form-grid">
 				<div className="admin-form-field full">
-					<label>Full name <span>*</span></label>
+					<label>
+						Full name <span>*</span>
+					</label>
 					<input value={form.name} onChange={set("name")} />
 				</div>
 				<div className="admin-form-field">
 					<label>Phone</label>
-					<input value={form.phone} onChange={set("phone")} placeholder="+63 917 000 0000" />
+					<input
+						value={form.phone}
+						onChange={set("phone")}
+						placeholder="+63 917 000 0000"
+					/>
 				</div>
 				<div className="admin-form-field">
 					<label>Email</label>
@@ -77,7 +84,11 @@ function ClientAccountSection() {
 				</div>
 			</div>
 
-			{updateProfile.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {updateProfile.error.message}</div>}
+			{updateProfile.error && (
+				<div className="admin-form-error">
+					<FiAlertTriangle size={13} /> {updateProfile.error.message}
+				</div>
+			)}
 
 			<div className="settings-actions">
 				<button
@@ -92,6 +103,5 @@ function ClientAccountSection() {
 		</section>
 	);
 }
-
 
 export default ClientAccountSection;

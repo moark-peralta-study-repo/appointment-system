@@ -4,7 +4,6 @@ import { useCreateMyPet, useUpdateMyPet } from "../../../hooks/useClientData";
 import { SPECIES_PICKER, GENDERS } from "../../shared/Species";
 import { FiAlertTriangle } from "react-icons/fi";
 
-
 function ClientPetForm({ pet, onClose }) {
 	const createPet = useCreateMyPet();
 	const updatePet = useUpdateMyPet();
@@ -41,7 +40,11 @@ function ClientPetForm({ pet, onClose }) {
 			onClose={onClose}
 			footer={
 				<>
-					<button className="admin-secondary-button" type="button" onClick={onClose}>
+					<button
+						className="admin-secondary-button"
+						type="button"
+						onClick={onClose}
+					>
 						Cancel
 					</button>
 					<button
@@ -55,12 +58,23 @@ function ClientPetForm({ pet, onClose }) {
 				</>
 			}
 		>
-			{mutation.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {mutation.error.message}</div>}
+			{mutation.error && (
+				<div className="admin-form-error">
+					<FiAlertTriangle size={13} /> {mutation.error.message}
+				</div>
+			)}
 
 			<div className="admin-form-grid">
 				<div className="admin-form-field full">
-					<label>Pet name <span>*</span></label>
-					<input value={form.name} onChange={set("name")} placeholder="e.g. Max" autoFocus />
+					<label>
+						Pet name <span>*</span>
+					</label>
+					<input
+						value={form.name}
+						onChange={set("name")}
+						placeholder="e.g. Max"
+						autoFocus
+					/>
 				</div>
 
 				<div className="admin-form-field full">
@@ -82,7 +96,11 @@ function ClientPetForm({ pet, onClose }) {
 
 				<div className="admin-form-field">
 					<label>Breed</label>
-					<input value={form.breed} onChange={set("breed")} placeholder="e.g. Beagle" />
+					<input
+						value={form.breed}
+						onChange={set("breed")}
+						placeholder="e.g. Beagle"
+					/>
 				</div>
 
 				<div className="admin-form-field">
@@ -121,6 +139,5 @@ function ClientPetForm({ pet, onClose }) {
 		</AdminModal>
 	);
 }
-
 
 export default ClientPetForm;
