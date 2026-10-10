@@ -194,16 +194,35 @@
   font-size: 18px;
 }
 
-.reports-status-list {
+.reports-status-chart {
   display: flex;
   flex-direction: column;
-  gap: 17px;
+  align-items: center;
+  gap: 22px;
+}
+
+.reports-pie-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.reports-status-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
 }
 
 .reports-status-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
+}
+
+.reports-status-item .reports-status-name {
+  flex: 1;
+  min-width: 0;
 }
 
 .reports-status-name {
@@ -212,6 +231,9 @@
   gap: 10px;
   color: var(--muted);
   font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .reports-status-item strong {
@@ -220,26 +242,20 @@
   font-size: 17px;
 }
 
+.reports-status-pct {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  width: 44px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
 .reports-status-dot {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-}
-
-.reports-status-dot.confirmed {
-  background: var(--primary);
-}
-
-.reports-status-dot.pending {
-  background: var(--accent-hover);
-}
-
-.reports-status-dot.completed {
-  background: var(--success);
-}
-
-.reports-status-dot.cancelled {
-  background: var(--danger-text);
+  flex-shrink: 0;
 }
 
 .reports-status-total {
@@ -254,6 +270,14 @@
 
 .reports-status-total strong {
   color: var(--foreground);
+}
+
+.reports-chart-block {
+  padding: 4px 0 0;
+}
+
+.reports-chart-block .reports-chart {
+  width: 100%;
 }
 
 .reports-vet-panel {

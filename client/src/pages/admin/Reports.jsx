@@ -1,8 +1,22 @@
 import { useMemo, useState } from "react";
+import {
+	Area,
+	AreaChart,
+	Bar,
+	BarChart,
+	Cell,
+	Line,
+	LineChart,
+	Pie,
+	PieChart,
+	ResponsiveContainer,
+	Tooltip,
+	XAxis,
+	YAxis,
+} from "recharts";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import { useStats, useAppointments, usePets, useUsers } from "../../hooks/useAdminData";
-import { initials } from "../../utils/admin";
-import { FaClock, FaDownload, FaThLarge } from "react-icons/fa";
+import { FaClock, FaDownload, FaPaw, FaThLarge } from "react-icons/fa";
 import { FiCheck } from "react-icons/fi";
 
 // Ranges the header selector offers. All filtering is client-side over the
@@ -18,6 +32,18 @@ const RANGES = [
 
 const MONTHS = ["January", "February", "March", "April", "May", "June",
 	"July", "August", "September", "October", "November", "December"];
+
+// Recharts renders raw SVG, so it can't read CSS vars — these are the light
+// theme values (the app's running mode), matched to the palette tokens.
+const C = {
+	primary: "#0091fd",
+	success: "#7cb342",
+	warning: "#f4a63a",
+	danger: "#e0635a",
+	grid: "#e4e9dc",
+	axis: "#7b8577",
+	surface: "#ffffff",
+};
 
 function rangeStart(id) {
 	const now = new Date();
@@ -62,7 +88,7 @@ function toDayKey(v) {
 	return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-// Bucketing for the trend chart depends on how wide the range is.
+// Bucketing for the trend charts depends on how wide the range is.
 function buildBuckets(appts, rangeId) {
 	const start = rangeStart(rangeId);
 	const now = new Date();
@@ -122,6 +148,55 @@ function csvEscape(v) {
 	return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
+const AXIS_TICK = { fontSize: 11, fill: C.axis };
+
+// Styled tooltip used by every chart on this page.
+function ChartTip({ active, payload, label, formatter }) {
+	if (!active || !payload?.length) return null;
+	return (
+		<div style={{
+			background: C.surface,
+			border: `1px solid ${C.grid}`,
+			borderRadius: 10,
+			padding: "8px 12px",
+			fontSize: 12,
+			boxShadow: "0 4px 14px rgba(4,30,48,.10)",
+		}}>
+			{label != null && (
+				<div style={{ color: C.axis, marginBottom: 5, fontSize: 11 }}>{label}</div>
+			)}
+			{payload.map((p, i) => (
+				<div key={i} style={{ display: "flex", alignItems: "center", gap: 6, marginTop: i ? 3 : 0 }}>
+					<span style={{ width: 8, height: 8, borderRadius: 2, background: p.color, display: "inline-block" }} />
+					<span style={{ color: C.axis }}>{formatter ? formatter(p, i) : p.name}</span>
+					<strong>{p.value}</strong>
+				</div>
+			))}
+		</div>
+	);
+}
+
+function CenterLabel({ value, sub }) {
+	return (
+		<div style={{
+			position: "absolute", inset: 0,
+			display: "flex", flexDirection: "column",
+			alignItems: "center", justifyContent: "center",
+			pointerEvents: "none",
+		}}>
+			<span style={{ fontSize: 28, fontWeight: 800, color: "var(--text)" }}>{value}</span>
+			<span style={{ fontSize: 11, color: "var(--text-soft)", marginTop: 2 }}>{sub}</span>
+		</div>
+	);
+}
+
+const STATUS_META = [
+	{ key: "confirmed", color: C.primary },
+	{ key: "pending", color: C.warning },
+	{ key: "completed", color: C.success },
+	{ key: "cancelled", color: C.danger },
+];
+
 function Reports() {
 	const { data: stats } = useStats();
 	const { data: appointments = [] } = useAppointments();
@@ -144,31 +219,47 @@ function Reports() {
 
 	// ---- trend buckets ------------------------------------------------
 	const buckets = useMemo(() => buildBuckets(appointments, range), [appointments, range]);
-	const maxBucket = Math.max(...buckets.map((b) => b.count), 1);
 	const rangeTotal = inRange.length;
+
+	// New patients registered in each bucket (for the overview line).
+	const newPetsByBucket = useMemo(() => {
+		const counts = Object.fromEntries(buckets.map((b) => [b.key, 0]));
+		for (const p of pets) {
+			if (!p.createdAt) continue;
+			const d = new Date(p.createdAt);
+			if (d < start) continue;
+			const key =
+				range === "week" || range === "month"
+					? toDayKey(d)
+					: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+			if (key in counts) counts[key] += 1;
+		}
+		return buckets.map((b) => ({ ...b, newPatients: counts[b.key] }));
+	}, [buckets, pets, range, start]);
 
 	// ---- status breakdown (in range) ---------------------------------
 	const byStatus = { pending: 0, confirmed: 0, completed: 0, cancelled: 0 };
 	for (const a of inRange) byStatus[a.status] = (byStatus[a.status] ?? 0) + 1;
-
-	// ---- new patients (in range) -------------------------------------
+	const statusData = STATUS_META
+		.map((m) => ({ name: m.key, value: byStatus[m.key] ?? 0, color: m.color }))
+		.filter((d) => d.value > 0);
 	const newPets = pets.filter((p) => new Date(p.createdAt) >= start).length;
 
-	// ---- vet workload (in range) ---------------------------------------
+	// ---- vet workload (in range) --------------------------------------
 	const byVet = {};
 	for (const a of inRange) {
 		if (a.vet) byVet[a.vet] = (byVet[a.vet] || 0) + 1;
 	}
 	const vetRows = Object.entries(byVet).sort((a, b) => b[1] - a[1]);
-	const maxVet = Math.max(...vetRows.map(([, n]) => n), 1);
+	const vetData = vetRows.map(([name, count]) => ({ name, count }));
 
-	// ---- popular services (in range) ------------------------------------
+	// ---- popular services (in range) -----------------------------------
 	const byService = {};
 	for (const a of inRange) {
 		if (a.reason) byService[a.reason] = (byService[a.reason] || 0) + 1;
 	}
 	const serviceRows = Object.entries(byService).sort((a, b) => b[1] - a[1]).slice(0, 5);
-	const maxService = Math.max(...serviceRows.map(([, n]) => n), 1);
+	const serviceData = serviceRows.map(([name, count]) => ({ name, count }));
 
 	// ---- CSV export ------------------------------------------------------
 	const exportCSV = () => {
@@ -280,7 +371,7 @@ function Reports() {
 				</div>
 
 				<div className="reports-summary-card">
-					<div className="reports-summary-icon soft-blue">₱</div>
+					<div className="reports-summary-icon soft-blue"><FaPaw size={20} /></div>
 
 					<div>
 						<span>Active Patients</span>
@@ -292,46 +383,69 @@ function Reports() {
 
 			{/* Main Reports */}
 			<section className="reports-grid">
-				{/* Appointment Overview — trend for the selected range */}
+				{/* Appointment Overview — appointments + new patients trend */}
 				<div className="admin-panel reports-panel">
 					<div className="reports-panel-header">
 						<div>
 							<h2>Appointment Overview</h2>
-							<p>Appointments recorded in {label.toLowerCase()}.</p>
+							<p>Appointments and new patients in {label.toLowerCase()}.</p>
 						</div>
 
 						<span className="reports-panel-label">{label}</span>
 					</div>
 
-					<div className="reports-chart">
-						{rangeTotal === 0 && (
-							<div className="admin-panel-empty">No appointments in this range yet.</div>
-						)}
-
-						{rangeTotal > 0 &&
-							buckets.map((b) => (
-								<div className="reports-chart-row" key={b.key}>
-									<span>{b.label}</span>
-
-									<div className="reports-bar-track">
-										<div
-											className="reports-bar"
-											style={{ width: `${Math.round((b.count / maxBucket) * 100)}%` }}
-										/>
-									</div>
-
-									<strong>{b.count}</strong>
+					{rangeTotal === 0 ? (
+						<div className="admin-panel-empty">No appointments in this range yet.</div>
+					) : (
+						<>
+							<div className="reports-chart-block">
+								<div className="reports-chart" style={{ height: 240 }}>
+									<ResponsiveContainer width="100%" height="100%">
+										<AreaChart data={newPetsByBucket} margin={{ top: 10, right: 8, left: -18, bottom: 0 }}>
+											<defs>
+												<linearGradient id="gradAppointments" x1="0" y1="0" x2="0" y2="1">
+													<stop offset="0%" stopColor={C.primary} stopOpacity={0.32} />
+													<stop offset="100%" stopColor={C.primary} stopOpacity={0.03} />
+												</linearGradient>
+											</defs>
+											<XAxis dataKey="label" tick={AXIS_TICK} tickLine={false} axisLine={false} interval="preserveStartEnd" minTickGap={24} />
+											<YAxis tick={AXIS_TICK} tickLine={false} axisLine={false} allowDecimals={false} width={44} />
+											<Tooltip
+												content={<ChartTip formatter={(p) => (p.dataKey === "count" ? "Appointments" : "New patients")} />}
+											/>
+											<Area
+												type="monotone"
+												dataKey="count"
+												name="Appointments"
+												stroke={C.primary}
+												strokeWidth={2.5}
+												fill="url(#gradAppointments)"
+												dot={false}
+												activeDot={{ r: 4, strokeWidth: 0 }}
+											/>
+											<Line
+												type="monotone"
+												dataKey="newPatients"
+												name="New patients"
+												stroke={C.success}
+												strokeWidth={2}
+												strokeDasharray="5 4"
+												dot={false}
+											/>
+										</AreaChart>
+									</ResponsiveContainer>
 								</div>
-							))}
-					</div>
+							</div>
 
-					<div className="reports-chart-footer">
-						<span>Total in range</span>
-						<strong>{rangeTotal}</strong>
-					</div>
+							<div className="reports-chart-footer">
+								<span>Total in range</span>
+								<strong>{rangeTotal} appointments · {newPets} new patients</strong>
+							</div>
+						</>
+					)}
 				</div>
 
-				{/* Appointment Status — in range */}
+				{/* Appointment Status — donut for the selected range */}
 				<div className="admin-panel reports-panel">
 					<div className="reports-panel-header">
 						<div>
@@ -340,23 +454,54 @@ function Reports() {
 						</div>
 					</div>
 
-					<div className="reports-status-list">
-						{["confirmed", "pending", "completed", "cancelled"].map((s) => (
-							<div className="reports-status-item" key={s}>
-								<div className="reports-status-name">
-									<span className={`reports-status-dot ${s}`}></span>
-									<span>{s.charAt(0).toUpperCase() + s.slice(1)}</span>
-								</div>
-
-								<strong>{byStatus[s] ?? 0}</strong>
+					{rangeTotal === 0 ? (
+						<div className="admin-panel-empty">No appointments in this range.</div>
+					) : (
+						<div className="reports-status-chart">
+							<div className="reports-pie-wrap" style={{ height: 220, width: 220 }}>
+								<ResponsiveContainer width="100%" height="100%">
+									<PieChart>
+										<Tooltip
+											content={<ChartTip formatter={(p) => p.name.charAt(0).toUpperCase() + p.name.slice(1)} />}
+										/>
+										<Pie
+											data={statusData}
+											dataKey="value"
+											nameKey="name"
+											cx="50%"
+											cy="50%"
+											innerRadius={68}
+											outerRadius={92}
+											paddingAngle={2}
+											stroke={C.surface}
+											strokeWidth={3}
+										>
+											{statusData.map((s) => (
+												<Cell key={s.name} fill={s.color} />
+											))}
+										</Pie>
+									</PieChart>
+								</ResponsiveContainer>
+								<CenterLabel value={rangeTotal} sub="appointments" />
 							</div>
-						))}
-					</div>
 
-					<div className="reports-status-total">
-						<span>Total</span>
-						<strong>{rangeTotal} appointments</strong>
-					</div>
+							<div className="reports-status-legend">
+								{STATUS_META.map(({ key, color }) => {
+									const n = byStatus[key] ?? 0;
+									return (
+										<div className="reports-status-item" key={key}>
+											<div className="reports-status-name">
+												<span className="reports-status-dot" style={{ background: color }} />
+												<span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
+											</div>
+											<strong>{n}</strong>
+											<span className="reports-status-pct">{rangeTotal ? Math.round((n / rangeTotal) * 100) : 0}%</span>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					)}
 				</div>
 			</section>
 
@@ -369,35 +514,29 @@ function Reports() {
 					</div>
 				</div>
 
-				<div className="reports-vet-list">
-					{vetRows.length === 0 && (
-						<div className="admin-panel-empty">No appointments in this range.</div>
-					)}
-
-					{vetRows.map(([name, count]) => (
-						<div className="reports-vet-row" key={name}>
-							<div className="reports-vet-info">
-								<div className="reports-vet-avatar">{initials(name)}</div>
-
-								<div>
-									<strong>{name}</strong>
-									<span>{count} appointment{count === 1 ? "" : "s"}</span>
-								</div>
-							</div>
-
-							<div className="reports-vet-progress">
-								<div className="reports-progress-track">
-									<div
-										className="reports-progress-bar"
-										style={{ width: `${Math.round((count / maxVet) * 100)}%` }}
-									/>
-								</div>
-
-								<strong>{count}</strong>
-							</div>
-						</div>
-					))}
-				</div>
+				{vetData.length === 0 ? (
+					<div className="admin-panel-empty">No appointments in this range.</div>
+				) : (
+					<div className="reports-chart" style={{ height: Math.max(180, vetData.length * 64) }}>
+						<ResponsiveContainer width="100%" height="100%">
+							<BarChart data={vetData} layout="vertical" margin={{ top: 4, right: 24, left: 12, bottom: 0 }}>
+								<XAxis type="number" tick={AXIS_TICK} tickLine={false} axisLine={false} allowDecimals={false} />
+								<YAxis
+									type="category"
+									dataKey="name"
+									tick={{ fontSize: 12, fill: "var(--text)" }}
+									tickLine={false}
+									axisLine={false}
+									width={150}
+								/>
+								<Tooltip
+									content={<ChartTip formatter={(p) => p.payload.name} />}
+								/>
+								<Bar dataKey="count" name="Appointments" fill={C.primary} radius={[0, 8, 8, 0]} barSize={26} />
+							</BarChart>
+						</ResponsiveContainer>
+					</div>
+				)}
 			</section>
 
 			{/* Popular Services — in range */}
@@ -409,22 +548,31 @@ function Reports() {
 					</div>
 				</div>
 
-				<div className="reports-services-grid">
-					{serviceRows.length === 0 && (
-						<div className="admin-panel-empty">No service data in this range.</div>
-					)}
-
-					{serviceRows.map(([service, count]) => (
-						<div className="reports-service-item" key={service}>
-							<div>
-								<strong>{service}</strong>
-								<span>{count} appointment{count === 1 ? "" : "s"}</span>
-							</div>
-
-							<b>{Math.round((count / maxService) * 100)}%</b>
-						</div>
-					))}
-				</div>
+				{serviceData.length === 0 ? (
+					<div className="admin-panel-empty">No service data in this range.</div>
+				) : (
+					<div className="reports-chart" style={{ height: 260 }}>
+						<ResponsiveContainer width="100%" height="100%">
+							<BarChart data={serviceData} margin={{ top: 4, right: 8, left: -18, bottom: 4 }}>
+								<XAxis
+									dataKey="name"
+									tick={{ fontSize: 10, fill: C.axis }}
+									tickLine={false}
+									axisLine={false}
+									interval={0}
+									angle={-24}
+									textAnchor="end"
+									height={64}
+								/>
+								<YAxis tick={AXIS_TICK} tickLine={false} axisLine={false} allowDecimals={false} width={40} />
+								<Tooltip
+									content={<ChartTip formatter={(p) => p.payload.name} />}
+								/>
+								<Bar dataKey="count" name="Appointments" fill={C.primary} radius={[8, 8, 0, 0]} barSize={30} />
+							</BarChart>
+						</ResponsiveContainer>
+					</div>
+				)}
 			</section>
 		</>
 	);
