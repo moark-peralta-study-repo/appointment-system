@@ -41,7 +41,7 @@ function useSavedFlash() {
 
 function Settings() {
 	const { user } = useAuth();
-	const { data: vets = [] } = useVets();
+	const { data: vets = [], isFetching: vetsLoading } = useVets();
 	const updateVet = useUpdateVet();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const scheduleRef = useRef(null);
@@ -61,9 +61,13 @@ function Settings() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [searchParams, vets.length]);
 
-	// This account's own vet profile — matched by name (the public vet
-	// list omits email; the staff user list has the name).
-	const myVet = vets.find((v) => v.name === user?.name);
+	// This account's own vet profile. Matched by userId (the vet doc links a
+	// User via `user`), falling back to name for any legacy profiles created
+	// before userId was exposed. userId is stable — the display name can
+	// differ, so it's only the fallback.
+	const myVet =
+		vets.find((v) => v.userId === user?._id) ??
+		vets.find((v) => v.name === user?.name);
 
 	// --- Clinic profile (persisted locally — no clinic model in the API) ---
 	const [clinic, setClinic] = useState(() =>
@@ -110,8 +114,14 @@ function Settings() {
 	}, [myVet?._id]);
 
 	const saveHours = () => {
+		// While the vet list is still loading, myVet is undefined but that
+		// isn't an error — the button is disabled so this shouldn't run, but
+		// guard anyway.
+		if (vetsLoading) return;
 		if (!myVet) {
-			setHoursError("No vet profile found for this account — hours can't be saved.");
+			setHoursError(
+				"This account has no vet profile yet, so working hours can't be saved. Ask an admin to create one under Veterinarians.",
+			);
 			return;
 		}
 		setHoursError("");
@@ -226,14 +236,25 @@ function Settings() {
 							</div>
 						</div>
 
-						{myVet && (
+						{myVet ? (
 							<ScheduleEditor value={schedule} onChange={setSchedule} />
+						) : vetsLoading ? (
+							<div className="settings-schedule-loading">Loading your schedule…</div>
+						) : (
+							<div className="admin-panel-empty">
+								No vet profile is linked to this account, so there's no schedule to edit yet.
+							</div>
 						)}
 
 						{hoursError && <div className="admin-form-error"><FiAlertTriangle size={13} /> {hoursError}</div>}
 
 						<div className="settings-actions">
-							<button className="admin-secondary-button" type="button" onClick={saveHours} disabled={updateVet.isPending}>
+							<button
+								className="admin-secondary-button"
+								type="button"
+								onClick={saveHours}
+								disabled={vetsLoading || updateVet.isPending || !myVet}
+							>
 								{updateVet.isPending ? "Saving…" : hoursSaved ? (<><FiCheck size={13} /> Saved</>) : "Save Hours"}
 							</button>
 						</div>

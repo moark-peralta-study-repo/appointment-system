@@ -29,7 +29,8 @@ export async function listVets() {
 	const vets = await Vet.find({ active: true }).populate("user", "name");
 	return vets.map((v) => ({
 		_id: v._id,
-		name: v.user.name,
+		userId: v.user?._id,
+		name: v.user?.name,
 		specialty: v.specialty,
 		bio: v.bio,
 		schedule: v.schedule,
