@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
 	// On load: if a token is stored, verify it with GET /auth/profile.
 	// This is what makes refreshes "stay signed in" — the token in
 	// localStorage is re-checked against the API on every page load.
-	const { data, isPending, isFetching, isError } = useQuery({
+	const { data, isFetching, isError } = useQuery({
 		queryKey: ["profile"],
 		queryFn: () => apiFetch("/auth/profile"),
 		enabled: Boolean(getToken()),
@@ -39,14 +39,19 @@ export function AuthProvider({ children }) {
 
 	const logout = () => {
 		clearToken();
-		queryClient.setQueryData(["profile"], undefined);
+		// v5: setQueryData(key, undefined) is a NO-OP (an updater that returns
+		// undefined leaves the data unchanged), so the old user stayed cached and
+		// the route guard kept us signed in. Set null explicitly so `data`
+		// becomes null → user null → the guard bounces to the login page.
+		queryClient.setQueryData(["profile"], null);
 	};
 
 	const user = data?.user ?? null;
-	// In react-query v5, isPending stays true for DISABLED queries (no token
-	// yet — nothing to check). Only wait while a request is actually in flight:
-	// isPending && isFetching.
-	const isSettled = !isPending || !isFetching;
+	// Wait only while a request is actually in flight. A disabled query
+	// (no token — we just signed out) reports isPending but never fetches,
+	// so it must count as settled: otherwise the guard's "checking your
+	// session" loader spins forever.
+	const isSettled = !isFetching;
 	const isAuthed = isSettled && Boolean(user);
 
 	return (

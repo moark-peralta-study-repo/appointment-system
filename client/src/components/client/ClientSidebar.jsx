@@ -137,8 +137,10 @@ function ClientSidebar() {
 									className="danger"
 									onClick={() => {
 										setMenuOpen(false);
+										// Clear the token; the route guard on /client then
+										// bounces to the login page (calling navigate here too
+										// races the guard's redirect).
 										logout();
-										navigate("/client/login");
 									}}
 								>
 									<FaSignOutAlt />

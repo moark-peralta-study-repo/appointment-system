@@ -161,8 +161,10 @@ function AdminSidebar() {
 									className="danger"
 									onClick={() => {
 										setMenuOpen(false);
+										// Clear the token; the route guard on /admin then
+										// bounces to the login page (we don't navigate
+										// here — calling both races the guard's redirect).
 										logout();
-										navigate("/admin/login");
 									}}
 								>
 									<FaSignOutAlt />
