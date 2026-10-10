@@ -25,10 +25,18 @@ import ClientAppointments from "./pages/client/ClientAppointments";
 import ClientMedicalRecords from "./pages/client/ClientMedicalRecords";
 import ClientProfile from "./pages/client/ClientProfile";
 import ClientSettings from "./pages/client/ClientSettings";
+import usePageTitle from "./hooks/usePageTitle";
+
+// Inside the Router so usePageTitle can read the current route.
+function TitleSync() {
+	usePageTitle();
+	return null;
+}
 
 function App() {
 	return (
 		<BrowserRouter>
+			<TitleSync />
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/book-appointment" element={<BookAppointment />} />
