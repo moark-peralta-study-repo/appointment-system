@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import ClientHeader from "../../components/client/ClientHeader";
 import DogLoader from "../../components/admin/DogLoader";
 import { useAuth } from "../../context/useAuth";
+import SettingToggle from "../../components/shared/SettingToggle";
 
 const KEY = "mp_owner_toggles";
 const DEFAULTS = {
@@ -19,21 +20,6 @@ function loadJSON() {
 	} catch {
 		return DEFAULTS;
 	}
-}
-
-function Toggle({ label, hint, checked, onChange }) {
-	return (
-		<div className="settings-option">
-			<div>
-				<strong>{label}</strong>
-				<span>{hint}</span>
-			</div>
-			<label className="settings-toggle">
-				<input type="checkbox" checked={checked} onChange={onChange} />
-				<span></span>
-			</label>
-		</div>
-	);
 }
 
 function ClientSettings() {
@@ -73,25 +59,25 @@ function ClientSettings() {
 				</div>
 
 				<div className="settings-options">
-					<Toggle
+					<SettingToggle
 						label="Appointment confirmed"
 						hint="Let me know as soon as the clinic confirms my booking."
 						checked={toggles.appointmentConfirmed}
 						onChange={set("appointmentConfirmed")}
 					/>
-					<Toggle
+					<SettingToggle
 						label="Visit reminders"
 						hint="A reminder the day before any scheduled visit."
 						checked={toggles.appointmentReminder}
 						onChange={set("appointmentReminder")}
 					/>
-					<Toggle
+					<SettingToggle
 						label="New visit notes"
 						hint="Tell me when my vet files notes for a completed visit."
 						checked={toggles.newVisitNotes}
 						onChange={set("newVisitNotes")}
 					/>
-					<Toggle
+					<SettingToggle
 						label="Tips & reminders"
 						hint="Occasional care tips and vaccine reminders from the clinic."
 						checked={toggles.marketing}

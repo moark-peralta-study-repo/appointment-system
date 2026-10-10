@@ -1,60 +1,15 @@
 import { useMemo, useState } from "react";
-import { PiCat, PiDog } from "react-icons/pi";
 import ClientHeader from "../../components/client/ClientHeader";
-import AdminModal from "../../components/admin/AdminModal";
 import DogLoader from "../../components/admin/DogLoader";
 import { useMyAppointments, useMyPets } from "../../hooks/useClientData";
-import { formatDate, format12h } from "../../utils/admin";
+import { formatDate } from "../../utils/admin";
 import { FaClipboardList } from "react-icons/fa";
 import { PiPawPrint } from "react-icons/pi";
 import { FiCheck } from "react-icons/fi";
-
-const SPECIES_ICON = (s) => (s === "cat" ? <PiCat size={22} /> : <PiDog size={22} />);
+import { SpeciesIcon } from "../../components/shared/Species";
+import ClientRecordView from "../../components/client/records/ClientRecordView";
 
 /* ---------------- RECORD VIEW ---------------- */
-function RecordView({ record, onClose }) {
-	const pet = record.pet;
-	return (
-		<AdminModal
-			eyebrow="VISIT NOTES"
-			title={`${pet?.name ?? "Your pet"} — ${record.reason ?? "Visit"}`}
-			onClose={onClose}
-			wide
-		>
-			<div className="admin-detail-grid">
-				<div className="admin-detail-item">
-					<span>PET</span>
-					<strong>
-						{pet?.name ?? "Unknown"}
-						<small>{pet?.breed ?? pet?.species ?? ""}</small>
-					</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>VETERINARIAN</span>
-					<strong>{record.vet ?? "—"}</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>DATE</span>
-					<strong>
-						{formatDate(record.date)} · {format12h(record.time)}
-					</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>REASON</span>
-					<strong>{record.reason ?? "—"}</strong>
-				</div>
-				<div className="admin-detail-item full">
-					<span>VISIT NOTES</span>
-					{record.vetNotes ? (
-						<p className="client-record-notes">{record.vetNotes}</p>
-					) : (
-						<p className="admin-panel-empty">No notes were recorded for this visit.</p>
-					)}
-				</div>
-			</div>
-		</AdminModal>
-	);
-}
 
 /* ---------------- PAGE ---------------- */
 function ClientMedicalRecords() {
@@ -138,7 +93,7 @@ function ClientMedicalRecords() {
 									const pet = a.pet;
 									return (
 										<article className="client-record-card" key={a._id}>
-											<div className="client-appt-avatar">{SPECIES_ICON(pet?.species)}</div>
+											<div className="client-appt-avatar"><SpeciesIcon species={pet?.species} /></div>
 
 											<div className="client-record-main">
 												<strong>
@@ -175,7 +130,7 @@ function ClientMedicalRecords() {
 				</>
 			)}
 
-			{viewing && <RecordView record={viewing} onClose={() => setViewing(null)} />}
+			{viewing && <ClientRecordView record={viewing} onClose={() => setViewing(null)} />}
 		</>
 	);
 }

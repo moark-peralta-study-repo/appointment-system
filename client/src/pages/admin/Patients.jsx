@@ -8,205 +8,17 @@ import {
 	usePets,
 	useUsers,
 	useAppointments,
-	useCreatePet,
-	useUpdatePet,
 	useDeletePet,
 } from "../../hooks/useAdminData";
 import { formatDate } from "../../utils/admin";
 import { PiPawPrint } from "react-icons/pi";
-import { FiAlertTriangle, FiSearch } from "react-icons/fi";
-
-const SPECIES = ["dog", "cat", "bird", "rabbit", "other"];
-const GENDERS = ["male", "female"];
+import { FiSearch } from "react-icons/fi";
+import AdminPatientForm from "../../components/admin/patients/AdminPatientForm";
+import AdminPatientView from "../../components/admin/patients/AdminPatientView";
 
 /* ---------------- ADD / EDIT FORM ---------------- */
 
-function PetForm({ pet, onClose }) {
-	const { data: users = [] } = useUsers();
-	const createPet = useCreatePet();
-	const updatePet = useUpdatePet();
-	const owners = users.filter((u) => u.role === "user");
-
-	const [form, setForm] = useState({
-		ownerId: pet?.owner ?? "",
-		name: pet?.name ?? "",
-		species: pet?.species ?? "dog",
-		breed: pet?.breed ?? "",
-		age: pet?.age ?? "",
-		gender: pet?.gender ?? "male",
-		notes: pet?.notes ?? "",
-	});
-
-	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
-	const mutation = pet ? updatePet : createPet;
-	const error = mutation.error;
-	const canSubmit = form.name.trim() && form.ownerId;
-
-	const submit = () => {
-		const body = {
-			name: form.name.trim(),
-			species: form.species,
-			breed: form.breed.trim() || undefined,
-			age: form.age === "" ? undefined : Number(form.age),
-			gender: form.gender,
-			notes: form.notes.trim() || undefined,
-		};
-		if (pet) mutation.mutate({ id: pet._id, body }, { onSuccess: onClose });
-		else
-			mutation.mutate(
-				{ ...body, ownerId: form.ownerId },
-				{ onSuccess: onClose },
-			);
-	};
-
-	return (
-		<AdminModal
-			eyebrow="CLINIC MANAGEMENT"
-			title={pet ? `Edit Patient — ${pet.name}` : "Add Patient"}
-			onClose={onClose}
-			footer={
-				<>
-					<button className="admin-secondary-button" type="button" onClick={onClose}>
-						Cancel
-					</button>
-					<button
-						className="admin-primary-button"
-						type="button"
-						disabled={!canSubmit || mutation.isPending}
-						onClick={submit}
-					>
-						{mutation.isPending
-							? "Saving…"
-							: pet
-							? "Save Changes"
-							: "Register Patient"}
-					</button>
-				</>
-			}
-		>
-			{error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {error.message}</div>}
-
-			<div className="admin-form-grid">
-				<div className="admin-form-field full">
-					<label>Pet Owner</label>
-					<select value={form.ownerId} onChange={set("ownerId")} disabled={Boolean(pet)}>
-						<option value="">Select an owner…</option>
-						{owners.map((o) => (
-							<option key={o._id} value={o._id}>
-								{o.name} — {o.email}
-							</option>
-						))}
-					</select>
-					{pet && <small className="admin-slot-note">Owner is fixed once a patient is registered.</small>}
-				</div>
-
-				<div className="admin-form-field">
-					<label>Pet Name <span>*</span></label>
-					<input type="text" value={form.name} onChange={set("name")} placeholder="e.g. Mochi" />
-				</div>
-
-				<div className="admin-form-field">
-					<label>Species</label>
-					<select value={form.species} onChange={set("species")}>
-						{SPECIES.map((s) => (
-							<option key={s} value={s}>
-								{s.charAt(0).toUpperCase() + s.slice(1)}
-							</option>
-						))}
-					</select>
-				</div>
-
-				<div className="admin-form-field">
-					<label>Breed</label>
-					<input type="text" value={form.breed} onChange={set("breed")} placeholder="e.g. Golden Retriever" />
-				</div>
-
-				<div className="admin-form-field">
-					<label>Age (years)</label>
-					<input type="number" min="0" max="30" value={form.age} onChange={set("age")} />
-				</div>
-
-				<div className="admin-form-field">
-					<label>Gender</label>
-					<select value={form.gender} onChange={set("gender")}>
-						{GENDERS.map((g) => (
-							<option key={g} value={g}>
-								{g.charAt(0).toUpperCase() + g.slice(1)}
-							</option>
-						))}
-					</select>
-				</div>
-
-				<div className="admin-form-field full">
-					<label>Medical Notes <span>(optional)</span></label>
-					<textarea
-						rows="3"
-						value={form.notes}
-						onChange={set("notes")}
-						placeholder="Allergies, conditions, medications…"
-					/>
-				</div>
-			</div>
-		</AdminModal>
-	);
-}
-
 /* ---------------- VIEW PANEL ---------------- */
-
-function PetView({ pet, ownersById, visits, onClose }) {
-	return (
-		<AdminModal eyebrow="PATIENT RECORD" title={pet.name} onClose={onClose} wide>
-			<div className="admin-detail-grid">
-				<div className="admin-detail-item">
-					<span>OWNER</span>
-					<strong>{ownersById[pet.owner]?.name ?? "—"}</strong>
-					<small>{ownersById[pet.owner]?.email ?? ""}</small>
-				</div>
-				<div className="admin-detail-item">
-					<span>SPECIES / BREED</span>
-					<strong>
-						{pet.species?.charAt(0).toUpperCase() + pet.species?.slice(1)}
-						{pet.breed ? ` — ${pet.breed}` : ""}
-					</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>AGE</span>
-					<strong>{pet.age != null ? `${pet.age} years` : "—"}</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>GENDER</span>
-					<strong>{pet.gender?.charAt(0).toUpperCase() + pet.gender?.slice(1) ?? "—"}</strong>
-				</div>
-				<div className="admin-detail-item full">
-					<span>STATUS</span>
-					<strong>{pet.notes ? "Under Observation" : "Healthy"}</strong>
-					{pet.notes && <small>{pet.notes}</small>}
-				</div>
-			</div>
-
-			<div className="admin-detail-section">VISIT HISTORY</div>
-
-			{visits.length === 0 ? (
-				<p className="admin-slot-note">No visits on record yet.</p>
-			) : (
-				<div className="admin-detail-grid">
-					{visits.map((v) => (
-						<div className="admin-detail-item" key={v._id}>
-							<span>
-								{formatDate(v.date)} · {v.status?.toUpperCase()}
-							</span>
-							<strong>{v.reason ?? "Visit"}</strong>
-							<small>
-								Dr. {(v.vet ?? "").replace(/^Dr\.\s*/, "") || "—"}
-								{v.vetNotes ? ` — ${v.vetNotes}` : ""}
-							</small>
-						</div>
-					))}
-				</div>
-			)}
-		</AdminModal>
-	);
-}
 
 /* ---------------- PAGE ---------------- */
 
@@ -475,11 +287,11 @@ function Patients() {
 				</div>
 			</section>
 
-			{showAdd && <PetForm onClose={() => setShowAdd(false)} />}
-			{editing && <PetForm pet={editing} onClose={() => setEditing(null)} />}
+			{showAdd && <AdminPatientForm onClose={() => setShowAdd(false)} />}
+			{editing && <AdminPatientForm pet={editing} onClose={() => setEditing(null)} />}
 
 			{viewing && (
-				<PetView
+				<AdminPatientView
 					pet={viewing}
 					ownersById={ownersById}
 					visits={(visitsByPet[viewing._id] ?? [])

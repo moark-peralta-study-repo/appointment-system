@@ -3,63 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { PiCat, PiDog } from "react-icons/pi";
 import { FiPlus } from "react-icons/fi";
 import ClientHeader from "../../components/client/ClientHeader";
-import AdminModal from "../../components/admin/AdminModal";
 import DogLoader from "../../components/admin/DogLoader";
 import {
 	useMyAppointments,
-	useCancelMyAppointment,
 } from "../../hooks/useClientData";
-import { isToday, isWithinDays, format12h, formatDate } from "../../utils/admin";
-import { FiAlertTriangle } from "react-icons/fi";
-
-const SPECIES_ICON = (s) => (s === "cat" ? <PiCat size={20} /> : <PiDog size={20} />);
+import { isToday, formatDate, format12h } from "../../utils/admin";
+import { SpeciesIcon } from "../../components/shared/Species";
+import ClientCancelModal from "../../components/client/appointments/ClientCancelModal";
 
 /* ---------------- CANCEL CONFIRM ---------------- */
-function CancelModal({ appointment, onClose }) {
-	const cancel = useCancelMyAppointment();
-
-	const confirm = () => {
-		cancel.mutate(appointment._id, {
-			onSuccess: onClose,
-			onError: () => {},
-		});
-	};
-
-	const pet = appointment.pet;
-	return (
-		<AdminModal
-			eyebrow="CANCEL VISIT"
-			title="Cancel this appointment?"
-			onClose={onClose}
-			footer={
-				<>
-					<button className="admin-secondary-button" type="button" onClick={onClose}>
-						Keep appointment
-					</button>
-					<button
-						className="admin-secondary-button"
-						style={{ color: "var(--danger)", borderColor: "var(--danger)" }}
-						type="button"
-						disabled={cancel.isPending}
-						onClick={confirm}
-					>
-						{cancel.isPending ? "Cancelling…" : "Yes, cancel it"}
-					</button>
-				</>
-			}
-		>
-			<p className="admin-slot-note">
-				{pet?.name ?? "Your pet"} — {formatDate(appointment.date)} at{" "}
-				{format12h(appointment.time)}
-			</p>
-			<p className="admin-form-desc">
-				Cancelling frees the slot so another pet can book it. You can always
-				schedule a new visit afterwards.
-			</p>
-			{cancel.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {cancel.error.message}</div>}
-		</AdminModal>
-	);
-}
 
 /* ---------------- PAGE ---------------- */
 function ClientAppointments() {
@@ -182,7 +134,7 @@ function ClientAppointments() {
 										</div>
 
 										<div className="client-appt-who">
-											<div className="client-appt-avatar">{SPECIES_ICON(pet?.species)}</div>
+											<div className="client-appt-avatar"><SpeciesIcon species={pet?.species} /></div>
 											<div>
 												<strong>{pet?.name ?? "Unknown pet"}</strong>
 												<span>
@@ -219,7 +171,7 @@ function ClientAppointments() {
 				</section>
 			)}
 
-			{canceling && <CancelModal appointment={canceling} onClose={() => setCanceling(null)} />}
+			{canceling && <ClientCancelModal appointment={canceling} onClose={() => setCanceling(null)} />}
 		</>
 	);
 }

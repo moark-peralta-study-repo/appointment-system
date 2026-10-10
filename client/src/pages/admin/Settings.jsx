@@ -5,6 +5,7 @@ import ScheduleEditor, { defaultSchedule } from "../../components/admin/Schedule
 import { useAuth } from "../../context/useAuth";
 import { useVets, useUpdateVet } from "../../hooks/useAdminData";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
+import SettingToggle from "../../components/shared/SettingToggle";
 
 const CLINIC_KEY = "mp_clinic_profile";
 const TOGGLES_KEY = "mp_clinic_toggles";
@@ -361,21 +362,5 @@ function Settings() {
 }
 
 /* ---------------- small pieces ---------------- */
-
-function SettingToggle({ label, hint, checked, onChange }) {
-	return (
-		<div className="settings-option">
-			<div>
-				<strong>{label}</strong>
-				<span>{hint}</span>
-			</div>
-
-			<label className="settings-toggle">
-				<input type="checkbox" checked={checked} onChange={onChange} />
-				<span></span>
-			</label>
-		</div>
-	);
-}
 
 export default Settings;

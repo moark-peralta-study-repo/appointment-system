@@ -18,6 +18,8 @@ import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import { useStats, useAppointments, usePets, useUsers } from "../../hooks/useAdminData";
 import { FaClock, FaDownload, FaPaw, FaThLarge } from "react-icons/fa";
 import { FiCheck } from "react-icons/fi";
+import { C, AXIS_TICK } from "../../components/reports/chartTheme";
+import { ChartTip, CenterLabel } from "../../components/reports/ReportChartHelpers";
 
 // Ranges the header selector offers. All filtering is client-side over the
 // full /appointments list (small dataset), so the select actually works —
@@ -33,17 +35,6 @@ const RANGES = [
 const MONTHS = ["January", "February", "March", "April", "May", "June",
 	"July", "August", "September", "October", "November", "December"];
 
-// Recharts renders raw SVG, so it can't read CSS vars — these are the light
-// theme values (the app's running mode), matched to the palette tokens.
-const C = {
-	primary: "#0091fd",
-	success: "#7cb342",
-	warning: "#f4a63a",
-	danger: "#e0635a",
-	grid: "#e4e9dc",
-	axis: "#7b8577",
-	surface: "#ffffff",
-};
 
 function rangeStart(id) {
 	const now = new Date();
@@ -148,47 +139,8 @@ function csvEscape(v) {
 	return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
-const AXIS_TICK = { fontSize: 11, fill: C.axis };
 
-// Styled tooltip used by every chart on this page.
-function ChartTip({ active, payload, label, formatter }) {
-	if (!active || !payload?.length) return null;
-	return (
-		<div style={{
-			background: C.surface,
-			border: `1px solid ${C.grid}`,
-			borderRadius: 10,
-			padding: "8px 12px",
-			fontSize: 12,
-			boxShadow: "0 4px 14px rgba(4,30,48,.10)",
-		}}>
-			{label != null && (
-				<div style={{ color: C.axis, marginBottom: 5, fontSize: 11 }}>{label}</div>
-			)}
-			{payload.map((p, i) => (
-				<div key={i} style={{ display: "flex", alignItems: "center", gap: 6, marginTop: i ? 3 : 0 }}>
-					<span style={{ width: 8, height: 8, borderRadius: 2, background: p.color, display: "inline-block" }} />
-					<span style={{ color: C.axis }}>{formatter ? formatter(p, i) : p.name}</span>
-					<strong>{p.value}</strong>
-				</div>
-			))}
-		</div>
-	);
-}
 
-function CenterLabel({ value, sub }) {
-	return (
-		<div style={{
-			position: "absolute", inset: 0,
-			display: "flex", flexDirection: "column",
-			alignItems: "center", justifyContent: "center",
-			pointerEvents: "none",
-		}}>
-			<span style={{ fontSize: 28, fontWeight: 800, color: "var(--text)" }}>{value}</span>
-			<span style={{ fontSize: 11, color: "var(--text-soft)", marginTop: 2 }}>{sub}</span>
-		</div>
-	);
-}
 
 const STATUS_META = [
 	{ key: "confirmed", color: C.primary },

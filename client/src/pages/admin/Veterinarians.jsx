@@ -1,216 +1,23 @@
 import { useMemo, useState } from "react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
-import AdminModal from "../../components/admin/AdminModal";
-import ScheduleEditor, { defaultSchedule } from "../../components/admin/ScheduleEditor";
 import {
 	useVets,
 	useAppointments,
 	useUsers,
-	useCreateVet,
-	useDeactivateVet,
 } from "../../hooks/useAdminData";
 import { isToday, initials } from "../../utils/admin";
+import { scheduleLabel } from "../../utils/schedule";
 import { FaStethoscope } from "react-icons/fa";
 import { RxCalendar } from "react-icons/rx";
 import { PiStar } from "react-icons/pi";
-import { FiAlertTriangle, FiCheck, FiSearch } from "react-icons/fi";
-
-const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-/** "Mon–Fri 09:00–17:00" from a vet's embedded schedule. */
-function scheduleLabel(schedule = []) {
-	if (!schedule.length) return "No schedule set";
-	const days = [...new Set(schedule.map((s) => DAY_NAMES[s.day]))].join(", ");
-	const first = schedule[0];
-	return `${days} ${first.start}–${first.end}`;
-}
+import { FiCheck, FiSearch } from "react-icons/fi";
+import ScheduleEditor from "../../components/admin/ScheduleEditor";
+import AdminVetForm from "../../components/admin/vets/AdminVetForm";
+import AdminVetView from "../../components/admin/vets/AdminVetView";
 
 /* ---------------- ADD VET FORM ---------------- */
 
-function VetForm({ onClose }) {
-	const createVet = useCreateVet();
-
-	const [form, setForm] = useState({
-		name: "",
-		email: "",
-		password: "",
-		specialty: "",
-		bio: "",
-		schedule: defaultSchedule(),
-	});
-	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
-
-	const canSubmit =
-		form.name.trim() && form.email.trim() && form.password.length >= 6;
-
-	const submit = () => {
-		// Only send days marked open.
-		const schedule = form.schedule
-			.filter((s) => s.open !== false)
-			.map(({ day, start, end, slotMinutes }) => ({
-				day,
-				start,
-				end,
-				slotMinutes: slotMinutes || 30,
-			}));
-
-		createVet.mutate(
-			{
-				name: form.name.trim(),
-				email: form.email.trim(),
-				password: form.password,
-				specialty: form.specialty.trim() || undefined,
-				bio: form.bio.trim() || undefined,
-				schedule,
-			},
-			{ onSuccess: onClose },
-		);
-	};
-
-	return (
-		<AdminModal
-			eyebrow="CLINIC MANAGEMENT"
-			title="Add Veterinarian"
-			onClose={onClose}
-			wide
-			footer={
-				<>
-					<button className="admin-secondary-button" type="button" onClick={onClose}>
-						Cancel
-					</button>
-					<button
-						className="admin-primary-button"
-						type="button"
-						disabled={!canSubmit || createVet.isPending}
-						onClick={submit}
-					>
-						{createVet.isPending ? "Creating…" : "Create Veterinarian"}
-					</button>
-				</>
-			}
-		>
-			{createVet.error && (
-				<div className="admin-form-error"><FiAlertTriangle size={13} /> {createVet.error.message}</div>
-			)}
-
-			<div className="admin-form-grid">
-				<div className="admin-form-field">
-					<label>Full Name <span>*</span></label>
-					<input type="text" value={form.name} onChange={set("name")} placeholder="Dr. Jane Smith" />
-				</div>
-
-				<div className="admin-form-field">
-					<label>Email <span>*</span></label>
-					<input type="email" value={form.email} onChange={set("email")} placeholder="vet@mutualspaws.com" />
-				</div>
-
-				<div className="admin-form-field">
-					<label>Portal Password <span>*</span></label>
-					<input type="text" value={form.password} onChange={set("password")} />
-				</div>
-
-				<div className="admin-form-field">
-					<label>Specialty</label>
-					<input type="text" value={form.specialty} onChange={set("specialty")} placeholder="General Practice" />
-				</div>
-
-				<div className="admin-form-field full">
-					<label>Bio</label>
-					<textarea rows="2" value={form.bio} onChange={set("bio")} placeholder="Short public bio…" />
-				</div>
-
-				<div className="admin-form-field full">
-					<label>Working Schedule</label>
-					<p className="schedule-caption">
-						Bookable slots come from each open day's times + slot length.
-						Uncheck a day to close it.
-					</p>
-					<ScheduleEditor value={form.schedule} onChange={(schedule) => setForm((f) => ({ ...f, schedule }))} />
-				</div>
-			</div>
-		</AdminModal>
-	);
-}
-
 /* ---------------- VET PROFILE VIEW ---------------- */
-
-function VetView({ vet, onClose }) {
-	const { data: users = [] } = useUsers();
-	const deactivateVet = useDeactivateVet();
-	const [confirming, setConfirming] = useState(false);
-
-	// The public vet list omits email/phone — the vet's name matches their
-	// staff user record, so look it up there.
-	const user = users.find((u) => u.name === vet.name);
-	const phone = user?.phone;
-
-	return (
-		<AdminModal
-			eyebrow="STAFF PROFILE"
-			title={vet.name}
-			onClose={onClose}
-			wide
-			footer={
-				<>
-					{confirming ? (
-						<>
-							<span className="admin-slot-note">
-								{deactivateVet.error?.message ?? "Remove " + vet.name + " from the roster?"}
-							</span>
-							<button className="admin-secondary-button" type="button" onClick={() => setConfirming(false)}>
-								Keep
-							</button>
-							<button
-								className="row-action cancel"
-								type="button"
-								disabled={deactivateVet.isPending}
-								onClick={() =>
-									deactivateVet.mutate(vet._id, { onSuccess: onClose })
-								}
-							>
-								{deactivateVet.isPending ? "Removing…" : "Deactivate"}
-							</button>
-						</>
-					) : (
-						<>
-							<button className="admin-secondary-button" type="button" onClick={onClose}>
-								Close
-							</button>
-							<button className="row-action cancel" type="button" onClick={() => setConfirming(true)}>
-								Deactivate
-							</button>
-						</>
-					)}
-				</>
-			}
-		>
-			<div className="admin-detail-grid">
-				<div className="admin-detail-item">
-					<span>EMAIL</span>
-					<strong>{user?.email ?? "—"}</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>PHONE</span>
-					<strong>{phone ?? "—"}</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>SPECIALTY</span>
-					<strong>{vet.specialty ?? "General"}</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>WORKING HOURS</span>
-					<strong>{scheduleLabel(vet.schedule)}</strong>
-				</div>
-				{vet.bio && (
-					<div className="admin-detail-item full">
-						<span>BIO</span>
-						<strong>{vet.bio}</strong>
-					</div>
-				)}
-			</div>
-		</AdminModal>
-	);
-}
 
 /* ---------------- PAGE ---------------- */
 
@@ -426,10 +233,10 @@ function Veterinarians() {
 				</div>
 			</section>
 
-			{showAdd && <VetForm onClose={() => setShowAdd(false)} />}
+			{showAdd && <AdminVetForm onClose={() => setShowAdd(false)} />}
 
 			{viewing && (
-				<VetView vet={viewing} onClose={() => setViewing(null)} />
+				<AdminVetView vet={viewing} onClose={() => setViewing(null)} />
 			)}
 		</>
 	);

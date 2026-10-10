@@ -1,12 +1,9 @@
 import { useMemo, useState } from "react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
-import AdminModal from "../../components/admin/AdminModal";
-import {
-	useAppointments,
-	useUsers,
-	useAddVisitNote,
-} from "../../hooks/useAdminData";
+import { useAppointments, useUsers } from "../../hooks/useAdminData";
 import { formatDate, initials } from "../../utils/admin";
+import AdminVisitNoteForm from "../../components/admin/medical/VisitNoteForm";
+import MedicalRecordView from "../../components/admin/medical/MedicalRecordView";
 import { FaClipboardList } from "react-icons/fa";
 import { PiStar } from "react-icons/pi";
 import { FiAlertTriangle, FiCheck, FiSearch } from "react-icons/fi";
@@ -22,123 +19,7 @@ const REASONS = [
 
 /* ---------------- NEW RECORD (visit note) ---------------- */
 
-function NewRecordModal({ appointments, onClose }) {
-	const addNote = useAddVisitNote();
-
-	// Only confirmed (today) or pending visits can become records.
-	const eligible = appointments
-		.filter((a) => a.status === "confirmed" || a.status === "pending")
-		.sort((x, y) => new Date(y.date) - new Date(x.date));
-
-	const [apptId, setApptId] = useState(eligible[0]?._id ?? "");
-	const selected = eligible.find((a) => a._id === apptId);
-	const [notes, setNotes] = useState("");
-
-	const canSubmit = Boolean(selected) && notes.trim().length > 0;
-
-	const submit = () => {
-		addNote.mutate({ id: selected._id, vetNotes: notes.trim() }, { onSuccess: onClose });
-	};
-
-	return (
-		<AdminModal
-			eyebrow="PATIENT CARE"
-			title="New Medical Record"
-			onClose={onClose}
-			footer={
-				<>
-					<button className="admin-secondary-button" type="button" onClick={onClose}>
-						Cancel
-					</button>
-					<button
-						className="admin-primary-button"
-						type="button"
-						disabled={!canSubmit || addNote.isPending}
-						onClick={submit}
-					>
-						{addNote.isPending ? "Saving…" : "Save Record"}
-					</button>
-				</>
-			}
-		>
-			{addNote.error && <div className="admin-form-error"><FiAlertTriangle size={13} /> {addNote.error.message}</div>}
-
-			{eligible.length === 0 ? (
-				<p className="admin-slot-note">
-					No pending or confirmed visits to record. Mark a visit Complete
-					first — or add a note via the Appointments page.
-				</p>
-			) : (
-				<div className="admin-form-grid">
-					<div className="admin-form-field full">
-						<label>Visit to Record</label>
-						<select value={apptId} onChange={(e) => setApptId(e.target.value)}>
-							{eligible.map((a) => (
-								<option key={a._id} value={a._id}>
-									{formatDate(a.date)} — {a.pet?.name ?? "Unknown"} — {a.reason ?? "Visit"} ({a.status})
-								</option>
-							))}
-						</select>
-						{selected && (
-							<p className="admin-slot-note">
-								Saving marks this visit as <strong>Completed</strong> and stores the note
-								below.
-							</p>
-						)}
-					</div>
-
-					<div className="admin-form-field full">
-						<label>Visit Notes <span>*</span></label>
-						<textarea
-							rows="5"
-							value={notes}
-							onChange={(e) => setNotes(e.target.value)}
-							placeholder="Findings, prescriptions, follow-up plan…"
-						/>
-					</div>
-				</div>
-			)}
-		</AdminModal>
-	);
-}
-
 /* ---------------- RECORD VIEW ---------------- */
-
-function RecordView({ record, onClose }) {
-	return (
-		<AdminModal eyebrow="MEDICAL RECORD" title={`${record.patient} — ${record.recordType}`} onClose={onClose} wide>
-			<div className="admin-detail-grid">
-				<div className="admin-detail-item">
-					<span>PATIENT</span>
-					<strong>{record.patient}</strong>
-					<small>{record.species}</small>
-				</div>
-				<div className="admin-detail-item">
-					<span>OWNER</span>
-					<strong>{record.owner}</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>VETERINARIAN</span>
-					<strong>{record.veterinarian}</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>DATE</span>
-					<strong>{record.date}</strong>
-				</div>
-				<div className="admin-detail-item full">
-					<span>RECORD TYPE</span>
-					<strong>{record.recordType}</strong>
-				</div>
-				<div className="admin-detail-item full">
-					<span>VISIT NOTES</span>
-					<strong style={{ whiteSpace: "pre-wrap", fontFamily: "'Baloo Thambi 2', sans-serif", fontSize: 15 }}>
-						{record.notes || "No notes recorded for this visit."}
-					</strong>
-				</div>
-			</div>
-		</AdminModal>
-	);
-}
 
 /* ---------------- PAGE ---------------- */
 
@@ -371,10 +252,10 @@ function MedicalRecords() {
 			</section>
 
 			{showNew && (
-				<NewRecordModal appointments={appointments} onClose={() => setShowNew(false)} />
+				<AdminVisitNoteForm appointments={appointments} onClose={() => setShowNew(false)} />
 			)}
 
-			{viewing && <RecordView record={viewing} onClose={() => setViewing(null)} />}
+			{viewing && <MedicalRecordView record={viewing} onClose={() => setViewing(null)} />}
 		</>
 	);
 }

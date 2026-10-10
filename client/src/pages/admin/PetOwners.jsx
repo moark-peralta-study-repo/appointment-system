@@ -1,169 +1,20 @@
 import { useMemo, useState } from "react";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
-import AdminModal from "../../components/admin/AdminModal";
 import {
 	useUsers,
 	usePets,
 	useAppointments,
-	useCreateOwner,
 } from "../../hooks/useAdminData";
 import { formatDate, initials } from "../../utils/admin";
 import { FaUsers } from "react-icons/fa";
-import { PiCat, PiDog, PiPawPrint, PiStar } from "react-icons/pi";
-import { FiAlertTriangle, FiCheck, FiSearch } from "react-icons/fi";
+import { PiPawPrint, PiStar } from "react-icons/pi";
+import { FiCheck, FiSearch } from "react-icons/fi";
+import AdminOwnerForm from "../../components/admin/owners/AdminOwnerForm";
+import AdminOwnerView from "../../components/admin/owners/AdminOwnerView";
 
 /* ---------------- ADD OWNER FORM ---------------- */
 
-function OwnerForm({ onClose }) {
-	const register = useCreateOwner();
-
-	const [form, setForm] = useState({
-		name: "",
-		email: "",
-		password: "",
-		phone: "",
-	});
-	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
-
-	const canSubmit = form.name.trim() && form.email.trim() && form.password.length >= 6;
-
-	const submit = () => {
-		register.mutate(
-			{
-				name: form.name.trim(),
-				email: form.email.trim(),
-				password: form.password,
-				phone: form.phone.trim() || undefined,
-			},
-			{ onSuccess: onClose },
-		);
-	};
-
-	return (
-		<AdminModal
-			eyebrow="CLINIC MANAGEMENT"
-			title="Add Pet Owner"
-			onClose={onClose}
-			footer={
-				<>
-					<button className="admin-secondary-button" type="button" onClick={onClose}>
-						Cancel
-					</button>
-					<button
-						className="admin-primary-button"
-						type="button"
-						disabled={!canSubmit || register.isPending}
-						onClick={submit}
-					>
-						{register.isPending ? "Creating…" : "Create Account"}
-					</button>
-				</>
-			}
-		>
-			{register.error && (
-				<div className="admin-form-error"><FiAlertTriangle size={13} /> {register.error.message}</div>
-			)}
-
-			<div className="admin-form-grid">
-				<div className="admin-form-field full">
-					<label>Full Name <span>*</span></label>
-					<input type="text" value={form.name} onChange={set("name")} placeholder="e.g. Maria Lopez" />
-				</div>
-
-				<div className="admin-form-field">
-					<label>Email <span>*</span></label>
-					<input type="email" value={form.email} onChange={set("email")} placeholder="owner@email.com" />
-				</div>
-
-				<div className="admin-form-field">
-					<label>Phone</label>
-					<input type="text" value={form.phone} onChange={set("phone")} placeholder="+63 917 000 0000" />
-				</div>
-
-				<div className="admin-form-field full">
-					<label>Portal Password <span>* (min 6 chars — the owner uses this to sign in)</span></label>
-					<input type="text" value={form.password} onChange={set("password")} />
-				</div>
-			</div>
-		</AdminModal>
-	);
-}
-
 /* ---------------- OWNER DETAIL ---------------- */
-
-function OwnerView({ owner, pets, visits, onClose }) {
-	return (
-		<AdminModal
-			eyebrow="OWNER RECORD"
-			title={owner.name}
-			onClose={onClose}
-			wide
-		>
-			<div className="admin-detail-grid">
-				<div className="admin-detail-item">
-					<span>EMAIL</span>
-					<strong>{owner.email}</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>PHONE</span>
-					<strong>{owner.phone || "—"}</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>REGISTERED</span>
-					<strong>{formatDate(owner.createdAt)}</strong>
-				</div>
-				<div className="admin-detail-item">
-					<span>REGISTERED PETS</span>
-					<strong>
-						{pets.length} pet{pets.length === 1 ? "" : "s"}
-					</strong>
-				</div>
-			</div>
-
-			<div className="admin-detail-section">PETS</div>
-
-			{pets.length === 0 ? (
-				<p className="admin-slot-note">No pets registered yet.</p>
-			) : (
-				<div className="admin-detail-grid">
-					{pets.map((p) => (
-						<div className="admin-detail-item" key={p._id}>
-							<span>SPECIES</span>
-							<strong>
-								{p.species === "cat" ? <PiCat size={15} /> : <PiDog size={15} />} {p.name}
-							</strong>
-							<small>
-								{p.breed ?? p.species}
-								{p.age != null ? ` · ${p.age} yrs` : ""}
-								{p.notes ? " · Under observation" : ""}
-							</small>
-						</div>
-					))}
-				</div>
-			)}
-
-			<div className="admin-detail-section">APPOINTMENTS</div>
-
-			{visits.length === 0 ? (
-				<p className="admin-slot-note">No appointments on file.</p>
-			) : (
-				<div className="admin-detail-grid">
-					{visits.map((v) => (
-						<div className="admin-detail-item" key={v._id}>
-							<span>
-								{formatDate(v.date)} · {v.status?.toUpperCase()}
-							</span>
-							<strong>
-								{v.pet?.name ?? "Unknown"} — {v.reason ?? "Visit"}
-							</strong>
-							<small>Dr. {(v.vet ?? "").replace(/^Dr\.\s*/, "") || "—"}</small>
-						</div>
-					))}
-				</div>
-			)}
-		</AdminModal>
-	);
-}
 
 /* ---------------- PAGE ---------------- */
 
@@ -401,10 +252,10 @@ function PetOwners() {
 				</div>
 			</section>
 
-			{showAdd && <OwnerForm onClose={() => setShowAdd(false)} />}
+			{showAdd && <AdminOwnerForm onClose={() => setShowAdd(false)} />}
 
 			{viewing && (
-				<OwnerView
+				<AdminOwnerView
 					owner={viewing}
 					pets={pets.filter((p) => p.owner === viewing._id)}
 					visits={appointments
