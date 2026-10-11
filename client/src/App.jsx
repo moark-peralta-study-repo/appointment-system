@@ -14,9 +14,7 @@ import Veterinarians from "./pages/admin/Veterinarians";
 import MedicalRecords from "./pages/admin/MedicalRecords";
 import Reports from "./pages/admin/Reports";
 import Settings from "./pages/admin/Settings";
-import AdminLogin from "./pages/admin/AdminLogin";
-
-import ClientLogin from "./pages/client/ClientLogin";
+import Login from "./pages/Login";
 import ClientRegister from "./pages/client/ClientRegister";
 import ClientLayout from "./components/client/ClientLayout";
 import ClientProtectedRoute from "./components/client/ClientProtectedRoute";
@@ -43,14 +41,21 @@ function App() {
 
 				<Route
 					path="/client"
-					element={<Navigate to="/client/login" replace />}
+					element={<Navigate to="/login" replace />}
 				/>
 
-				{/* Client routes — same pattern as /admin: the login page stands
-        alone, everything else is behind ClientProtectedRoute which
-        verifies /auth/profile, then ClientLayout renders the page in
-        its <Outlet />. */}
-				<Route path="/client/login" element={<ClientLogin />} />
+				{/* One sign-in page for clients AND staff. On success it routes
+				by the account's role (vet → /admin, owner → /client/dashboard),
+				so the old two separate logins are just legacy redirects. */}
+				<Route path="/login" element={<Login />} />
+				<Route
+					path="/client/login"
+					element={<Navigate to="/login" replace />}
+				/>
+				<Route
+					path="/admin/login"
+					element={<Navigate to="/login" replace />}
+				/>
 				<Route path="/client/register" element={<ClientRegister />} />
 				<Route element={<ClientProtectedRoute />}>
 					<Route path="/client" element={<ClientLayout />}>
@@ -65,9 +70,6 @@ function App() {
 						<Route path="settings" element={<ClientSettings />} />
 					</Route>
 				</Route>
-
-				{/* Staff login is a standalone page (no sidebar). */}
-				<Route path="/admin/login" element={<AdminLogin />} />
 
 				{/* Everything else under /admin is behind the token guard:
 					ProtectedRoute verifies /auth/profile, then AdminLayout

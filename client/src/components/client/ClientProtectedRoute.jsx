@@ -3,7 +3,7 @@ import { useAuth } from "../../context/useAuth";
 import DogLoader from "../admin/DogLoader";
 
 // Wraps the /client subtree (dashboard onward). Waits for the profile
-// query to settle, then lets the owner in or bounces to /client/login.
+// query to settle, then lets the owner in or bounces to /login.
 // Same pattern as ProtectedRoute for /admin.
 function ClientProtectedRoute() {
 	const { user, isSettled } = useAuth();
@@ -18,7 +18,7 @@ function ClientProtectedRoute() {
 	}
 
 	if (!user) {
-		return <Navigate to="/client/login" replace />;
+		return <Navigate to="/login" replace />;
 	}
 
 	// Staff accounts don't use the pet-owner portal.

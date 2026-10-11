@@ -3,7 +3,7 @@ import { useAuth } from "../../context/useAuth";
 import DogLoader from "./DogLoader";
 
 // Wraps the /admin subtree. Waits for the profile query to settle,
-// then lets the user in or bounces them to /admin/login.
+// then lets the user in or bounces them to /login.
 function ProtectedRoute() {
 	const { user, isSettled } = useAuth();
 
@@ -17,7 +17,7 @@ function ProtectedRoute() {
 	}
 
 	if (!user) {
-		return <Navigate to="/admin/login" replace />;
+		return <Navigate to="/login" replace />;
 	}
 
 	// Only staff (vets) get the admin dashboard — pet owners bounce to

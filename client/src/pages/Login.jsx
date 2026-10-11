@@ -1,45 +1,45 @@
 import { useState } from "react";
 import { useNavigate, Link, Navigate } from "react-router-dom";
-import logo from "../../assets/logo/happy-paws-logo-2.png";
-import { useAuth } from "../../context/useAuth";
+import logo from "../assets/logo/happy-paws-logo-2.png";
+import { useAuth } from "../context/useAuth";
 
-function ClientLogin() {
+// Shared by login (mutate onSuccess) and the "already signed in" redirect,
+// so a vet and an owner each land on the right portal from one place.
+const homeFor = (user) => (user?.role === "vet" ? "/admin" : "/client/dashboard");
+
+// Single sign-in page for both portals. The form is identical to what the
+// old /client/login and /admin/login pages had — the only difference now is
+// that the destination is decided by the account's role, not by which URL
+// the user came from.
+function Login() {
 	const navigate = useNavigate();
-	const { login, isAuthed } = useAuth();
+	const { login, isAuthed, user } = useAuth();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 
+	// Show the API's message verbatim ("Invalid email or password",
+	// "email must be valid"…). On error we stay on the form so it's visible.
 	const error = login?.error?.message || "";
 
 	const handleLogin = (e) => {
 		e.preventDefault();
-
-		// Only navigate on success — on error we stay on the form so the
-		// API's message (e.g. "Invalid email or password") stays visible.
 		login?.mutate?.(
 			{ email, password },
-			{
-				onSuccess: () => navigate("/client/dashboard"),
-			},
+			{ onSuccess: (data) => navigate(homeFor(data.user)) },
 		);
 	};
 
+	// Already signed in (e.g. came back from a page) → go straight to the
+	// portal for this role.
 	if (isAuthed) {
-		return <Navigate to="/client/dashboard" replace />;
+		return <Navigate to={homeFor(user)} replace />;
 	}
 
 	return (
-		<div
-			className="admin-login-page"
-			style={{
-				display: "flex",
-				flexDirection: "row-reverse !important",
-				flexWrap: "nowrap",
-			}}
-		>
-			<div className="admin-login-card" style={{ order: 2 }}>
+		<div className="admin-login-page">
+			<div className="admin-login-card">
 				{/* Brand Logo & Name */}
 				<div className="admin-login-brand">
 					<img src={logo} alt="Mutuals Paws Veterinary Clinic" />
@@ -52,18 +52,21 @@ function ClientLogin() {
 
 				{/* Heading */}
 				<div className="admin-login-heading">
-					<p>CLIENT PORTAL</p>
-					<h1>Welcome back</h1>
-					<span>Sign in to manage your pets and appointments.</span>
+					<p>WELCOME BACK</p>
+					<h1>Sign in to your account</h1>
+					<span>
+						Clients and staff share one sign-in — we'll take you to the
+						right portal.
+					</span>
 				</div>
 
 				{/* Form */}
 				<form onSubmit={handleLogin} className="admin-login-form">
 					<div className="admin-login-field">
-						<label htmlFor="client-email">Email Address</label>
+						<label htmlFor="login-email">Email Address</label>
 
 						<input
-							id="client-email"
+							id="login-email"
 							type="email"
 							placeholder="Enter your email address"
 							value={email}
@@ -73,11 +76,11 @@ function ClientLogin() {
 					</div>
 
 					<div className="admin-login-field">
-						<label htmlFor="client-password">Password</label>
+						<label htmlFor="login-password">Password</label>
 
 						<div className="admin-password-wrapper">
 							<input
-								id="client-password"
+								id="login-password"
 								type={showPassword ? "text" : "password"}
 								placeholder="Enter your password"
 								value={password}
@@ -102,7 +105,7 @@ function ClientLogin() {
 						className="admin-login-button"
 						disabled={login?.isPending}
 					>
-						{login?.isPending ? "Signing in…" : "Sign In to Client Portal"}
+						{login?.isPending ? "Signing in…" : "Sign In"}
 					</button>
 
 					<p
@@ -123,11 +126,11 @@ function ClientLogin() {
 					</p>
 				</form>
 
-				{/* Client Demo Account Credentials */}
+				{/* Demo Account Credentials */}
 				<div className="admin-login-demo">
-					<span>Demo account</span>
-					<p>client@mutualspaws.com</p>
-					<p>client123</p>
+					<span>Demo accounts</span>
+					<p>client@mutualspaws.com · client123</p>
+					<p>admin@mutualspaws.com · admin123</p>
 				</div>
 
 				{/* Back Button */}
@@ -140,7 +143,7 @@ function ClientLogin() {
 				</button>
 			</div>
 
-			<div className="admin-login-side" style={{ order: 1 }}>
+			<div className="admin-login-side">
 				<div className="admin-login-side-content">
 					<span className="admin-login-side-label">MUTUALS PAWS</span>
 
@@ -151,15 +154,15 @@ function ClientLogin() {
 					</h2>
 
 					<p>
-						Access your pets' records, manage upcoming appointments, and get
-						updates directly from your veterinarian.
+						One sign-in for everyone — pet owners and clinic staff. We
+						recognise your account and take you to the right place.
 					</p>
 				</div>
 
-				<div className="admin-login-side-footer">Client Portal</div>
+				<div className="admin-login-side-footer">Client & Staff</div>
 			</div>
 		</div>
 	);
 }
 
-export default ClientLogin;
+export default Login;

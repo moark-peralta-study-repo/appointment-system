@@ -178,7 +178,7 @@ function ClientRegister() {
 							fontWeight: 700,
 							cursor: "pointer",
 						}}
-						onClick={() => navigate("/client/login")}
+						onClick={() => navigate("/login")}
 					>
 						Sign in
 					</button>
