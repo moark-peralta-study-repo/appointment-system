@@ -16,6 +16,9 @@ import Reports from "./pages/admin/Reports";
 import Settings from "./pages/admin/Settings";
 import Login from "./pages/Login";
 import ClientRegister from "./pages/client/ClientRegister";
+import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import ClientLayout from "./components/client/ClientLayout";
 import ClientProtectedRoute from "./components/client/ClientProtectedRoute";
 import ClientDashboard from "./pages/client/ClientDashboard";
@@ -57,6 +60,10 @@ function App() {
 					element={<Navigate to="/login" replace />}
 				/>
 				<Route path="/client/register" element={<ClientRegister />} />
+				{/* Post-register verification + password reset (public, no auth). */}
+				<Route path="/verify-email" element={<VerifyEmail />} />
+				<Route path="/forgot-password" element={<ForgotPassword />} />
+				<Route path="/reset-password" element={<ResetPassword />} />
 				<Route element={<ClientProtectedRoute />}>
 					<Route path="/client" element={<ClientLayout />}>
 						<Route

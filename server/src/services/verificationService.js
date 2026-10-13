@@ -53,7 +53,7 @@ export async function sendOtp(email) {
 
 	const delivered = await sendMail({
 		to: user.email,
-		subject: `Your Mutuals Paws verification code: ${otp}`,
+		subject: `Your Pink Paws verification code: ${otp}`,
 		html: emailLayout({
 			title: "Verify your email",
 			code: otp,
@@ -89,7 +89,13 @@ export async function verifyOtp(email, otp) {
 	user.otpHash = undefined;
 	user.otpExpiresAt = undefined;
 	await user.save();
-	return { isVerified: true };
+
+	// The password was just set and the email is now proven — issue a
+	// session so the caller can sign in straight away (register flow,
+	// booking wizard). The client stores the token in useVerifyOtp.
+	const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+	const safeUser = await User.findById(user._id);
+	return { isVerified: true, token, user: safeUser };
 }
 
 /** Request a password reset: email a signed token (valid 1h). */
@@ -104,7 +110,7 @@ export async function requestPasswordReset(email) {
 	const token = resetSign(payload);
 	const delivered = await sendMail({
 		to: user.email,
-		subject: "Reset your Mutuals Paws password",
+		subject: "Reset your Pink Paws password",
 		html: emailLayout({
 			title: "Password reset",
 			button: { href: resetUrl(token), label: "Reset your password" },

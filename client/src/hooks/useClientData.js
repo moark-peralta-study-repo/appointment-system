@@ -113,8 +113,11 @@ export function useUpdateMyProfile() {
 /**
  * Register a new pet-owner account (public flow: /client/register and the
  * booking wizard). Same endpoint the admin's "create owner" uses — the
- * server assigns role "user". On success the token is stored and the
- * ["profile"] query is cached so the caller is signed in immediately.
+ * server assigns role "user".
+ *
+ * Self-service signup: the server sends the email OTP and returns NO token
+ * (the account is activated on /verify-otp, which is where the token comes
+ * from — see useVerifyOtp). The onSuccess here just clears stale state.
  */
 export function useRegister() {
 	const qc = useQueryClient();
@@ -125,10 +128,56 @@ export function useRegister() {
 				body: { name, email, phone, password },
 			}),
 		onSuccess: ({ token, user }) => {
-			setToken(token);
-			qc.setQueryData(["profile"], { user });
+			if (token && user) {
+				setToken(token);
+				qc.setQueryData(["profile"], { user });
+			}
 			qc.invalidateQueries({ queryKey: ["client"] });
 		},
+	});
+}
+
+/**
+ * Confirm the 6-digit email code after registration. On success the server
+ * returns a JWT — store it so the caller can continue immediately (the
+ * register page hands off to the dashboard, the booking wizard continues).
+ */
+export function useVerifyOtp() {
+	const qc = useQueryClient();
+	return useMutation({
+		mutationFn: ({ email, otp }) =>
+			apiFetch("/auth/verify-otp", { method: "POST", body: { email, otp } }),
+		onSuccess: ({ token, user }) => {
+			if (token && user) {
+				setToken(token);
+				qc.setQueryData(["profile"], { user });
+				qc.invalidateQueries({ queryKey: ["client"] });
+			}
+		},
+	});
+}
+
+/** Re-send a verification code (60s cooldown enforced server-side). */
+export function useResendOtp() {
+	return useMutation({
+		mutationFn: (email) =>
+			apiFetch("/auth/resend-otp", { method: "POST", body: { email } }),
+	});
+}
+
+/** Request a password reset email. Always resolves (server hides unknown emails). */
+export function useForgotPassword() {
+	return useMutation({
+		mutationFn: (email) =>
+			apiFetch("/auth/forgot-password", { method: "POST", body: { email } }),
+	});
+}
+
+/** Apply a new password using the token from the reset email link. */
+export function useResetPassword() {
+	return useMutation({
+		mutationFn: ({ token, password }) =>
+			apiFetch("/auth/reset-password", { method: "POST", body: { token, password } }),
 	});
 }
 

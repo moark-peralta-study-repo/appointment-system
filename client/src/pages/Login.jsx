@@ -22,6 +22,9 @@ function Login() {
 	// Show the API's message verbatim ("Invalid email or password",
 	// "email must be valid"…). On error we stay on the form so it's visible.
 	const error = login?.error?.message || "";
+	// 403 = valid credentials but email unverified → offer the verify page
+	// (prefilled with the email they just typed). 401 = plain wrong creds.
+	const unverified = login?.error?.status === 403;
 
 	const handleLogin = (e) => {
 		e.preventDefault();
@@ -98,7 +101,35 @@ function Login() {
 						</div>
 					</div>
 
-					{error && <div className="admin-login-error">{error}</div>}
+					{error && (
+						<div className="admin-login-error">
+							{error}
+							{unverified && (
+								<>
+									{" "}
+									<button
+										type="button"
+										style={{
+											background: "none",
+											border: "none",
+											padding: 0,
+											font: "inherit",
+											color: "var(--primary)",
+											fontWeight: 700,
+											cursor: "pointer",
+										}}
+										onClick={() =>
+											navigate(
+												`/verify-email?email=${encodeURIComponent(email.trim())}`,
+											)
+										}
+									>
+										Verify your email
+									</button>
+								</>
+							)}
+						</div>
+					)}
 
 					<button
 						type="submit"
@@ -107,6 +138,22 @@ function Login() {
 					>
 						{login?.isPending ? "Signing in…" : "Sign In"}
 					</button>
+
+					<p
+						style={{
+							textAlign: "center",
+							marginTop: 12,
+							fontSize: 13,
+							color: "var(--muted)",
+						}}
+					>
+						<Link
+							to="/forgot-password"
+							style={{ color: "var(--muted)" }}
+						>
+							Forgot your password?
+						</Link>
+					</p>
 
 					<p
 						style={{

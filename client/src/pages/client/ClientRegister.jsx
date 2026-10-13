@@ -4,9 +4,10 @@ import logo from "../../assets/logo/pink-paws-mark-sq-256.png";
 import { useAuth } from "../../context/useAuth";
 import { useRegister } from "../../hooks/useClientData";
 
-// Public pet-owner sign-up. On success the JWT is stored (useRegister) and
-// the visitor lands straight in the client portal — the booking wizard's
-// "create account" tab calls the same API.
+// Public pet-owner sign-up. Registration sends a 6-digit verification code
+// to the user's email (no token yet) — the account activates on the
+// /verify-email screen, which is where the session starts. The booking
+// wizard's "create account" tab calls the same API.
 function ClientRegister() {
 	const navigate = useNavigate();
 	const { isAuthed } = useAuth();
@@ -31,15 +32,18 @@ function ClientRegister() {
 	const handleRegister = (e) => {
 		e.preventDefault();
 		if (mismatch) return;
+		const email = form.email.trim();
 		register.mutate(
 			{
 				name: form.name.trim(),
-				email: form.email.trim(),
+				email,
 				phone: form.phone.trim() || undefined,
 				password: form.password,
 			},
 			{
-				onSuccess: () => navigate("/client/dashboard"),
+				// No token yet — the account activates on the verify screen
+				// (the code was just emailed). Prefill the email there.
+				onSuccess: () => navigate(`/verify-email?email=${encodeURIComponent(email)}`),
 			},
 		);
 	};
