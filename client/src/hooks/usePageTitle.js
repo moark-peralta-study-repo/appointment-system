@@ -22,6 +22,7 @@ const TITLES = [
 	["/admin/veterinarians", "Veterinarians — Staff Portal"],
 	["/admin/medical-records", "Medical Records — Staff Portal"],
 	["/admin/reports", "Reports — Staff Portal"],
+	["/admin/activity", "Activity — Staff Portal"],
 	["/admin/settings", "Settings — Staff Portal"],
 	["/admin", "Dashboard — Staff Portal"],
 ];

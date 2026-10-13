@@ -13,6 +13,7 @@ import PetOwners from "./pages/admin/PetOwners";
 import Veterinarians from "./pages/admin/Veterinarians";
 import MedicalRecords from "./pages/admin/MedicalRecords";
 import Reports from "./pages/admin/Reports";
+import Activity from "./pages/admin/Activity";
 import Settings from "./pages/admin/Settings";
 import Login from "./pages/Login";
 import ClientRegister from "./pages/client/ClientRegister";
@@ -90,6 +91,7 @@ function App() {
 						<Route path="veterinarians" element={<Veterinarians />} />
 						<Route path="medical-records" element={<MedicalRecords />} />
 						<Route path="reports" element={<Reports />} />
+						<Route path="activity" element={<Activity />} />
 						<Route path="settings" element={<Settings />} />
 					</Route>
 				</Route>

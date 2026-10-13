@@ -182,3 +182,32 @@ export function useDeactivateVet() {
 		onSuccess,
 	});
 }
+
+/**
+ * Activity / audit trail (GET /audit). Newest first, paginated, optional
+ * search + action/entity filters. actor is populated (name/email/role).
+ */
+export function useAuditLogs({ search, action, entity, page = 1, limit = 20 } = {}) {
+	return useQuery({
+		queryKey: ["admin", "audit", search, action, entity, page, limit],
+		queryFn: async () => {
+			const params = new URLSearchParams({ page: String(page), limit: String(limit) });
+			if (search) params.set("search", search);
+			if (action) params.set("action", action);
+			if (entity) params.set("entity", entity);
+			const data = await apiFetch(`/audit?${params}`);
+			return data;
+		},
+		// Keep the trail fresh (someone may be acting elsewhere).
+		staleTime: 10_000,
+	});
+}
+
+/** Distinct actions currently in the log — for the filter dropdown. */
+export function useAuditActions() {
+	return useQuery({
+		queryKey: ["admin", "audit", "actions"],
+		queryFn: async () => apiFetch("/audit/actions"),
+		staleTime: 60_000,
+	});
+}

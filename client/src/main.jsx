@@ -22,6 +22,7 @@ import "./styles/admin-login.css";
 import "./styles/client.css";
 import "./styles/dog.css";
 import "./styles/admin-modals.css";
+import "./styles/audit.css";
 import App from "./App.jsx";
 import { AuthProvider } from "./context/AuthContext";
 

@@ -1,0 +1,189 @@
+/* Activity (audit trail) page — mirrors the medical-table conventions. */
+
+.audit-panel {
+	background: var(--surface);
+	border: 1px solid rgba(36, 26, 53, 0.07);
+	border-radius: var(--radius-lg);
+	box-shadow: 0 8px 24px rgba(36, 26, 53, 0.06);
+	overflow: hidden;
+}
+
+.admin-panel-meta {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--muted);
+	font-size: 12px;
+	font-weight: 600;
+	background: var(--surface-2);
+	border: 1px solid var(--border);
+	padding: 8px 14px;
+	border-radius: var(--radius-full);
+}
+
+
+.audit-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	padding: 22px;
+	border-bottom: 1px solid rgba(36, 26, 53, 0.08);
+}
+
+.audit-search {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 360px;
+	height: 42px;
+	padding: 0 14px;
+	border: 1px solid var(--border-cool-strong);
+	border-radius: var(--radius-md);
+	background: var(--background);
+	color: var(--muted);
+}
+
+.audit-search input {
+	width: 100%;
+	border: none;
+	outline: none;
+	background: transparent;
+	color: var(--foreground);
+	font-family: inherit;
+	font-size: 13px;
+}
+
+.audit-search input::placeholder {
+	color: var(--faint);
+}
+
+.audit-filter {
+	height: 42px;
+	padding: 0 34px 0 12px;
+	border: 1px solid var(--border-cool-strong);
+	border-radius: var(--radius-md);
+	background: var(--surface);
+	color: var(--foreground);
+	font-family: inherit;
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.audit-table-wrapper {
+	width: 100%;
+	overflow-x: auto;
+}
+
+.audit-table {
+	width: 100%;
+	border-collapse: collapse;
+	min-width: 900px;
+}
+
+.audit-table th {
+	padding: 15px 20px;
+	background: var(--surface-2);
+	color: var(--muted);
+	font-size: 11px;
+	font-weight: 800;
+	text-align: left;
+	letter-spacing: 0.04em;
+	white-space: nowrap;
+}
+
+.audit-table td {
+	padding: 14px 20px;
+	border-top: 1px solid rgba(36, 26, 53, 0.07);
+	color: var(--muted);
+	font-size: 13px;
+	vertical-align: middle;
+}
+
+.audit-table tbody tr:hover {
+	background: var(--surface-2);
+}
+
+.audit-time {
+	color: var(--faint);
+	font-size: 12px;
+	white-space: nowrap;
+}
+
+.audit-actor-sub {
+	display: block;
+	font-size: 11px;
+	color: var(--faint);
+	margin-top: 2px;
+}
+
+.audit-actor-anon {
+	color: var(--faint);
+	font-style: italic;
+	font-size: 12px;
+}
+
+/* action badge */
+.audit-action {
+	display: inline-block;
+	padding: 4px 10px;
+	border-radius: var(--radius-full);
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	background: var(--surface-2);
+	color: var(--muted);
+	border: 1px solid var(--border);
+	white-space: nowrap;
+}
+
+.audit-action.danger {
+	background: var(--danger-soft);
+	color: var(--danger-text);
+	border-color: rgba(192, 39, 64, 0.2);
+}
+
+.audit-action.warn {
+	background: var(--warning-soft);
+	color: var(--warning-text);
+	border-color: rgba(154, 91, 0, 0.2);
+}
+
+.audit-action.accent {
+	background: var(--primary-soft);
+	color: var(--primary-text);
+	border-color: rgba(226, 25, 144, 0.18);
+}
+
+.audit-action-detail {
+	color: var(--foreground);
+	font-weight: 500;
+}
+
+.audit-entity,
+.audit-ip {
+	font-size: 12px;
+	color: var(--faint);
+}
+
+.audit-pagination {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+	padding: 18px;
+	border-top: 1px solid rgba(36, 26, 53, 0.08);
+	color: var(--muted);
+	font-size: 13px;
+}
+
+@media (max-width: 768px) {
+	.audit-toolbar {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.audit-search {
+		width: 100%;
+	}
+}
