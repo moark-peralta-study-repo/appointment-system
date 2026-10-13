@@ -1,19 +1,32 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import ApiError from "../utils/ApiError.js";
+import { sendOtp } from "./verificationService.js";
 
 const generateToken = (id) => {
 	return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 };
 
-export async function register({ name, email, password, phone }) {
+export async function register({ name, email, password, phone }, { verified = false } = {}) {
 	const userExists = await User.findOne({ email });
 	if (userExists) throw new ApiError(409, "User already exists");
 
-	const user = await User.create({ name, email, phone, password, role: "user" });
-	const safeUser = await User.findById(user._id);
+	const user = await User.create({ name, email, phone, password, role: "user", isVerified: verified });
 
-	return { token: generateToken(user._id), user: safeUser };
+	// Self-service signup → email OTP activates the account. Accounts
+	// created BY the clinic (admin) skip verification — they were created
+	// deliberately, no inbox round-trip needed.
+	if (verified) {
+		const safeUser = await User.findById(user._id);
+		return { token: generateToken(user._id), user: safeUser };
+	}
+
+	// No JWT yet — the account is activated by the email OTP. sendOtp
+	// swallows mail failures so a missing SMTP server can't block signup;
+	// the user can request a new code on the verify screen.
+	await sendOtp(user.email).catch(() => {});
+
+	return { email: user.email, message: "Account created — check your email for a 6-digit verification code." };
 }
 
 export async function login({ email, password }) {
@@ -21,6 +34,13 @@ export async function login({ email, password }) {
 
 	if (!user || !(await user.matchPassword(password))) {
 		throw new ApiError(401, "Invalid email or password");
+	}
+
+	// Guidelines: no CRUD/logins until the email is verified.
+	// (Checked AFTER the password so the usual "invalid credentials"
+	// still hides whether the account exists.)
+	if (!user.isVerified) {
+		throw new ApiError(403, "Please verify your email first — check your inbox for the 6-digit code.");
 	}
 
 	const safeUser = await User.findById(user._id);

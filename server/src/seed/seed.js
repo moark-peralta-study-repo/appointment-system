@@ -114,7 +114,13 @@ async function seed() {
 				password: doc.password,
 				role: doc.role,
 				phone: doc.phone,
+				isVerified: true,
 			});
+		} else if (!u.isVerified) {
+			// Seeded before the verification field existed — promote so
+			// the demo accounts still log in after the login gate shipped.
+			u.isVerified = true;
+			await u.save();
 		}
 		return u;
 	}

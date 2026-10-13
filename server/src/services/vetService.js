@@ -81,7 +81,7 @@ export async function createVet(
 		throw new ApiError(409, "A user with this email already exists");
 	}
 
-	const user = await User.create({ name, email, password, role: "vet" });
+	const user = await User.create({ name, email, password, role: "vet", isVerified: true });
 
 	const vet = await Vet.create({
 		user: user._id,

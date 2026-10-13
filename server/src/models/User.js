@@ -8,6 +8,15 @@ const userSchema = new mongoose.Schema(
 		password: { type: String, required: true, minlength: 6, select: false },
 		role: { type: String, enum: ["user", "vet"], default: "user" },
 		phone: String,
+		// Email verification (guidelines: OTP expires in 15 minutes).
+		// Only the SHA-256 hash is stored — never the plaintext OTP.
+		isVerified: { type: Boolean, default: false },
+		otpHash: { type: String, select: false },
+		otpExpiresAt: Date,
+		// Rate-limit resend: don't spam an inbox one OTP per second.
+		otpSentAt: Date,
+		// Password reset — hash of the signed reset token, cleared on use.
+		resetTokenHash: { type: String, select: false },
 	},
 	{ timestamps: true },
 );
