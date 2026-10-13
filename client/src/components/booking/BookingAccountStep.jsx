@@ -2,25 +2,31 @@ import { useState } from "react";
 import { FaArrowRight, FaCheck } from "react-icons/fa";
 import { FiAlertTriangle } from "react-icons/fi";
 import { useAuth } from "../../context/useAuth";
-import { useRegister } from "../../hooks/useClientData";
+import { useRegister, useVerifyOtp } from "../../hooks/useClientData";
 
-// Step 1 — make sure there's a pet-owner account behind the booking.
+// Step 1 — make sure there's a verified pet-owner account behind the booking.
 //
-// If the visitor already has a signed-in owner account (they may have come
-// in from the client portal), we skip the forms entirely. Otherwise they
-// can create an account or sign in with an existing one; the booking is
-// then tied to THAT account so they can manage it in the client portal.
+// Three modes, one step:
+//   register → create account (server emails a 6-digit code, no token yet)
+//   otp      → enter that code; verifying is what issues the session
+//   login    → existing account signs in
+//
+// The wizard can't continue past this step until the user is authed — the
+// next steps call /appointments and /pets with the JWT — which is why
+// registration is a two-part flow here instead of a single submit.
 function BookingAccountStep({ onDone }) {
 	const { user, isAuthed, login } = useAuth();
 	const register = useRegister();
+	const verify = useVerifyOtp();
 
-	const [mode, setMode] = useState("register"); // "register" | "login"
+	const [mode, setMode] = useState("register"); // "register" | "otp" | "login"
 	const [form, setForm] = useState({
 		name: "",
 		email: "",
 		phone: "",
 		password: "",
 	});
+	const [otp, setOtp] = useState("");
 	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
 	// Already a signed-in owner → no forms needed.
@@ -55,12 +61,18 @@ function BookingAccountStep({ onDone }) {
 	}
 
 	const error =
-		mode === "register" ? register.error?.message : login.error?.message;
-	const busy = mode === "register" ? register.isPending : login.isPending;
+		mode === "register"
+			? register.error?.message
+			: mode === "otp"
+				? verify.error?.message
+				: login.error?.message;
+	const busy =
+		mode === "register" ? register.isPending : mode === "otp" ? verify.isPending : login.isPending;
 
 	function submit(e) {
 		e.preventDefault();
 		if (mode === "register") {
+			// Success → the code is in the user's inbox; show the OTP field.
 			register.mutate(
 				{
 					name: form.name.trim(),
@@ -68,14 +80,74 @@ function BookingAccountStep({ onDone }) {
 					phone: form.phone.trim() || undefined,
 					password: form.password,
 				},
+				{ onSuccess: () => setMode("otp") },
+			);
+		} else if (mode === "otp") {
+			// Verifying returns the JWT (useVerifyOtp stores it) → continue.
+			verify.mutate(
+				{ email: form.email.trim(), otp: otp.trim() },
 				{ onSuccess: onDone },
 			);
 		} else {
-			login.mutate(
-				{ email: form.email.trim(), password: form.password },
-				{ onSuccess: onDone },
-			);
+			login.mutate({ email: form.email.trim(), password: form.password }, { onSuccess: onDone });
 		}
+	}
+
+	// The post-register OTP sub-mode: no tabs, just the code.
+	if (mode === "otp") {
+		return (
+			<div className="appointment-card">
+				<section className="form-section">
+					<div className="booking-step-banner">
+						<span className="booking-step-banner-icon">
+							<FaCheck size={16} />
+						</span>
+						<div>
+							<h2>Account created</h2>
+							<p className="form-description">
+								We emailed a 6-digit code to {form.email.trim()}. Enter it to
+								activate your account and continue booking.
+							</p>
+						</div>
+					</div>
+
+					<form onSubmit={submit} noValidate>
+						<div className="appointment-field">
+							<label>Verification code *</label>
+
+							<input
+								type="text"
+								inputMode="numeric"
+								pattern="\d{6}"
+								name="otp"
+								placeholder="6-digit code"
+								value={otp}
+								onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+								autoComplete="one-time-code"
+								required
+							/>
+						</div>
+
+						{error && (
+							<div className="admin-form-error">
+								<FiAlertTriangle size={13} /> {error}
+							</div>
+						)}
+
+						<div className="appointment-actions">
+							<a href="/" className="cancel-button">
+								Cancel
+							</a>
+
+							<button type="submit" className="continue-button" disabled={busy || otp.length !== 6}>
+								{busy ? "One moment…" : "Verify & continue"}
+								<FaArrowRight />
+							</button>
+						</div>
+					</form>
+				</section>
+			</div>
+		);
 	}
 
 	return (
@@ -188,7 +260,7 @@ function BookingAccountStep({ onDone }) {
 							{busy
 								? "One moment…"
 								: mode === "register"
-									? "Create account & continue"
+									? "Create account"
 									: "Sign in & continue"}
 							<FaArrowRight />
 						</button>
