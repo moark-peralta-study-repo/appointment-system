@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { PiCat, PiDog } from "react-icons/pi";
 import { FiPlus, FiAlertTriangle } from "react-icons/fi";
-import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import AdminModal from "../../components/admin/AdminModal";
 import {
@@ -295,7 +295,9 @@ function Patients() {
 					</span>
 
 					<div className="patient-pagination">
-						<button type="button">‹</button>
+						<button type="button">
+							<IoIosArrowBack />
+						</button>
 						<button className="active" type="button">
 							1
 						</button>

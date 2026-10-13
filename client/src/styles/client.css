@@ -10,6 +10,7 @@
 .client-pets-panel,
 .client-settings-panel,
 .client-profile-card,
+.client-password-panel,
 .client-profile-account {
 	padding: 24px;
 }
@@ -117,7 +118,9 @@
 	border-radius: var(--radius-lg);
 	padding: 16px 20px;
 	background: var(--surface);
-	transition: box-shadow 0.15s, border-color 0.15s;
+	transition:
+		box-shadow 0.15s,
+		border-color 0.15s;
 }
 .client-appt-card:hover {
 	border-color: var(--border-cool-strong);
@@ -405,6 +408,8 @@
 	position: relative;
 }
 .admin-notification {
+	display: grid;
+	place-items: center;
 	font-size: 16px;
 	line-height: 1;
 	padding: 8px 10px;

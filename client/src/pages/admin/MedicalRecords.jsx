@@ -5,6 +5,7 @@ import { formatDate, initials } from "../../utils/admin";
 import AdminVisitNoteForm from "../../components/admin/medical/VisitNoteForm";
 import MedicalRecordView from "../../components/admin/medical/MedicalRecordView";
 import { FaClipboardList } from "react-icons/fa";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { PiStar } from "react-icons/pi";
 import { FiCheck, FiSearch } from "react-icons/fi";
 
@@ -260,13 +261,17 @@ function MedicalRecords() {
 					</span>
 
 					<div className="medical-pagination">
-						<button type="button">‹</button>
+						<button type="button">
+							<IoIosArrowBack />
+						</button>
 
 						<button className="active" type="button">
 							1
 						</button>
 
-						<button type="button">›</button>
+						<button type="button">
+							<IoIosArrowForward />
+						</button>
 					</div>
 				</div>
 			</section>

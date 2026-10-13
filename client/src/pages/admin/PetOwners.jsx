@@ -7,6 +7,7 @@ import { PiPawPrint, PiStar } from "react-icons/pi";
 import { FiCheck, FiSearch } from "react-icons/fi";
 import AdminOwnerForm from "../../components/admin/owners/AdminOwnerForm";
 import AdminOwnerView from "../../components/admin/owners/AdminOwnerView";
+import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 
 function PetOwners() {
 	const { data: users = [], isPending } = useUsers();
@@ -232,13 +233,17 @@ function PetOwners() {
 					</span>
 
 					<div className="owner-pagination">
-						<button type="button">‹</button>
+						<button type="button">
+							<IoIosArrowBack />
+						</button>
 
 						<button className="active" type="button">
 							1
 						</button>
 
-						<button type="button">›</button>
+						<button type="button">
+							<IoIosArrowForward />
+						</button>
 					</div>
 				</div>
 			</section>
