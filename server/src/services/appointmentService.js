@@ -114,6 +114,8 @@ export async function updateStatus(actor, appointmentId, { status, vetNotes }) {
 	const appointment = await Appointment.findById(appointmentId);
 	if (!appointment) throw new ApiError(404, "Appointment not found");
 
+	const previousStatus = appointment.status;
+
 	if (
 		actor.role !== "vet" &&
 		!appointment.owner.equals(actor._id)
@@ -137,7 +139,7 @@ export async function updateStatus(actor, appointmentId, { status, vetNotes }) {
 	if (vetNotes !== undefined) appointment.vetNotes = vetNotes;
 
 	await appointment.save();
-	return appointment;
+	return { appointment, previousStatus };
 }
 
 export async function cancelAppointment(actor, appointmentId) {

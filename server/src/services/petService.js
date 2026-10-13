@@ -64,5 +64,7 @@ export async function deletePet(user, petId) {
 	}
 
 	await pet.deleteOne();
-	return { message: "Pet deleted" };
+	// Return the deleted pet (name/species) so the response and the audit
+	// trail can say WHAT was removed, not just the id.
+	return { message: "Pet deleted", pet };
 }
