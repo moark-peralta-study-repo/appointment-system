@@ -12,7 +12,7 @@
 // a mail server is missing.
 import nodemailer from "nodemailer";
 
-const FROM = process.env.MAIL_FROM || "Mutuals Paws Clinic <no-reply@mutualspaws.com>";
+const FROM = process.env.MAIL_FROM || "Pink Paws Clinic <no-reply@pinkpaws.com>";
 
 let transporter;
 if (process.env.SMTP_HOST) {
