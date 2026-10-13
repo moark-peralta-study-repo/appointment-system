@@ -1,57 +1,63 @@
-/* ---------- Fonts (variable, loaded here — no <link> needed) ----------
-   League Spartan (display): variable weight 100–900
-   Baloo Thambi 2 (body): variable weight 400–800
+/* ---------- Fonts (loaded here — no <link> needed) ----------
+   Quicksand (display): 300–700, rounded geometric — matches the logo
+   Baloo Thambi 2 (body): variable 400–800, rounded warm
 -----------------------------------------------------------------*/
-@import url("https://fonts.googleapis.com/css2?family=Baloo+Thambi+2:wght@400..800&family=League+Spartan:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Thambi+2:wght@400..800&family=Quicksand:wght@300..700&display=swap");
 
 :root {
 	color-scheme: light;
 
-	/* ---- surfaces ---- */
-	--background: #fdfff1; /* app bg (cream) */
+	/* ---- surfaces (soft pink paper) ---- */
+	--background: #fdf2fa; /* app bg — pale pink wash */
 	--surface: #ffffff; /* cards, modals */
-	--surface-2: #f4f9e8; /* inset panels, zebra rows (green-tinted) */
-	--border: #e4eed4; /* hairlines */
-	--border-strong: #c9d6b6; /* dividers, input focus ring base */
+	--surface-2: #fbeef8; /* inset panels, zebra rows (pink-tinted) */
+	--border: #f0dcee; /* hairlines */
+	--border-strong: #ddc2e3; /* dividers, input focus ring base */
+	--border-cool: #e9e2f2;
+	--border-cool-strong: #d8cce6;
+
+	/* ---- inverse (brand navy) panels ---- */
+	--inverse-surface: #1f326e;
+	--on-inverse-surface: #ffffff;
 
 	/* ---- text ---- */
-	--foreground: #00345b; /* navy ink */
-	--muted: #4e6e85; /* slate — secondary text */
-	--faint: #85a8c0; /* decorative only (meta, watermarks) */
+	--foreground: #241a35; /* deep plum ink */
+	--muted: #5d4c6b; /* muted plum — secondary text */
+	--faint: #9c8cab; /* decorative only */
 	--on-inverted: #ffffff;
 
-	/* ---- brand: primary (electric blue) ---- */
-	--primary: #0091fd;
-	--primary-hover: #0070e0;
-	--primary-active: #005fc0;
-	--primary-soft: #d6efff; /* tinted bg */
-	--primary-text: #0062c8; /* primary used AS text (AA on cream) */
-	--primary-contrast: #ffffff; /* white text on primary (AA on hover/active shades) */
+	/* ---- brand: primary (magenta) ---- */
+	--primary: #e21990;
+	--primary-hover: #c41380;
+	--primary-active: #a8106b;
+	--primary-soft: #fbe0f1; /* tinted bg */
+	--primary-text: #a8106b; /* primary used AS text (AA on pink) */
+	--primary-contrast: #ffffff;
 
-	/* ---- brand: accent (sunshine yellow) ---- */
-	--accent: #fffea1; /* sunshine yellow */
-	--accent-hover: #fdf489;
-	--accent-soft: #fffea1; /* yellow IS the pastel — soft = accent */
-	--accent-text: #6e6200; /* olive ink (AA-safe yellow-toned text) */
-	--accent-soft-text: #6e6200; /* text on accent-soft */
-	--accent-contrast: #00345b; /* navy ink text on accent (12.1:1) */
+	/* ---- brand: accent (pink celebratory) ---- */
+	--accent: #f9d3ec;
+	--accent-hover: #f3bcd9;
+	--accent-soft: #fde7f5; /* pastel bg */
+	--accent-text: #7a1b55;
+	--accent-soft-text: #7a1b55;
+	--accent-contrast: #241a35;
 
 	/* ---- semantic states ---- */
-	--success: #3e6b14;
-	--success-soft: #dcf2aa; /* sage green */
-	--success-text: #3e6b14;
-	--warning: #6e6200;
-	--warning-soft: #fffea1; /* shares the yellow family */
-	--warning-text: #6e6200;
-	--danger: #b4231f;
-	--danger-soft: #fbe9e7;
-	--danger-text: #b4231f;
+	--success: #2f7d4f;
+	--success-soft: #d9f0e3;
+	--success-text: #256b42;
+	--warning: #9a5b00;
+	--warning-soft: #fdeedd;
+	--warning-text: #7d4b00;
+	--danger: #c02740;
+	--danger-soft: #fbe2e6;
+	--danger-text: #a31f35;
 
-	/* ---- shape ---- */
-	--radius-sm: 6px;
-	--radius-md: 10px;
-	--radius-lg: 16px;
-	--radius-xl: 24px;
+	/* ---- shape (rounder — matches the logo) ---- */
+	--radius-sm: 8px;
+	--radius-md: 12px;
+	--radius-lg: 18px;
+	--radius-xl: 26px;
 	--radius-full: 9999px;
 
 	/* ---- spacing (4px grid) ---- */
@@ -63,79 +69,84 @@
 	--space-2xl: 3rem; /* 48 */
 	--space-3xl: 4rem; /* 64 */
 
-	/* ---- elevation (navy-tinted) ---- */
-	--shadow-sm: 0 1px 2px rgba(0, 52, 91, 0.06);
-	--shadow-md: 0 2px 8px rgba(0, 52, 91, 0.08);
-	--shadow-lg: 0 8px 24px rgba(0, 52, 91, 0.1);
+	/* ---- elevation (plum-tinted) ---- */
+	--shadow-sm: 0 1px 2px rgba(36, 26, 53, 0.06);
+	--shadow-md: 0 2px 8px rgba(36, 26, 53, 0.08);
+	--shadow-lg: 0 8px 24px rgba(36, 26, 53, 0.1);
 
 	/* ---- motion ---- */
 	--ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 	--duration: 180ms;
 
 	/* ---- type ---- */
-	--font-display: "League Spartan", ui-sans-serif, system-ui, sans-serif;
+	--font-display: "Quicksand", ui-rounded, "Baloo Thambi 2", system-ui, sans-serif;
 	--font-sans: "Baloo Thambi 2", ui-rounded, system-ui, sans-serif;
 
 	/* ---- font weights ----
-	   Both families are VARIABLE: League Spartan 100–900,
-	   Baloo Thambi 2 400–800. Any numeric weight in range renders
-	   (e.g. font-weight: 550) — these are named defaults. */
-	--font-weight-thin: 100; /* League only */
-	--font-weight-extralight: 200; /* League only */
-	--font-weight-light: 300; /* League only */
+	   Quicksand: 300–700 (700 is its max). Baloo Thambi 2: 400–800.
+	   Any numeric weight in range renders; these are named defaults. */
+	--font-weight-thin: 300; /* Quicksand min */
+	--font-weight-extralight: 400;
+	--font-weight-light: 400;
 	--font-weight-normal: 400;
 	--font-weight-medium: 500;
 	--font-weight-semibold: 600;
 	--font-weight-bold: 700;
-	--font-weight-extrabold: 800;
-	--font-weight-black: 900; /* League only */
+	--font-weight-extrabold: 800; /* Baloo only */
+	--font-weight-black: 700; /* Quicksand max */
 }
 
 /* ============================ DARK ============================ */
 .dark {
 	color-scheme: dark;
 
-	/* surfaces: deep navy steps */
-	--background: #041e30;
-	--surface: #0a2d47;
-	--surface-2: #103a5a;
-	--border: #1c466b;
-	--border-strong: #2c5b85;
+	/* surfaces: deep plum steps */
+	--background: #171021;
+	--surface: #221833;
+	--surface-2: #2b1e40;
+	--border: #3a2c50;
+	--border-strong: #524072;
+	--border-cool: #3a2c50;
+	--border-cool-strong: #524072;
+
+	/* inverse panels: deep navy in dark (don't flip to pink) */
+	--inverse-surface: #131c38;
+	--on-inverse-surface: #f6f1fb;
 
 	/* text */
-	--foreground: #f4faff;
-	--muted: #a8c4d8;
-	--faint: #6f8ba1;
-	--on-inverted: #041e30;
+	--foreground: #f6f1fb;
+	--muted: #c9bcd9;
+	--faint: #8d7ba3;
+	--on-inverted: #131c38;
 
-	/* brand — blue lightens to glow on dark navy */
-	--primary: #33aaff;
-	--primary-hover: #0091fd;
-	--primary-active: #0070e0;
-	--primary-soft: #12304a;
-	--primary-text: #33aaff;
-	--primary-contrast: #041e30; /* dark text on bright blue */
+	/* brand — magenta lightens to glow on dark plum */
+	--primary: #f0559f;
+	--primary-hover: #e21990;
+	--primary-active: #c41380;
+	--primary-soft: #3a1f37;
+	--primary-text: #f0559f;
+	--primary-contrast: #171021;
 
-	/* yellow is already the lightest hue — stays as-is */
-	--accent: #fffea1;
-	--accent-hover: #fdf489;
-	--accent-soft: #3a2c1b;
-	--accent-text: #fffea1;
-	--accent-soft-text: #fffea1;
-	--accent-contrast: #00345b;
+	/* accent */
+	--accent: #f9d3ec;
+	--accent-hover: #f3bcd9;
+	--accent-soft: #332040;
+	--accent-text: #f9d3ec;
+	--accent-soft-text: #f9d3ec;
+	--accent-contrast: #171021;
 
 	/* semantic states */
-	--success: #8fd14f;
-	--success-soft: #14301c;
-	--success-text: #8fd14f;
-	--warning: #fffea1;
-	--warning-soft: #2a2410;
-	--warning-text: #fffea1;
-	--danger: #f97066;
-	--danger-soft: #2e1714;
-	--danger-text: #f97066;
+	--success: #6fd39a;
+	--success-soft: #1c3527;
+	--success-text: #6fd39a;
+	--warning: #f5b950;
+	--warning-soft: #332814;
+	--warning-text: #f5b950;
+	--danger: #f97a8a;
+	--danger-soft: #331a1e;
+	--danger-text: #f97a8a;
 
-	/* elevation — surface steps do the work; shadows stay subtle */
+	/* elevation */
 	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
 	--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
 	--shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.45);
@@ -242,5 +253,3 @@ button,
 	outline-offset: 1px;
 	border-color: transparent;
 }
-
-/* ============================================================= */

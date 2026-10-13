@@ -55,7 +55,7 @@ function Hero() {
 					<div className="hero-stat">
 						<strong>98.6%</strong>
 
-						<span>of pet parents would recommend Mutuals Paws</span>
+						<span>of pet parents would recommend Pink Paws</span>
 					</div>
 				</div>
 			</div>

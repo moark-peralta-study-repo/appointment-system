@@ -48,7 +48,7 @@
 .client-appt-tabs button.active {
 	background: var(--surface);
 	color: var(--foreground);
-	box-shadow: 0 2px 6px rgba(0, 52, 91, 0.08);
+	box-shadow: 0 2px 6px rgba(36, 26, 53, 0.08);
 }
 .client-appt-tab-count {
 	background: var(--primary);
@@ -121,7 +121,7 @@
 }
 .client-appt-card:hover {
 	border-color: var(--border-cool-strong);
-	box-shadow: 0 6px 18px rgba(0, 52, 91, 0.06);
+	box-shadow: 0 6px 18px rgba(36, 26, 53, 0.06);
 }
 .client-appt-when .client-appt-day {
 	display: block;
@@ -414,7 +414,7 @@
 	top: 2px;
 	right: 2px;
 	background: var(--danger);
-	color: #fff;
+	color: var(--on-inverse-surface);
 	font-size: 9px;
 	font-weight: 800;
 	min-width: 15px;
@@ -432,7 +432,7 @@
 	background: var(--surface);
 	border: 1px solid var(--border-cool);
 	border-radius: var(--radius-lg);
-	box-shadow: 0 12px 35px rgba(0, 52, 91, 0.12);
+	box-shadow: 0 12px 35px rgba(36, 26, 53, 0.12);
 	padding: 6px;
 	z-index: 80;
 	animation: client-bell-in 140ms var(--ease);

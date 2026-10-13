@@ -13,7 +13,7 @@
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(0, 30, 59, 0.45);
+  background: rgba(19, 28, 56, 0.55);
   backdrop-filter: blur(2px);
   display: flex;
   align-items: flex-start;
@@ -26,9 +26,9 @@
   width: 100%;
   max-width: 560px;
   background: var(--surface);
-  border: 1px solid rgba(0, 52, 91, 0.07);
+  border: 1px solid rgba(36, 26, 53, 0.07);
   border-radius: var(--radius-lg);
-  box-shadow: 0 24px 60px rgba(0, 52, 91, 0.25);
+  box-shadow: 0 24px 60px rgba(36, 26, 53, 0.25);
   overflow: hidden;
 }
 
@@ -42,7 +42,7 @@
   align-items: center;
   gap: 16px;
   padding: 20px 24px;
-  border-bottom: 1px solid rgba(0, 52, 91, 0.07);
+  border-bottom: 1px solid rgba(36, 26, 53, 0.07);
 }
 
 .admin-modal-header .admin-eyebrow {
@@ -59,7 +59,7 @@
 .admin-modal-close {
   width: 34px;
   height: 34px;
-  border: 1px solid rgba(0, 52, 91, 0.1);
+  border: 1px solid rgba(36, 26, 53, 0.1);
   border-radius: var(--radius-md);
   background: var(--surface);
   color: var(--muted);
@@ -114,7 +114,7 @@
 .admin-form-field textarea {
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid rgba(0, 52, 91, 0.16);
+  border: 1px solid rgba(36, 26, 53, 0.16);
   border-radius: var(--radius-md);
   background: var(--surface);
   color: var(--foreground);
@@ -134,7 +134,7 @@
 .admin-form-field select:focus,
 .admin-form-field textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(0, 145, 253, 0.15);
+  box-shadow: 0 0 0 3px rgba(226, 25, 144, 0.15);
 }
 
 .admin-form-field input:disabled,
@@ -153,7 +153,7 @@
 }
 
 .admin-slot {
-  border: 1px solid rgba(0, 52, 91, 0.16);
+  border: 1px solid rgba(36, 26, 53, 0.16);
   border-radius: var(--radius-md);
   background: var(--surface);
   color: var(--foreground);
@@ -173,7 +173,7 @@
   background: var(--primary);
   border-color: var(--primary);
   color: var(--surface);
-  box-shadow: 0 4px 12px rgba(0, 145, 253, 0.35);
+  box-shadow: 0 4px 12px rgba(226, 25, 144, 0.35);
 }
 
 .admin-slot-note {
@@ -190,7 +190,7 @@
   justify-content: flex-end;
   gap: 10px;
   padding: 16px 24px;
-  border-top: 1px solid rgba(0, 52, 91, 0.07);
+  border-top: 1px solid rgba(36, 26, 53, 0.07);
   background: var(--surface-2);
 }
 
@@ -216,7 +216,7 @@
 }
 
 .admin-detail-item {
-  border: 1px solid rgba(0, 52, 91, 0.07);
+  border: 1px solid rgba(36, 26, 53, 0.07);
   border-radius: 12px;
   background: var(--background);
   padding: 12px 14px;
@@ -258,7 +258,7 @@
   font-weight: 700;
   letter-spacing: 0.6px;
   color: var(--muted);
-  border-top: 1px solid rgba(0, 52, 91, 0.07);
+  border-top: 1px solid rgba(36, 26, 53, 0.07);
   padding-top: 14px;
 }
 
@@ -275,7 +275,7 @@
   grid-template-columns: 74px 1fr 14px 1fr 86px 18px;
   align-items: center;
   gap: 10px;
-  border: 1px solid rgba(0, 52, 91, 0.07);
+  border: 1px solid rgba(36, 26, 53, 0.07);
   border-radius: var(--radius-md);
   background: var(--surface);
   padding: 8px 12px;
@@ -307,7 +307,7 @@
 }
 
 .schedule-row input[type="time"] {
-  border: 1px solid rgba(0, 52, 91, 0.16);
+  border: 1px solid rgba(36, 26, 53, 0.16);
   border-radius: 8px;
   padding: 6px 8px;
   font-family: var(--font-sans);
@@ -331,7 +331,7 @@
 }
 
 .schedule-row input[type="number"] {
-  border: 1px solid rgba(0, 52, 91, 0.16);
+  border: 1px solid rgba(36, 26, 53, 0.16);
   border-radius: 8px;
   padding: 6px 8px;
   font-family: var(--font-sans);

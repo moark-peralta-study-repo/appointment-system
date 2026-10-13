@@ -22,9 +22,9 @@
   gap: 15px;
   padding: 20px;
   background: var(--surface);
-  border: 1px solid rgba(0, 52, 91, 0.08);
+  border: 1px solid rgba(36, 26, 53, 0.08);
   border-radius: var(--radius-lg);
-  box-shadow: 0 6px 18px rgba(0, 52, 91, 0.06);
+  box-shadow: 0 6px 18px rgba(36, 26, 53, 0.06);
 }
 
 .patient-summary-icon {
@@ -81,7 +81,7 @@
   justify-content: space-between;
   gap: 20px;
   padding: 22px;
-  border-bottom: 1px solid rgba(0, 52, 91, 0.08);
+  border-bottom: 1px solid rgba(36, 26, 53, 0.08);
 }
 
 .patient-search {
@@ -157,7 +157,7 @@
 
 .patients-table td {
   padding: 16px 20px;
-  border-top: 1px solid rgba(0, 52, 91, 0.07);
+  border-top: 1px solid rgba(36, 26, 53, 0.07);
   color: var(--muted);
   font-size: 13px;
   vertical-align: middle;
@@ -259,7 +259,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px 22px;
-  border-top: 1px solid rgba(0, 52, 91, 0.08);
+  border-top: 1px solid rgba(36, 26, 53, 0.08);
 }
 
 .patients-table-footer > span {

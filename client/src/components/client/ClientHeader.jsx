@@ -2,7 +2,7 @@
 // the admin pages so the chrome matches. Pages pass their own title,
 // subtitle and (optional) header actions (e.g. "Book an appointment").
 function ClientHeader({
-	eyebrow = "MUTUALS PAWS VETERINARY CLINIC",
+	eyebrow = "PINK PAWS VETERINARY CLINIC",
 	title,
 	subtitle,
 	actions,

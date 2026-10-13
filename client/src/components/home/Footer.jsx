@@ -1,11 +1,14 @@
-import logo from "../../assets/logo/happy-paws-logo.png";
+import logo from "../../assets/logo/pink-paws-mark-sq-256.png";
 
 function Footer() {
 	return (
 		<footer className="footer">
 			<div className="footer-inner">
 				<div className="footer-brand">
-					<img src={logo} alt="Mutuals Paws" />
+					<div className="footer-brand-logo">
+						<img src={logo} alt="Pink Paws" />
+						<span className="footer-brand-name">Pink Paws</span>
+					</div>
 
 					<p>
 						Compassionate veterinary care for the pets who mean the most to you.
@@ -41,12 +44,12 @@ function Footer() {
 
 					<a href="#visit">Quezon City</a>
 
-					<a href="#home">info@mutualspaws.com</a>
+					<a href="#home">info@pinkpaws.com</a>
 				</div>
 			</div>
 
 			<div className="footer-bottom">
-				© 2026 Mutuals Paws. All rights reserved.
+				© 2026 Pink Paws. All rights reserved.
 			</div>
 		</footer>
 	);

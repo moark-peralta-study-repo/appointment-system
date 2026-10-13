@@ -65,10 +65,10 @@
 
 .appointment-summary-card {
   background: var(--surface);
-  border: 1px solid rgba(0, 52, 91, 0.08);
+  border: 1px solid rgba(36, 26, 53, 0.08);
   border-radius: var(--radius-lg);
   padding: 20px 22px;
-  box-shadow: 0 6px 18px rgba(0, 52, 91, 0.06);
+  box-shadow: 0 6px 18px rgba(36, 26, 53, 0.06);
 }
 
 .appointment-summary-card span {
@@ -99,7 +99,7 @@
   justify-content: space-between;
   gap: 20px;
   padding: 22px;
-  border-bottom: 1px solid rgba(0, 52, 91, 0.08);
+  border-bottom: 1px solid rgba(36, 26, 53, 0.08);
 }
 
 .appointment-search {
@@ -175,7 +175,7 @@
 
 .appointments-table td {
   padding: 17px 18px;
-  border-top: 1px solid rgba(0, 52, 91, 0.07);
+  border-top: 1px solid rgba(36, 26, 53, 0.07);
   color: var(--muted);
   font-size: 13px;
   vertical-align: middle;
@@ -268,7 +268,7 @@
 }
 
 .row-action {
-  border: 1px solid rgba(0, 52, 91, 0.15);
+  border: 1px solid rgba(36, 26, 53, 0.15);
   background: var(--surface);
   border-radius: 9999px;
   padding: 5px 12px;
@@ -281,7 +281,7 @@
 
 .row-action.confirm {
   color: var(--success);
-  border-color: rgba(62, 107, 20, 0.35);
+  border-color: rgba(47, 125, 79, 0.4);
 }
 
 .row-action.confirm:hover {
@@ -290,7 +290,7 @@
 
 .row-action.complete {
   color: var(--foreground);
-  border-color: rgba(0, 52, 91, 0.3);
+  border-color: rgba(36, 26, 53, 0.3);
 }
 
 .row-action.complete:hover {
@@ -299,7 +299,7 @@
 
 .row-action.cancel {
   color: var(--danger-text);
-  border-color: rgba(122, 46, 46, 0.3);
+  border-color: rgba(192, 39, 64, 0.35);
 }
 
 .row-action.cancel:hover {

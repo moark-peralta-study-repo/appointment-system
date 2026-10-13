@@ -6,10 +6,10 @@
  *   npm run seed --fresh  # drops the collections first
  *
  * Credentials that get created:
- *   Staff portal (vet owner): admin@mutualspaws.com / admin123  (Dr. Evelyn Dane)
+ *   Staff portal (vet owner): admin@pinkpaws.com / admin123  (Dr. Evelyn Dane)
  *   Other vets:               vet12345
  *   Pet owners:               patient123
- *   Client portal demo:       client@mutualspaws.com / client123  (Jamie Rivera —
+ *   Client portal demo:       client@pinkpaws.com / client123  (Jamie Rivera —
  *                             the account the login page advertises)
  *
  * The seed creates the vet profiles + pets + appointments directly with
@@ -53,12 +53,12 @@ function daysAgo(n, time, status) {
 // --- Sample data (from the admin UI) ------------------------------------
 
 const VETS = [
-	{ name: "Dr. Evelyn Dane", email: "admin@mutualspaws.com", password: "admin123", phone: "+63 917 245 0001", specialty: "General Practice", bio: "Clinic owner and lead veterinarian." },
-	{ name: "Dr. Alex Mercer", email: "alex.mercer@mutualspaws.com", password: "vet12345", phone: "+63 918 562 0002", specialty: "Surgery & Diagnostics" },
-	{ name: "Dr. Elena Rostova", email: "elena.rostova@mutualspaws.com", password: "vet12345", phone: "+63 905 731 0003", specialty: "Internal Medicine" },
-	{ name: "Dr. Marcus Bennett", email: "marcus.bennett@mutualspaws.com", password: "vet12345", phone: "+63 917 843 0004", specialty: "Dermatology" },
-	{ name: "Dr. Claire Morgan", email: "claire.morgan@mutualspaws.com", password: "vet12345", phone: "+63 919 325 0005", specialty: "Emergency Care" },
-	{ name: "Dr. Noah Williams", email: "noah.williams@mutualspaws.com", password: "vet12345", phone: "+63 906 482 0006", specialty: "Preventive Care" },
+	{ name: "Dr. Evelyn Dane", email: "admin@pinkpaws.com", password: "admin123", phone: "+63 917 245 0001", specialty: "General Practice", bio: "Clinic owner and lead veterinarian." },
+	{ name: "Dr. Alex Mercer", email: "alex.mercer@pinkpaws.com", password: "vet12345", phone: "+63 918 562 0002", specialty: "Surgery & Diagnostics" },
+	{ name: "Dr. Elena Rostova", email: "elena.rostova@pinkpaws.com", password: "vet12345", phone: "+63 905 731 0003", specialty: "Internal Medicine" },
+	{ name: "Dr. Marcus Bennett", email: "marcus.bennett@pinkpaws.com", password: "vet12345", phone: "+63 917 843 0004", specialty: "Dermatology" },
+	{ name: "Dr. Claire Morgan", email: "claire.morgan@pinkpaws.com", password: "vet12345", phone: "+63 919 325 0005", specialty: "Emergency Care" },
+	{ name: "Dr. Noah Williams", email: "noah.williams@pinkpaws.com", password: "vet12345", phone: "+63 906 482 0006", specialty: "Preventive Care" },
 ];
 
 const OWNERS = [
@@ -126,7 +126,7 @@ async function seed() {
 	// login page advertises its own password (client123), not patient123.
 	users["Jamie Rivera"] = await upsertUser({
 		name: "Jamie Rivera",
-		email: "client@mutualspaws.com",
+		email: "client@pinkpaws.com",
 		password: "client123",
 		role: "user",
 		phone: "+63 917 245 9999",

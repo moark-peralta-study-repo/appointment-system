@@ -8,7 +8,7 @@ import {
 	CiUser,
 } from "react-icons/ci";
 import { FaChartBar, FaSignOutAlt } from "react-icons/fa";
-import logo from "../../assets/logo/happy-paws-logo.png";
+import logo from "../../assets/logo/pink-paws-mark-sq-256.png";
 import { useAuth } from "../../context/useAuth";
 
 function AdminSidebar() {
@@ -44,12 +44,12 @@ function AdminSidebar() {
 			<div className="admin-brand">
 				<img
 					src={logo}
-					alt="Mutuals Paws Veterinary Clinic"
+					alt="Pink Paws Veterinary Clinic"
 					className="admin-brand-logo"
 				/>
 
 				<div className="admin-brand-text">
-					<span className="admin-brand-name">Mutuals Paws</span>
+					<span className="admin-brand-name">Pink Paws</span>
 					<span className="admin-brand-subtitle">Veterinary Clinic</span>
 				</div>
 			</div>

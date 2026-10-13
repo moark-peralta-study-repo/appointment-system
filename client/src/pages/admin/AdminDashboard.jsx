@@ -62,7 +62,7 @@ function AdminDashboard() {
 		<>
 			<header className="admin-header">
 				<div>
-					<p className="admin-eyebrow">MUTUALS PAWS VETERINARY CLINIC</p>
+					<p className="admin-eyebrow">PINK PAWS VETERINARY CLINIC</p>
 					<h1>Clinic Dashboard</h1>
 					<p className="admin-header-text">
 						{loading

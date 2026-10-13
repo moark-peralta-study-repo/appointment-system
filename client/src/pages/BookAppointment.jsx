@@ -64,7 +64,7 @@ function BookAppointment() {
 
 			<main className="booking-main">
 				<div className="booking-title">
-					<span>MUTUALS PAWS</span>
+					<span>PINK PAWS</span>
 
 					<h1>Book an Appointment</h1>
 

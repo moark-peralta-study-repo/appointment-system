@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
-import logo from "../../assets/logo/happy-paws-logo-2.png";
+import logo from "../../assets/logo/pink-paws-mark-sq-256.png";
 import { useAuth } from "../../context/useAuth";
 import { useRegister } from "../../hooks/useClientData";
 
@@ -59,10 +59,10 @@ function ClientRegister() {
 		>
 			<div className="admin-login-card" style={{ order: 2 }}>
 				<div className="admin-login-brand">
-					<img src={logo} alt="Mutuals Paws Veterinary Clinic" />
+					<img src={logo} alt="Pink Paws Veterinary Clinic" />
 
 					<div>
-						<strong>Mutuals Paws</strong>
+						<strong>Pink Paws</strong>
 						<span>Veterinary Clinic</span>
 					</div>
 				</div>
@@ -195,7 +195,7 @@ function ClientRegister() {
 
 			<div className="admin-login-side" style={{ order: 1 }}>
 				<div className="admin-login-side-content">
-					<span className="admin-login-side-label">MUTUALS PAWS</span>
+					<span className="admin-login-side-label">PINK PAWS</span>
 
 					<h2>
 						Your pets' health,

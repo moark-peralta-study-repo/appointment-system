@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import { FaPhoneAlt } from "react-icons/fa";
-import logo from "../../assets/logo/happy-paws-logo.png";
+import logo from "../../assets/logo/pink-paws-full.png";
 
 function Navbar() {
 	return (
 		<header className="navbar">
 			<div className="navbar-inner">
 				<a href="#home" className="logo">
-					<img src={logo} alt="Mutuals Paws" />
+					<img src={logo} alt="Pink Paws" />
 				</a>
 
 				<nav className="nav-links">

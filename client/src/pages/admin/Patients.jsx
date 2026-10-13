@@ -90,7 +90,7 @@ function Patients() {
 			<AdminPageHeader
 				eyebrow="CLINIC MANAGEMENT"
 				title="Patients"
-				description="View and manage all pets registered at Mutuals Paws."
+				description="View and manage all pets registered at Pink Paws."
 				actions={
 					<button
 						className="admin-primary-button"

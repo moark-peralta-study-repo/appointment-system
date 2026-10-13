@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link, Navigate } from "react-router-dom";
-import logo from "../assets/logo/happy-paws-logo-2.png";
+import logo from "../assets/logo/pink-paws-mark-sq-256.png";
 import { useAuth } from "../context/useAuth";
 
 // Shared by login (mutate onSuccess) and the "already signed in" redirect,
@@ -42,10 +42,10 @@ function Login() {
 			<div className="admin-login-card">
 				{/* Brand Logo & Name */}
 				<div className="admin-login-brand">
-					<img src={logo} alt="Mutuals Paws Veterinary Clinic" />
+					<img src={logo} alt="Pink Paws Veterinary Clinic" />
 
 					<div>
-						<strong>Mutuals Paws</strong>
+						<strong>Pink Paws</strong>
 						<span>Veterinary Clinic</span>
 					</div>
 				</div>
@@ -129,8 +129,8 @@ function Login() {
 				{/* Demo Account Credentials */}
 				<div className="admin-login-demo">
 					<span>Demo accounts</span>
-					<p>client@mutualspaws.com · client123</p>
-					<p>admin@mutualspaws.com · admin123</p>
+					<p>client@pinkpaws.com · client123</p>
+					<p>admin@pinkpaws.com · admin123</p>
 				</div>
 
 				{/* Back Button */}
@@ -145,7 +145,7 @@ function Login() {
 
 			<div className="admin-login-side">
 				<div className="admin-login-side-content">
-					<span className="admin-login-side-label">MUTUALS PAWS</span>
+					<span className="admin-login-side-label">PINK PAWS</span>
 
 					<h2>
 						Caring for pets.

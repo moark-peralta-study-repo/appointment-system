@@ -14,7 +14,7 @@ function PetPortal() {
 					</h2>
 
 					<p>
-						With your Mutuals Paws client portal, you can keep your pet's
+						With your Pink Paws client portal, you can keep your pet's
 						important health information organized and accessible whenever you
 						need it.
 					</p>

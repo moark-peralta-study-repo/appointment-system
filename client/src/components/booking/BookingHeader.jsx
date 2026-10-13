@@ -1,10 +1,10 @@
-import logo2 from "../../assets/logo/happy-paws-logo-2.png";
+import logo2 from "../../assets/logo/pink-paws-mark-sq-256.png";
 
 function BookingHeader({ right }) {
 	return (
 		<header className="booking-header">
 			<a href="/" className="booking-logo">
-				<img src={logo2} alt="Mutuals Paws" />
+				<img src={logo2} alt="Pink Paws" />
 			</a>
 
 			{right}

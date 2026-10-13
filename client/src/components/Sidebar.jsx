@@ -1,5 +1,5 @@
 import { RxDashboard, RxPeople, RxPerson } from "react-icons/rx";
-import logo from "../assets/logo/happy-paws-logo.png";
+import logo from "../assets/logo/pink-paws-mark-sq-256.png";
 import { FaRegClock } from "react-icons/fa";
 import { CiMedicalCase, CiMedicalClipboard } from "react-icons/ci";
 import { PiGearLight } from "react-icons/pi";
@@ -11,12 +11,12 @@ function Sidebar() {
 			<div className="brand">
 				<img
 					src={logo}
-					alt="Mutuals Paws Veterinary Clinic"
+					alt="Pink Paws Veterinary Clinic"
 					className="brand-logo"
 				/>
 
 				<div className="brand-text">
-					<span className="brand-name">Mutuals Paws</span>
+					<span className="brand-name">Pink Paws</span>
 					<span className="brand-subtitle">Veterinary Clinic</span>
 				</div>
 			</div>

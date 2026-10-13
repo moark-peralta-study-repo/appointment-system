@@ -27,7 +27,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(253, 255, 241, 0.96);
+  background: rgba(249, 211, 236, 0.96);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(10px);
 }
@@ -114,7 +114,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 5px 14px rgba(0, 145, 253, 0.18);
+  box-shadow: 0 5px 14px rgba(226, 25, 144, 0.18);
 }
 
 .book-button:hover {
@@ -217,7 +217,7 @@
   color: white;
   font-size: 14px;
   font-weight: 800;
-  box-shadow: 0 7px 18px rgba(0, 145, 253, 0.2);
+  box-shadow: 0 7px 18px rgba(226, 25, 144, 0.2);
 }
 
 .primary-button:hover {
@@ -252,7 +252,7 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  color: #e2b900;
+  color: var(--primary-text);
 }
 
 
@@ -275,7 +275,7 @@
   overflow: hidden;
   border-radius: 45% 45% 24px 24px;
   background: var(--primary-soft);
-  box-shadow: 0 20px 45px rgba(0, 52, 91, 0.14);
+  box-shadow: 0 20px 45px rgba(36, 26, 53, 0.14);
 }
 
 .hero-photo-box img {
@@ -294,7 +294,7 @@
   padding: 17px;
   background: white;
   border-radius: 17px;
-  box-shadow: 0 15px 35px rgba(0, 52, 91, 0.15);
+  box-shadow: 0 15px 35px rgba(36, 26, 53, 0.15);
 }
 
 .hero-stat strong {
@@ -328,7 +328,7 @@
   padding: 28px 30px;
   border-radius: 22px;
   background: var(--inverse-surface);
-  box-shadow: 0 15px 35px rgba(0, 52, 91, 0.15);
+  box-shadow: 0 15px 35px rgba(36, 26, 53, 0.15);
 }
 
 .booking-heading {
@@ -459,13 +459,13 @@
   background: white;
   border: 1px solid var(--border);
   border-radius: 17px;
-  box-shadow: 0 4px 14px rgba(0, 52, 91, 0.06);
+  box-shadow: 0 4px 14px rgba(36, 26, 53, 0.06);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .feature-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 52, 91, 0.1);
+  box-shadow: 0 12px 28px rgba(36, 26, 53, 0.1);
 }
 
 .feature-icon {
@@ -520,13 +520,13 @@
   background: white;
   border: 1px solid var(--border);
   border-radius: 17px;
-  box-shadow: 0 4px 14px rgba(0, 52, 91, 0.06);
+  box-shadow: 0 4px 14px rgba(36, 26, 53, 0.06);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .service-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 52, 91, 0.1);
+  box-shadow: 0 12px 28px rgba(36, 26, 53, 0.1);
 }
 
 .service-icon {
@@ -687,7 +687,7 @@
   overflow: hidden;
   background: white;
   border-radius: var(--radius-lg);
-  box-shadow: 0 12px 30px rgba(0, 52, 91, 0.12);
+  box-shadow: 0 12px 30px rgba(36, 26, 53, 0.12);
 }
 
 .record-top {
@@ -785,7 +785,7 @@
   background: var(--background);
   border: 1px solid var(--border);
   border-radius: 17px;
-  box-shadow: 0 4px 14px rgba(0, 52, 91, 0.06);
+  box-shadow: 0 4px 14px rgba(36, 26, 53, 0.06);
   transition: transform 0.2s ease;
 }
 
@@ -867,7 +867,7 @@
   background: white;
   border: 1px solid var(--border);
   border-radius: 17px;
-  box-shadow: 0 4px 14px rgba(0, 52, 91, 0.06);
+  box-shadow: 0 4px 14px rgba(36, 26, 53, 0.06);
 }
 
 .review-stars {
@@ -875,7 +875,7 @@
   align-items: center;
   gap: 3px;
   margin-bottom: 15px;
-  color: #e2b900;
+  color: var(--primary-text);
 }
 
 .review-card p {
@@ -924,7 +924,7 @@
 
   background: var(--primary);
 
-  box-shadow: 0 20px 50px rgba(0, 52, 91, 0.2);
+  box-shadow: 0 20px 50px rgba(36, 26, 53, 0.2);
 }
 
 
@@ -984,7 +984,7 @@
 
   cursor: pointer;
 
-  box-shadow: 0 8px 20px rgba(0, 52, 91, 0.15);
+  box-shadow: 0 8px 20px rgba(36, 26, 53, 0.15);
 
   transition:
     transform 0.2s ease,
@@ -1098,7 +1098,7 @@
   background: var(--primary);
   color: white;
   font-size: 18px;
-  box-shadow: 0 8px 20px rgba(0, 145, 253, 0.25);
+  box-shadow: 0 8px 20px rgba(226, 25, 144, 0.25);
 }
 
 .map-box h3 {
@@ -1135,12 +1135,25 @@
   padding-bottom: 40px;
 }
 
-.footer-brand img {
-  width: 140px;
-  max-height: 55px;
-  object-fit: contain;
+.footer-brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 14px;
-  filter: brightness(0) invert(1);
+}
+
+.footer-brand-logo img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.footer-brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--on-inverse-surface);
 }
 
 .footer-brand p {

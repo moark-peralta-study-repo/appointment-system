@@ -79,7 +79,7 @@ function AdminVetForm({ onClose }) {
 
 				<div className="admin-form-field">
 					<label>Email <span>*</span></label>
-					<input type="email" value={form.email} onChange={set("email")} placeholder="vet@mutualspaws.com" />
+					<input type="email" value={form.email} onChange={set("email")} placeholder="vet@pinkpaws.com" />
 				</div>
 
 				<div className="admin-form-field">

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-const BASE = "Mutuals Paws Veterinary Clinic";
+const BASE = "Pink Paws Veterinary Clinic";
 
 // Route path -> tab title. Keep in sync with App.jsx and the sidebar labels.
 const TITLES = [

@@ -1,8 +1,8 @@
-/* ---------- Fonts (variable, loaded here — no <link> needed) ----------
-   League Spartan (display): variable weight 100–900
-   Baloo Thambi 2 (body): variable weight 400–800
+/* ---------- Fonts (loaded here — no <link> needed) ----------
+   Quicksand (display): 300–700, rounded geometric — matches the logo
+   Baloo Thambi 2 (body): variable 400–800, rounded warm
    @import must precede all other rules, so it sits above Tailwind. */
-@import url("https://fonts.googleapis.com/css2?family=Baloo+Thambi+2:wght@400..800&family=League+Spartan:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Thambi+2:wght@400..800&family=Quicksand:wght@300..700&display=swap");
 
 @import "tailwindcss";
 
@@ -11,100 +11,97 @@
 
 /* ---------- Light values = defaults ---------- */
 @theme {
-  /* surfaces */
-  --color-background: #FDFFF1;
+  /* surfaces (soft pink paper) */
+  --color-background: #FDF2FA;
   --color-surface: #FFFFFF;
-  --color-surface-2: #F4F9E8;
-  --color-border: #E4EED4;
-  --color-border-strong: #C9D6B6;
+  --color-surface-2: #FBEEF8;
+  --color-border: #F0DCEE;
+  --color-border-strong: #DDC2E3;
 
   /* text */
-  --color-ink: #00345B;
-  --color-muted: #4E6E85;
-  --color-faint: #85A8C0;
+  --color-ink: #241A35;
+  --color-muted: #5D4C6B;
+  --color-faint: #9C8CAB;
 
-  /* brand primary (electric blue) */
-  --color-primary: #0091FD;
-  --color-primary-hover: #0070E0;
-  --color-primary-soft: #D6EFFF;
+  /* brand primary (magenta) */
+  --color-primary: #E21990;
+  --color-primary-hover: #C41380;
+  --color-primary-soft: #FBE0F1;
   --color-primary-contrast: #FFFFFF;
 
-  /* brand accent (sunshine yellow) */
-  --color-accent: #FFFEA1;
-  --color-accent-hover: #FDF489;
-  --color-accent-soft: #FFFEA1;
-  --color-accent-text: #6E6200;
-  --color-accent-contrast: #00345B;
+  /* brand accent (pink) */
+  --color-accent: #F9D3EC;
+  --color-accent-hover: #F3BCD9;
+  --color-accent-soft: #FDE7F5;
+  --color-accent-text: #7A1B55;
+  --color-accent-contrast: #241A35;
 
   /* semantic */
-  --color-success: #3E6B14;
-  --color-success-soft: #DCF2AA;
-  --color-warning: #6E6200;
-  --color-warning-soft: #FFFEA1;
-  --color-danger: #B4231F;
-  --color-danger-soft: #FBE9E7;
+  --color-success: #2F7D4F;
+  --color-success-soft: #D9F0E3;
+  --color-warning: #9A5B00;
+  --color-warning-soft: #FDEEDD;
+  --color-danger: #C02740;
+  --color-danger-soft: #FBE2E6;
 
-  /* shape */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* shape (rounder — matches the logo) */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
 
   /* type */
-  --font-display: "League Spartan", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Quicksand", ui-rounded, "Baloo Thambi 2", system-ui, sans-serif;
   --font-sans: "Baloo Thambi 2", ui-rounded, system-ui, sans-serif;
 
-  /* font weights — both families are VARIABLE fonts, so any numeric
-     weight in range works (e.g. font-[550]); these map to the
-     font-thin … font-black utilities. League Spartan 100–900,
-     Baloo Thambi 2 400–800. */
-  --font-weight-thin: 100;       /* League only */
-  --font-weight-extralight: 200; /* League only */
-  --font-weight-light: 300;      /* League only */
+  /* font weights — Quicksand 300–700, Baloo Thambi 2 400–800.
+     font-thin … font-black utilities map to these. */
+  --font-weight-thin: 300;       /* Quicksand min */
+  --font-weight-extralight: 400;
+  --font-weight-light: 400;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
-  --font-weight-black: 900;      /* League only */
+  --font-weight-extrabold: 800;  /* Baloo only */
+  --font-weight-black: 700;      /* Quicksand max */
 
-  /* elevation (navy-tinted) */
-  --shadow-sm: 0 1px 2px rgba(0, 52, 91, 0.06);
-  --shadow-md: 0 2px 8px rgba(0, 52, 91, 0.08);
-  --shadow-lg: 0 8px 24px rgba(0, 52, 91, 0.10);
+  /* elevation (plum-tinted) */
+  --shadow-sm: 0 1px 2px rgba(36, 26, 53, 0.06);
+  --shadow-md: 0 2px 8px rgba(36, 26, 53, 0.08);
+  --shadow-lg: 0 8px 24px rgba(36, 26, 53, 0.10);
 }
 
 /* ---------- Dark mode overrides (after @theme on purpose) ---------- */
 .dark {
-  --color-background: #041E30;
-  --color-surface: #0A2D47;
-  --color-surface-2: #103A5A;
-  --color-border: #1C466B;
-  --color-border-strong: #2C5B85;
+  --color-background: #171021;
+  --color-surface: #221833;
+  --color-surface-2: #2B1E40;
+  --color-border: #3A2C50;
+  --color-border-strong: #524072;
 
-  --color-ink: #F4FAFF;
-  --color-muted: #A8C4D8;
-  --color-faint: #6F8BA1;
+  --color-ink: #F6F1FB;
+  --color-muted: #C9BCD9;
+  --color-faint: #8D7BA3;
 
-  /* blue lightens to glow on dark navy */
-  --color-primary: #33AAFF;
-  --color-primary-hover: #0091FD;
-  --color-primary-soft: #12304A;
-  --color-primary-contrast: #041E30;
+  /* magenta lightens to glow on dark plum */
+  --color-primary: #F0559F;
+  --color-primary-hover: #E21990;
+  --color-primary-soft: #3A1F37;
+  --color-primary-contrast: #171021;
 
-  /* yellow is already the lightest hue — stays as-is */
-  --color-accent: #FFFEA1;
-  --color-accent-hover: #FDF489;
-  --color-accent-soft: #3A2C1B;
-  --color-accent-text: #FFFEA1;
-  --color-accent-contrast: #00345B;
+  --color-accent: #F9D3EC;
+  --color-accent-hover: #F3BCD9;
+  --color-accent-soft: #332040;
+  --color-accent-text: #F9D3EC;
+  --color-accent-contrast: #171021;
 
-  --color-success: #8FD14F;
-  --color-success-soft: #14301C;
-  --color-warning: #FFFEA1;
-  --color-warning-soft: #2A2410;
-  --color-danger: #F97066;
-  --color-danger-soft: #2E1714;
+  --color-success: #6FD39A;
+  --color-success-soft: #1C3527;
+  --color-warning: #F5B950;
+  --color-warning-soft: #332814;
+  --color-danger: #F97A8A;
+  --color-danger-soft: #331A1E;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);

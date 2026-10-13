@@ -5,7 +5,7 @@ function WhyUs() {
 		<section className="features">
 			<div className="section-container">
 				<div className="section-heading">
-					<span>WHY MUTUALS PAWS</span>
+					<span>WHY PINK PAWS</span>
 
 					<h2>Care that feels different.</h2>
 

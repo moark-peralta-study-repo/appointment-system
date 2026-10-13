@@ -83,12 +83,12 @@ function Settings() {
 	// --- Clinic profile (persisted locally — no clinic model in the API) ---
 	const [clinic, setClinic] = useState(() =>
 		loadJSON(CLINIC_KEY, {
-			name: "Mutuals Paws Veterinary Clinic",
-			email: "hello@mutualspaws.com",
+			name: "Pink Paws Veterinary Clinic",
+			email: "hello@pinkpaws.com",
 			phone: "+63 917 123 4567",
 			address: "123 Pet Care Avenue, Metro Manila",
 			about:
-				"Mutuals Paws Veterinary Clinic provides compassionate and reliable veterinary care for pets and their families.",
+				"Pink Paws Veterinary Clinic provides compassionate and reliable veterinary care for pets and their families.",
 		}),
 	);
 	const [clinicDraft, setClinicDraft] = useState(clinic);

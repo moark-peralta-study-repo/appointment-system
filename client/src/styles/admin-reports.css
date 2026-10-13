@@ -42,7 +42,7 @@
   background: var(--surface);
   border: 1px solid var(--border-cool);
   border-radius: var(--radius-lg);
-  box-shadow: 0 8px 20px rgba(0, 52, 91, 0.06);
+  box-shadow: 0 8px 20px rgba(36, 26, 53, 0.06);
 }
 
 .reports-summary-card span {
