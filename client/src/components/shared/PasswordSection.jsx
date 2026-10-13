@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useChangePassword } from "../../hooks/useClientData";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
 
-
 function PasswordSection() {
 	const changePassword = useChangePassword();
 	const [form, setForm] = useState({ current: "", next: "", confirm: "" });
@@ -93,20 +92,18 @@ function PasswordSection() {
 						<FiAlertTriangle size={13} /> {changePassword.error.message}
 					</div>
 				)}
-
-				<div className="settings-actions full">
-					<button
-						type="submit"
-						className="admin-primary-button"
-						disabled={!canSubmit}
-					>
-						{changePassword.isPending ? "Updating…" : "Update password"}
-					</button>
-				</div>
 			</form>
+			<div className="settings-actions">
+				<button
+					type="submit"
+					className="admin-primary-button"
+					disabled={!canSubmit}
+				>
+					{changePassword.isPending ? "Updating…" : "Update password"}
+				</button>
+			</div>
 		</section>
 	);
 }
-
 
 export default PasswordSection;
