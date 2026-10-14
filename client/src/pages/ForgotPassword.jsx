@@ -3,6 +3,7 @@ import { useNavigate, Link, useSearchParams, Navigate } from "react-router-dom";
 import logo from "../assets/logo/pink-paws-full.png";
 import { useAuth } from "../context/useAuth";
 import { useForgotPassword } from "../hooks/useClientData";
+import { required, emailValue, firstError, collectErrors } from "../utils/validate";
 
 // "Forgot password?" — email a signed reset link. The server always
 // answers 200 (unknown emails included) so the form can't be used to
@@ -15,12 +16,17 @@ function ForgotPassword() {
 
 	const [email, setEmail] = useState("");
 	const [sent, setSent] = useState(false);
+	const [errors, setErrors] = useState({});
 
-	const error = forgot.error?.message || "";
+	const serverError = forgot.error?.message || "";
 
 	const handleSend = (e) => {
 		e.preventDefault();
-		if (!email.trim()) return;
+		const found = collectErrors({
+			email: firstError(required(email, "Email"), emailValue(email)),
+		});
+		setErrors(found);
+		if (Object.keys(found).length) return;
 		forgot.mutate(email.trim(), { onSuccess: () => setSent(true) });
 	};
 
@@ -59,30 +65,40 @@ function ForgotPassword() {
 
 				{!sent ? (
 					<form onSubmit={handleSend} className="admin-login-form" noValidate>
-						<div className="admin-login-field">
-							<label htmlFor="forgot-email">Email Address</label>
+					<div className="admin-login-field">
+						<label htmlFor="forgot-email">Email Address</label>
 
-							<input
-								id="forgot-email"
-								type="email"
-								placeholder="Enter your email address"
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
-								autoComplete="email"
-								required
-								autoFocus
-							/>
-						</div>
+						<input
+							id="forgot-email"
+							type="email"
+							placeholder="Enter your email address"
+							value={email}
+							onChange={(e) => {
+								setEmail(e.target.value);
+								if (errors.email) setErrors((prev) => { const next = { ...prev }; delete next.email; return next; });
+							}}
+							autoComplete="email"
+							className={errors.email ? "invalid" : ""}
+							aria-invalid={errors.email ? true : undefined}
+							aria-describedby={errors.email ? "forgot-email-err" : undefined}
+							required
+							autoFocus
+						/>
 
-						{error && <div className="admin-login-error">{error}</div>}
+						{errors.email && (
+							<p id="forgot-email-err" className="field-error" role="alert">{errors.email}</p>
+						)}
+					</div>
 
-						<button
-							type="submit"
-							className="admin-login-button"
-							disabled={!email.trim() || forgot.isPending}
-						>
-							{forgot.isPending ? "Sending…" : "Send Reset Link"}
-						</button>
+					{serverError && <div className="admin-login-error">{serverError}</div>}
+
+					<button
+						type="submit"
+						className="admin-login-button"
+						disabled={forgot.isPending}
+					>
+						{forgot.isPending ? "Sending…" : "Send Reset Link"}
+					</button>
 					</form>
 				) : (
 					<div style={{ textAlign: "center", marginTop: 8 }}>

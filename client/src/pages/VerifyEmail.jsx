@@ -3,6 +3,7 @@ import { useNavigate, Link, useSearchParams, Navigate } from "react-router-dom";
 import logo from "../assets/logo/pink-paws-full.png";
 import { useAuth } from "../context/useAuth";
 import { useVerifyOtp, useResendOtp } from "../hooks/useClientData";
+import { required, emailValue, otpValue, firstError, collectErrors } from "../utils/validate";
 
 // Confirm a just-registered account: enter the 6-digit code from the
 // email. The server stores only the code's hash; codes expire after
@@ -23,6 +24,7 @@ function VerifyEmail() {
 	const [email, setEmail] = useState(params.get("email") || "");
 	const [otp, setOtp] = useState("");
 	const [cooldown, setCooldown] = useState(0);
+	const [errors, setErrors] = useState({});
 
 	// 60s resend cooldown, mirrored client-side (the server enforces it too).
 	useEffect(() => {
@@ -35,12 +37,16 @@ function VerifyEmail() {
 		return <Navigate to="/client/dashboard" replace />;
 	}
 
-	const error = verify.error?.message || resend.error?.message || "";
-	const canSubmit = otp.trim().length === 6 && email.trim().length > 0;
+	const serverError = verify.error?.message || resend.error?.message || "";
 
 	const handleVerify = (e) => {
 		e.preventDefault();
-		if (!canSubmit) return;
+		const found = collectErrors({
+			email: firstError(required(email, "Email"), emailValue(email)),
+			otp: firstError(required(otp, "Code"), otpValue(otp)),
+		});
+		setErrors(found);
+		if (Object.keys(found).length) return;
 		verify.mutate(
 			{ email: email.trim(), otp: otp.trim() },
 			{ onSuccess: () => navigate("/client/dashboard") },
@@ -89,10 +95,20 @@ function VerifyEmail() {
 							type="email"
 							placeholder="you@example.com"
 							value={email}
-							onChange={(e) => setEmail(e.target.value)}
+							onChange={(e) => {
+								setEmail(e.target.value);
+								if (errors.email) setErrors((prev) => { const next = { ...prev }; delete next.email; return next; });
+							}}
 							autoComplete="email"
+							className={errors.email ? "invalid" : ""}
+							aria-invalid={errors.email ? true : undefined}
+							aria-describedby={errors.email ? "verify-email-err" : undefined}
 							required
 						/>
+
+						{errors.email && (
+						<p id="verify-email-err" className="field-error" role="alert">{errors.email}</p>
+						)}
 					</div>
 
 					<div className="admin-login-field">
@@ -105,20 +121,28 @@ function VerifyEmail() {
 							pattern="\d{6}"
 							placeholder="6-digit code"
 							value={otp}
-							onChange={(e) =>
-								setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
-							}
+							onChange={(e) => {
+								setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+								if (errors.otp) setErrors((prev) => { const next = { ...prev }; delete next.otp; return next; });
+							}}
 							autoComplete="one-time-code"
+							className={errors.otp ? "invalid" : ""}
+							aria-invalid={errors.otp ? true : undefined}
+							aria-describedby={errors.otp ? "verify-otp-err" : undefined}
 							required
 						/>
+
+						{errors.otp && (
+						<p id="verify-otp-err" className="field-error" role="alert">{errors.otp}</p>
+						)}
 					</div>
 
-					{error && <div className="admin-login-error">{error}</div>}
+					{serverError && <div className="admin-login-error">{serverError}</div>}
 
 					<button
 						type="submit"
 						className="admin-login-button"
-						disabled={!canSubmit || verify.isPending}
+						disabled={verify.isPending}
 					>
 						{verify.isPending ? "Verifying…" : "Verify Email"}
 					</button>

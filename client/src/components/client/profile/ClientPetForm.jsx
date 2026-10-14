@@ -3,6 +3,7 @@ import AdminModal from "../../admin/AdminModal";
 import { useCreateMyPet, useUpdateMyPet } from "../../../hooks/useClientData";
 import { SPECIES_PICKER, GENDERS } from "../../shared/Species";
 import { FiAlertTriangle } from "react-icons/fi";
+import { required, ageValue, collectErrors } from "../../../utils/validate";
 
 function ClientPetForm({ pet, onClose }) {
 	const createPet = useCreateMyPet();
@@ -17,10 +18,19 @@ function ClientPetForm({ pet, onClose }) {
 		gender: pet?.gender ?? "male",
 		notes: pet?.notes ?? "",
 	});
-	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+	const set = (k) => (e) => {
+		setForm((f) => ({ ...f, [k]: e.target.value }));
+		if (errors[k]) setErrors((prev) => { const next = { ...prev }; delete next[k]; return next; });
+	};
+	const [errors, setErrors] = useState({});
 
-	const canSubmit = form.name.trim().length > 0;
 	const submit = () => {
+		const found = collectErrors({
+			name: required(form.name, "Pet name"),
+			age: ageValue(form.age),
+		});
+		setErrors(found);
+		if (Object.keys(found).length) return;
 		const body = {
 			name: form.name.trim(),
 			species: form.species,
@@ -50,7 +60,7 @@ function ClientPetForm({ pet, onClose }) {
 					<button
 						className="admin-primary-button"
 						type="button"
-						disabled={!canSubmit || mutation.isPending}
+						disabled={mutation.isPending}
 						onClick={submit}
 					>
 						{mutation.isPending ? "Saving…" : pet ? "Save changes" : "Add pet"}
@@ -73,8 +83,14 @@ function ClientPetForm({ pet, onClose }) {
 						value={form.name}
 						onChange={set("name")}
 						placeholder="e.g. Max"
+						className={errors.name ? "invalid" : ""}
+						aria-invalid={errors.name ? true : undefined}
+						aria-describedby={errors.name ? "pet-name-err" : undefined}
 						autoFocus
 					/>
+					{errors.name && (
+					<p id="pet-name-err" className="field-error" role="alert">{errors.name}</p>
+					)}
 				</div>
 
 				<div className="admin-form-field full">
@@ -111,8 +127,14 @@ function ClientPetForm({ pet, onClose }) {
 						step="0.5"
 						value={form.age}
 						onChange={set("age")}
+						className={errors.age ? "invalid" : ""}
+						aria-invalid={errors.age ? true : undefined}
+						aria-describedby={errors.age ? "pet-age-err" : undefined}
 						placeholder="e.g. 2"
 					/>
+					{errors.age && (
+					<p id="pet-age-err" className="field-error" role="alert">{errors.age}</p>
+					)}
 				</div>
 
 				<div className="admin-form-field">

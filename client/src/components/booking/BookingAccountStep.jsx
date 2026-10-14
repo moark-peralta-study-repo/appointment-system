@@ -3,6 +3,13 @@ import { FaArrowRight, FaCheck } from "react-icons/fa";
 import { FiAlertTriangle } from "react-icons/fi";
 import { useAuth } from "../../context/useAuth";
 import { useRegister, useVerifyOtp } from "../../hooks/useClientData";
+import {
+	required,
+	emailValue,
+	phoneValue,
+	firstError,
+	collectErrors,
+} from "../../utils/validate";
 
 // Step 1 — make sure there's a verified pet-owner account behind the booking.
 //
@@ -27,7 +34,11 @@ function BookingAccountStep({ onDone }) {
 		password: "",
 	});
 	const [otp, setOtp] = useState("");
-	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+	const [errors, setErrors] = useState({});
+	const set = (k) => (e) => {
+		setForm((f) => ({ ...f, [k]: e.target.value }));
+		if (errors[k]) setErrors((prev) => { const next = { ...prev }; delete next[k]; return next; });
+	};
 
 	// Already a signed-in owner → no forms needed.
 	if (isAuthed && user?.role !== "vet") {
@@ -71,6 +82,24 @@ function BookingAccountStep({ onDone }) {
 
 	function submit(e) {
 		e.preventDefault();
+		const found = collectErrors(
+			mode === "login"
+				? {
+							email: firstError(required(form.email, "Email"), emailValue(form.email)),
+							password: required(form.password, "Password"),
+				  }
+				: {
+							name: required(form.name, "Name"),
+							email: firstError(required(form.email, "Email"), emailValue(form.email)),
+							phone: phoneValue(form.phone),
+							password: firstError(
+								required(form.password, "Password"),
+								form.password.length < 6 ? "Password must be at least 6 characters." : ""
+							),
+				  }
+		);
+		setErrors(found);
+		if (Object.keys(found).length) return;
 		if (mode === "register") {
 			// Success → the code is in the user's inbox; show the OTP field.
 			register.mutate(
@@ -193,8 +222,14 @@ function BookingAccountStep({ onDone }) {
 								onChange={set("name")}
 								placeholder="e.g. Mocha Peralta"
 								autoComplete="name"
+								className={errors.name ? "invalid" : ""}
+								aria-invalid={errors.name ? true : undefined}
 								required
 							/>
+
+							{errors.name && (
+							<p className="field-error" role="alert">{errors.name}</p>
+							)}
 						</div>
 					)}
 
@@ -208,8 +243,14 @@ function BookingAccountStep({ onDone }) {
 							onChange={set("email")}
 							placeholder="you@example.com"
 							autoComplete="email"
+							className={errors.email ? "invalid" : ""}
+							aria-invalid={errors.email ? true : undefined}
 							required
 						/>
+
+						{errors.email && (
+						<p className="field-error" role="alert">{errors.email}</p>
+						)}
 					</div>
 
 					{mode === "register" && (
@@ -223,7 +264,13 @@ function BookingAccountStep({ onDone }) {
 								onChange={set("phone")}
 								placeholder="+63 917 000 0000"
 								autoComplete="tel"
+								className={errors.phone ? "invalid" : ""}
+								aria-invalid={errors.phone ? true : undefined}
 							/>
+
+							{errors.phone && (
+							<p className="field-error" role="alert">{errors.phone}</p>
+							)}
 						</div>
 					)}
 
@@ -241,8 +288,14 @@ function BookingAccountStep({ onDone }) {
 							autoComplete={
 								mode === "register" ? "new-password" : "current-password"
 							}
+							className={errors.password ? "invalid" : ""}
+							aria-invalid={errors.password ? true : undefined}
 							required
 						/>
+
+						{errors.password && (
+						<p className="field-error" role="alert">{errors.password}</p>
+						)}
 					</div>
 
 					{error && (

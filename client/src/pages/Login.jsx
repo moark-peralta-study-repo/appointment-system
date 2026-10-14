@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link, Navigate } from "react-router-dom";
 import logo from "../assets/logo/pink-paws-full.png";
 import { useAuth } from "../context/useAuth";
+import { required, emailValue, firstError, collectErrors } from "../utils/validate";
 
 // Shared by login (mutate onSuccess) and the "already signed in" redirect,
 // so a vet and an owner each land on the right portal from one place.
@@ -19,6 +20,7 @@ function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const [errors, setErrors] = useState({});
 
 	// Show the API's message verbatim ("Invalid email or password",
 	// "email must be valid"…). On error we stay on the form so it's visible.
@@ -29,6 +31,12 @@ function Login() {
 
 	const handleLogin = (e) => {
 		e.preventDefault();
+		const found = collectErrors({
+			email: firstError(required(email, "Email"), emailValue(email)),
+			password: required(password, "Password"),
+		});
+		setErrors(found);
+		if (Object.keys(found).length) return;
 		login?.mutate?.(
 			{ email, password },
 			{ onSuccess: (data) => navigate(homeFor(data.user)) },
@@ -65,7 +73,11 @@ function Login() {
 				</div>
 
 				{/* Form */}
-				<form onSubmit={handleLogin} className="admin-login-form">
+				<form
+					onSubmit={handleLogin}
+					className="admin-login-form"
+					noValidate
+				>
 					<div className="admin-login-field">
 						<label htmlFor="login-email">Email Address</label>
 
@@ -74,9 +86,20 @@ function Login() {
 							type="email"
 							placeholder="Enter your email address"
 							value={email}
-							onChange={(e) => setEmail(e.target.value)}
+							onChange={(e) => {
+								setEmail(e.target.value);
+								if (errors.email) setErrors((prev) => { const next = { ...prev }; delete next.email; return next; });
+							}}
+							autoComplete="email"
+							className={errors.email ? "invalid" : ""}
+							aria-invalid={errors.email ? true : undefined}
+							aria-describedby={errors.email ? "login-email-err" : undefined}
 							required
 						/>
+
+						{errors.email && (
+							<p id="login-email-err" className="field-error" role="alert">{errors.email}</p>
+						)}
 					</div>
 
 					<div className="admin-login-field">
@@ -88,7 +111,14 @@ function Login() {
 								type={showPassword ? "text" : "password"}
 								placeholder="Enter your password"
 								value={password}
-								onChange={(e) => setPassword(e.target.value)}
+								onChange={(e) => {
+									setPassword(e.target.value);
+									if (errors.password) setErrors((prev) => { const next = { ...prev }; delete next.password; return next; });
+								}}
+								autoComplete="current-password"
+								className={errors.password ? "invalid" : ""}
+								aria-invalid={errors.password ? true : undefined}
+								aria-describedby={errors.password ? "login-password-err" : undefined}
 								required
 							/>
 
@@ -100,6 +130,10 @@ function Login() {
 								{showPassword ? "Hide" : "Show"}
 							</button>
 						</div>
+
+						{errors.password && (
+							<p id="login-password-err" className="field-error" role="alert">{errors.password}</p>
+						)}
 					</div>
 
 					{error && (

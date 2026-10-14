@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import logo from "../assets/logo/pink-paws-full.png";
 import { useResetPassword } from "../hooks/useClientData";
+import { useAuth } from "../context/useAuth";
+import { required, minLength, passwordsMatch, firstError, collectErrors } from "../utils/validate";
 
 // /reset-password?token=... — the landing page of the email link. The token
 // is a signed JWT (1h, purpose "password-reset"). Setting a new password
@@ -13,10 +15,12 @@ function ResetPassword() {
 	const [params] = useSearchParams();
 	const token = params.get("token") || "";
 	const reset = useResetPassword();
+	const { logout } = useAuth();
 
 	const [password, setPassword] = useState("");
 	const [confirm, setConfirm] = useState("");
 	const [done, setDone] = useState(false);
+	const [errors, setErrors] = useState({});
 
 	const noToken = token.length === 0;
 	const serverExpired = reset.isError && reset.error?.status === 410;
@@ -38,10 +42,7 @@ function ResetPassword() {
 				return false;
 			}
 		})();
-	const mismatch =
-		confirm && confirm !== password ? "Passwords do not match." : "";
-	const error = reset.error?.message || "";
-	const canSubmit = password.length >= 6 && confirm === password && !noToken;
+	const serverError = reset.error?.message || "";
 
 	// After a successful reset the token is spent — don't let a refresh
 	// re-post it.
@@ -49,9 +50,28 @@ function ResetPassword() {
 		if (reset.isSuccess) setDone(true);
 	}, [reset.isSuccess]);
 
+	// The password changed, so any pre-existing session token was issued
+	// against the OLD password — drop it. Without this, "Continue to sign in"
+	// lands on /login, which sees you're still authed and auto-bounces you to
+	// the dashboard instead of asking for the new password.
+	useEffect(() => {
+		if (reset.isSuccess) logout();
+	}, [reset.isSuccess, logout]);
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (!canSubmit) return;
+		const found = collectErrors({
+			password: firstError(
+				required(password, "Password"),
+				minLength(password, 6, "Password")
+			),
+			confirm: firstError(
+				required(confirm, "Confirmation"),
+				passwordsMatch(password, confirm)
+			),
+		});
+		setErrors(found);
+		if (Object.keys(found).length) return;
 		reset.mutate({ token, password }, { onSuccess: () => setDone(true) });
 	};
 
@@ -111,6 +131,7 @@ function ResetPassword() {
 							</button>
 						) : (
 							<>
+
 								<div className="admin-login-field">
 									<label htmlFor="reset-password">New Password</label>
 
@@ -119,12 +140,22 @@ function ResetPassword() {
 										type="password"
 										placeholder="At least 6 characters"
 										value={password}
-										onChange={(e) => setPassword(e.target.value)}
+										onChange={(e) => {
+											setPassword(e.target.value);
+											if (errors.password) setErrors((prev) => { const next = { ...prev }; delete next.password; return next; });
+										}}
 										autoComplete="new-password"
+										className={errors.password ? "invalid" : ""}
+										aria-invalid={errors.password ? true : undefined}
+										aria-describedby={errors.password ? "reset-password-err" : undefined}
 										required
 										minLength={6}
 										autoFocus
 									/>
+
+									{errors.password && (
+										<p id="reset-password-err" className="field-error" role="alert">{errors.password}</p>
+									)}
 								</div>
 
 								<div className="admin-login-field">
@@ -135,21 +166,31 @@ function ResetPassword() {
 										type="password"
 										placeholder="Repeat your new password"
 										value={confirm}
-										onChange={(e) => setConfirm(e.target.value)}
+										onChange={(e) => {
+											setConfirm(e.target.value);
+											if (errors.confirm) setErrors((prev) => { const next = { ...prev }; delete next.confirm; return next; });
+										}}
 										autoComplete="new-password"
+										className={errors.confirm ? "invalid" : ""}
+										aria-invalid={errors.confirm ? true : undefined}
+										aria-describedby={errors.confirm ? "reset-confirm-err" : undefined}
 										required
 										minLength={6}
 									/>
+
+									{errors.confirm && (
+										<p id="reset-confirm-err" className="field-error" role="alert">{errors.confirm}</p>
+									)}
 								</div>
 
-								{(mismatch || error) && (
-									<div className="admin-login-error">{mismatch || error}</div>
+								{serverError && (
+									<div className="admin-login-error">{serverError}</div>
 								)}
 
 								<button
 									type="submit"
 									className="admin-login-button"
-									disabled={!canSubmit || reset.isPending}
+									disabled={reset.isPending}
 								>
 									{reset.isPending ? "Updating…" : "Reset Password"}
 								</button>
