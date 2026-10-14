@@ -8,6 +8,7 @@ import {
 } from "../../../hooks/useAdminData";
 import AdminModal from "../AdminModal";
 import { FiAlertTriangle } from "react-icons/fi";
+import { useFieldErrors } from "../../../utils/validate";
 
 const REASONS = [
 	"General Check-up",
@@ -40,6 +41,7 @@ function NewAppointmentModal({ onClose }) {
 	const [date, setDate] = useState(toLocalISO(new Date()));
 	const [time, setTime] = useState("");
 	const [reason, setReason] = useState(REASONS[0]);
+	const [errors, validate, clear] = useFieldErrors();
 
 	const ownerPets = useMemo(
 		() => pets.filter((p) => p.owner === ownerId),
@@ -65,10 +67,14 @@ function NewAppointmentModal({ onClose }) {
 		setTime("");
 	};
 
-	const canSubmit =
-		ownerId && petId && vetId && time && reason.trim().length >= 3;
-
 	const submit = () => {
+		const found = validate({
+			owner: ownerId ? "" : "Select a pet owner.",
+			pet: petId ? "" : "Select a pet.",
+			vet: vetId ? "" : "Select a veterinarian.",
+			time: time ? "" : "Pick a time slot.",
+		});
+		if (Object.keys(found).length) return;
 		book.mutate(
 			{ vetId, petId, date, time, reason: reason.trim() },
 			{ onSuccess: onClose },
@@ -92,7 +98,7 @@ function NewAppointmentModal({ onClose }) {
 					<button
 						className="admin-primary-button"
 						type="button"
-						disabled={!canSubmit || book.isPending}
+						disabled={book.isPending}
 						onClick={submit}
 					>
 						{book.isPending ? "Booking…" : "Book Appointment"}
@@ -109,7 +115,12 @@ function NewAppointmentModal({ onClose }) {
 			<div className="admin-form-grid">
 				<div className="admin-form-field">
 					<label>Pet Owner</label>
-					<select value={ownerId} onChange={(e) => handleOwner(e.target.value)}>
+					<select
+						value={ownerId}
+						onChange={(e) => { handleOwner(e.target.value); clear("owner")(); }}
+						className={errors.owner ? "invalid" : ""}
+						aria-invalid={errors.owner ? true : undefined}
+					>
 						<option value="">Select an owner…</option>
 						{owners.map((o) => (
 							<option key={o._id} value={o._id}>
@@ -117,13 +128,17 @@ function NewAppointmentModal({ onClose }) {
 							</option>
 						))}
 					</select>
+					{errors.owner && (
+						<p className="field-error" role="alert">{errors.owner}</p>
+					)}
 				</div>
 
 				<div className="admin-form-field">
 					<label>Pet</label>
 					<select
 						value={petId}
-						onChange={(e) => setPetId(e.target.value)}
+						onChange={(e) => { setPetId(e.target.value); clear("pet")(); }}
+						className={errors.pet ? "invalid" : ""}
 						disabled={!ownerId}
 					>
 						<option value="">
@@ -139,11 +154,19 @@ function NewAppointmentModal({ onClose }) {
 							</option>
 						))}
 					</select>
+					{errors.pet && (
+						<p className="field-error" role="alert">{errors.pet}</p>
+					)}
 				</div>
 
 				<div className="admin-form-field">
 					<label>Veterinarian</label>
-					<select value={vetId} onChange={(e) => handleVet(e.target.value)}>
+					<select
+						value={vetId}
+						onChange={(e) => { handleVet(e.target.value); clear("vet")(); }}
+						className={errors.vet ? "invalid" : ""}
+						aria-invalid={errors.vet ? true : undefined}
+					>
 						<option value="">Select a vet…</option>
 						{vets.map((v) => (
 							<option key={v._id} value={v._id}>
@@ -151,6 +174,9 @@ function NewAppointmentModal({ onClose }) {
 							</option>
 						))}
 					</select>
+					{errors.vet && (
+						<p className="field-error" role="alert">{errors.vet}</p>
+					)}
 				</div>
 
 				<div className="admin-form-field">
@@ -180,12 +206,15 @@ function NewAppointmentModal({ onClose }) {
 						</p>
 					) : (
 						<div className="admin-slots">
+							{errors.time && (
+								<p className="field-error" role="alert">{errors.time}</p>
+							)}
 							{slots.map((s) => (
 								<button
 									key={s}
 									type="button"
 									className={`admin-slot${time === s ? " selected" : ""}`}
-									onClick={() => setTime(s)}
+									onClick={() => { setTime(s); clear("time")(); }}
 								>
 									{s}
 								</button>

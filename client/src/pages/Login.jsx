@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link, Navigate } from "react-router-dom";
-import logo from "../assets/logo/pink-paws-mark-sq-256.png";
+import logo from "../assets/logo/pink-paws-full.png";
 import { useAuth } from "../context/useAuth";
+import { required, emailValue, firstError, collectErrors } from "../utils/validate";
 
 // Shared by login (mutate onSuccess) and the "already signed in" redirect,
 // so a vet and an owner each land on the right portal from one place.
-const homeFor = (user) => (user?.role === "vet" ? "/admin" : "/client/dashboard");
+const homeFor = (user) =>
+	user?.role === "vet" ? "/admin" : "/client/dashboard";
 
 // Single sign-in page for both portals. The form is identical to what the
 // old /client/login and /admin/login pages had — the only difference now is
@@ -18,13 +20,23 @@ function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+	const [errors, setErrors] = useState({});
 
 	// Show the API's message verbatim ("Invalid email or password",
 	// "email must be valid"…). On error we stay on the form so it's visible.
 	const error = login?.error?.message || "";
+	// 403 = valid credentials but email unverified → offer the verify page
+	// (prefilled with the email they just typed). 401 = plain wrong creds.
+	const unverified = login?.error?.status === 403;
 
 	const handleLogin = (e) => {
 		e.preventDefault();
+		const found = collectErrors({
+			email: firstError(required(email, "Email"), emailValue(email)),
+			password: required(password, "Password"),
+		});
+		setErrors(found);
+		if (Object.keys(found).length) return;
 		login?.mutate?.(
 			{ email, password },
 			{ onSuccess: (data) => navigate(homeFor(data.user)) },
@@ -55,13 +67,17 @@ function Login() {
 					<p>WELCOME BACK</p>
 					<h1>Sign in to your account</h1>
 					<span>
-						Clients and staff share one sign-in — we'll take you to the
-						right portal.
+						Clients and staff share one sign-in — we'll take you to the right
+						portal.
 					</span>
 				</div>
 
 				{/* Form */}
-				<form onSubmit={handleLogin} className="admin-login-form">
+				<form
+					onSubmit={handleLogin}
+					className="admin-login-form"
+					noValidate
+				>
 					<div className="admin-login-field">
 						<label htmlFor="login-email">Email Address</label>
 
@@ -70,9 +86,20 @@ function Login() {
 							type="email"
 							placeholder="Enter your email address"
 							value={email}
-							onChange={(e) => setEmail(e.target.value)}
+							onChange={(e) => {
+								setEmail(e.target.value);
+								if (errors.email) setErrors((prev) => { const next = { ...prev }; delete next.email; return next; });
+							}}
+							autoComplete="email"
+							className={errors.email ? "invalid" : ""}
+							aria-invalid={errors.email ? true : undefined}
+							aria-describedby={errors.email ? "login-email-err" : undefined}
 							required
 						/>
+
+						{errors.email && (
+							<p id="login-email-err" className="field-error" role="alert">{errors.email}</p>
+						)}
 					</div>
 
 					<div className="admin-login-field">
@@ -84,7 +111,14 @@ function Login() {
 								type={showPassword ? "text" : "password"}
 								placeholder="Enter your password"
 								value={password}
-								onChange={(e) => setPassword(e.target.value)}
+								onChange={(e) => {
+									setPassword(e.target.value);
+									if (errors.password) setErrors((prev) => { const next = { ...prev }; delete next.password; return next; });
+								}}
+								autoComplete="current-password"
+								className={errors.password ? "invalid" : ""}
+								aria-invalid={errors.password ? true : undefined}
+								aria-describedby={errors.password ? "login-password-err" : undefined}
 								required
 							/>
 
@@ -96,9 +130,41 @@ function Login() {
 								{showPassword ? "Hide" : "Show"}
 							</button>
 						</div>
+
+						{errors.password && (
+							<p id="login-password-err" className="field-error" role="alert">{errors.password}</p>
+						)}
 					</div>
 
-					{error && <div className="admin-login-error">{error}</div>}
+					{error && (
+						<div className="admin-login-error">
+							{error}
+							{unverified && (
+								<>
+									{" "}
+									<button
+										type="button"
+										style={{
+											background: "none",
+											border: "none",
+											padding: 0,
+											font: "inherit",
+											color: "var(--primary)",
+											fontWeight: 700,
+											cursor: "pointer",
+										}}
+										onClick={() =>
+											navigate(
+												`/verify-email?email=${encodeURIComponent(email.trim())}`,
+											)
+										}
+									>
+										Verify your email
+									</button>
+								</>
+							)}
+						</div>
+					)}
 
 					<button
 						type="submit"
@@ -107,6 +173,19 @@ function Login() {
 					>
 						{login?.isPending ? "Signing in…" : "Sign In"}
 					</button>
+
+					<p
+						style={{
+							textAlign: "center",
+							marginTop: 12,
+							fontSize: 13,
+							color: "var(--muted)",
+						}}
+					>
+						<Link to="/forgot-password" style={{ color: "var(--muted)" }}>
+							Forgot your password?
+						</Link>
+					</p>
 
 					<p
 						style={{
@@ -154,8 +233,8 @@ function Login() {
 					</h2>
 
 					<p>
-						One sign-in for everyone — pet owners and clinic staff. We
-						recognise your account and take you to the right place.
+						One sign-in for everyone — pet owners and clinic staff. We recognise
+						your account and take you to the right place.
 					</p>
 				</div>
 

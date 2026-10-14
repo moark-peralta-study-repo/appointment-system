@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/useAuth";
 import { useUpdateMyProfile } from "../../hooks/useClientData";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
-
+import { required, emailValue, phoneValue, firstError, useFieldErrors } from "../../utils/validate";
 
 function AccountSection() {
 	const { user } = useAuth();
@@ -14,7 +14,11 @@ function AccountSection() {
 		phone: user?.phone ?? "",
 		email: user?.email ?? "",
 	});
-	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+	const [errors, validate, clear] = useFieldErrors();
+	const set = (k) => (e) => {
+		setForm((f) => ({ ...f, [k]: e.target.value }));
+		clear(k)();
+	};
 
 	// Re-sync if the signed-in account changes (e.g. after re-login).
 	useEffect(() => {
@@ -32,6 +36,12 @@ function AccountSection() {
 		form.email !== user?.email;
 
 	const submit = () => {
+		const found = validate({
+			name: required(form.name, "Full name"),
+			email: firstError(required(form.email, "Email"), emailValue(form.email)),
+			phone: phoneValue(form.phone),
+		});
+		if (Object.keys(found).length) return;
 		updateProfile.mutate(
 			{
 				name: form.name.trim(),
@@ -69,19 +79,41 @@ function AccountSection() {
 					<label>
 						Full name <span>*</span>
 					</label>
-					<input value={form.name} onChange={set("name")} />
+					<input
+						value={form.name}
+						onChange={set("name")}
+						className={errors.name ? "invalid" : ""}
+						aria-invalid={errors.name ? true : undefined}
+					/>
+					{errors.name && (
+						<p className="field-error" role="alert">{errors.name}</p>
+					)}
 				</div>
 				<div className="admin-form-field">
 					<label>Phone</label>
 					<input
 						value={form.phone}
 						onChange={set("phone")}
+						className={errors.phone ? "invalid" : ""}
+						aria-invalid={errors.phone ? true : undefined}
 						placeholder="+63 917 000 0000"
 					/>
+					{errors.phone && (
+						<p className="field-error" role="alert">{errors.phone}</p>
+					)}
 				</div>
 				<div className="admin-form-field">
 					<label>Email</label>
-					<input type="email" value={form.email} onChange={set("email")} />
+					<input
+						type="email"
+						value={form.email}
+						onChange={set("email")}
+						className={errors.email ? "invalid" : ""}
+						aria-invalid={errors.email ? true : undefined}
+					/>
+					{errors.email && (
+						<p className="field-error" role="alert">{errors.email}</p>
+					)}
 				</div>
 			</div>
 
@@ -95,7 +127,7 @@ function AccountSection() {
 				<button
 					className="admin-primary-button"
 					type="button"
-					disabled={!dirty || updateProfile.isPending}
+					disabled={updateProfile.isPending}
 					onClick={submit}
 				>
 					{updateProfile.isPending ? "Saving…" : "Save changes"}
@@ -104,6 +136,5 @@ function AccountSection() {
 		</section>
 	);
 }
-
 
 export default AccountSection;

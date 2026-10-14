@@ -3,6 +3,7 @@ import AdminModal from "../AdminModal";
 import { useAddVisitNote } from "../../../hooks/useAdminData";
 import { formatDate } from "../../../utils/admin";
 import { FiAlertTriangle } from "react-icons/fi";
+import { useFieldErrors } from "../../../utils/validate";
 
 function AdminVisitNoteForm({ appointments, onClose }) {
 	const addNote = useAddVisitNote();
@@ -15,10 +16,14 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 	const [apptId, setApptId] = useState(eligible[0]?._id ?? "");
 	const selected = eligible.find((a) => a._id === apptId);
 	const [notes, setNotes] = useState("");
-
-	const canSubmit = Boolean(selected) && notes.trim().length > 0;
+	const [errors, validate, clear] = useFieldErrors();
 
 	const submit = () => {
+		const found = validate({
+			visit: selected ? "" : "Select a visit to record.",
+			notes: notes.trim().length > 0 ? "" : "Write a visit note first.",
+		});
+		if (Object.keys(found).length) return;
 		addNote.mutate(
 			{ id: selected._id, vetNotes: notes.trim() },
 			{ onSuccess: onClose },
@@ -42,7 +47,7 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 					<button
 						className="admin-primary-button"
 						type="button"
-						disabled={!canSubmit || addNote.isPending}
+						disabled={addNote.isPending}
 						onClick={submit}
 					>
 						{addNote.isPending ? "Saving…" : "Save Record"}
@@ -65,7 +70,12 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 				<div className="admin-form-grid">
 					<div className="admin-form-field full">
 						<label>Visit to Record</label>
-						<select value={apptId} onChange={(e) => setApptId(e.target.value)}>
+						<select
+							value={apptId}
+							onChange={(e) => { setApptId(e.target.value); clear("visit")(); }}
+							className={errors.visit ? "invalid" : ""}
+							aria-invalid={errors.visit ? true : undefined}
+						>
 							{eligible.map((a) => (
 								<option key={a._id} value={a._id}>
 									{formatDate(a.date)} — {a.pet?.name ?? "Unknown"} —{" "}
@@ -73,6 +83,9 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 								</option>
 							))}
 						</select>
+						{errors.visit && (
+							<p className="field-error" role="alert">{errors.visit}</p>
+						)}
 						{selected && (
 							<p className="admin-slot-note">
 								Saving marks this visit as <strong>Completed</strong> and stores
@@ -88,9 +101,14 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 						<textarea
 							rows="5"
 							value={notes}
-							onChange={(e) => setNotes(e.target.value)}
+							onChange={(e) => { setNotes(e.target.value); clear("notes")(); }}
+							className={errors.notes ? "invalid" : ""}
+							aria-invalid={errors.notes ? true : undefined}
 							placeholder="Findings, prescriptions, follow-up plan…"
 						/>
+						{errors.notes && (
+							<p className="field-error" role="alert">{errors.notes}</p>
+						)}
 					</div>
 				</div>
 			)}

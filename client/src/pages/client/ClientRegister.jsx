@@ -1,12 +1,22 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
-import logo from "../../assets/logo/pink-paws-mark-sq-256.png";
+import logo from "../../assets/logo/pink-paws-full.png";
 import { useAuth } from "../../context/useAuth";
 import { useRegister } from "../../hooks/useClientData";
+import {
+	required,
+	emailValue,
+	minLength,
+	passwordsMatch,
+	phoneValue,
+	firstError,
+	collectErrors,
+} from "../../utils/validate";
 
-// Public pet-owner sign-up. On success the JWT is stored (useRegister) and
-// the visitor lands straight in the client portal — the booking wizard's
-// "create account" tab calls the same API.
+// Public pet-owner sign-up. Registration sends a 6-digit verification code
+// to the user's email (no token yet) — the account activates on the
+// /verify-email screen, which is where the session starts. The booking
+// wizard's "create account" tab calls the same API.
 function ClientRegister() {
 	const navigate = useNavigate();
 	const { isAuthed } = useAuth();
@@ -19,27 +29,50 @@ function ClientRegister() {
 		password: "",
 		confirm: "",
 	});
-	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+	const [errors, setErrors] = useState({});
+	const set = (k) => (e) => {
+		setForm((f) => ({ ...f, [k]: e.target.value }));
+		if (errors[k]) setErrors((prev) => { const next = { ...prev }; delete next[k]; return next; });
+	};
 
-	const error = register.error?.message || "";
-	const mismatch =
-		form.confirm && form.confirm !== form.password
-			? "Passwords do not match."
-			: "";
-	const showFormError = error || mismatch;
+	// Inline field errors: name, email, password format/length, confirm match.
+	// The banner below the form is reserved for server messages (e.g.
+	// "an account with this email already exists").
+	const validate = () =>
+		collectErrors({
+			name: required(form.name, "Name"),
+			email: firstError(required(form.email, "Email"), emailValue(form.email)),
+			phone: phoneValue(form.phone),
+			password: firstError(
+				required(form.password, "Password"),
+				minLength(form.password, 6, "Password")
+			),
+			confirm: firstError(
+				required(form.confirm, "Confirmation"),
+				passwordsMatch(form.password, form.confirm)
+			),
+		});
+
+	const serverError = register.error?.message || "";
 
 	const handleRegister = (e) => {
 		e.preventDefault();
-		if (mismatch) return;
+		const found = validate();
+		setErrors(found);
+		if (Object.keys(found).length) return;
+		const email = form.email.trim();
 		register.mutate(
 			{
 				name: form.name.trim(),
-				email: form.email.trim(),
+				email,
 				phone: form.phone.trim() || undefined,
 				password: form.password,
 			},
 			{
-				onSuccess: () => navigate("/client/dashboard"),
+				// No token yet — the account activates on the verify screen
+				// (the code was just emailed). Prefill the email there.
+				onSuccess: () =>
+					navigate(`/verify-email?email=${encodeURIComponent(email)}`),
 			},
 		);
 	};
@@ -84,8 +117,15 @@ function ClientRegister() {
 							value={form.name}
 							onChange={set("name")}
 							autoComplete="name"
+							className={errors.name ? "invalid" : ""}
+							aria-invalid={errors.name ? true : undefined}
+							aria-describedby={errors.name ? "reg-name-err" : undefined}
 							required
 						/>
+
+						{errors.name && (
+							<p id="reg-name-err" className="field-error" role="alert">{errors.name}</p>
+						)}
 					</div>
 
 					<div className="admin-login-field">
@@ -98,8 +138,15 @@ function ClientRegister() {
 							value={form.email}
 							onChange={set("email")}
 							autoComplete="email"
+							className={errors.email ? "invalid" : ""}
+							aria-invalid={errors.email ? true : undefined}
+							aria-describedby={errors.email ? "reg-email-err" : undefined}
 							required
 						/>
+
+						{errors.email && (
+							<p id="reg-email-err" className="field-error" role="alert">{errors.email}</p>
+						)}
 					</div>
 
 					<div className="admin-login-field">
@@ -112,7 +159,14 @@ function ClientRegister() {
 							value={form.phone}
 							onChange={set("phone")}
 							autoComplete="tel"
+							className={errors.phone ? "invalid" : ""}
+							aria-invalid={errors.phone ? true : undefined}
+							aria-describedby={errors.phone ? "reg-phone-err" : undefined}
 						/>
+
+						{errors.phone && (
+							<p id="reg-phone-err" className="field-error" role="alert">{errors.phone}</p>
+						)}
 					</div>
 
 					<div className="admin-login-field">
@@ -125,9 +179,16 @@ function ClientRegister() {
 							value={form.password}
 							onChange={set("password")}
 							autoComplete="new-password"
+							className={errors.password ? "invalid" : ""}
+							aria-invalid={errors.password ? true : undefined}
+							aria-describedby={errors.password ? "reg-password-err" : undefined}
 							required
 							minLength={6}
 						/>
+
+						{errors.password && (
+							<p id="reg-password-err" className="field-error" role="alert">{errors.password}</p>
+						)}
 					</div>
 
 					<div className="admin-login-field">
@@ -140,13 +201,20 @@ function ClientRegister() {
 							value={form.confirm}
 							onChange={set("confirm")}
 							autoComplete="new-password"
+							className={errors.confirm ? "invalid" : ""}
+							aria-invalid={errors.confirm ? true : undefined}
+							aria-describedby={errors.confirm ? "reg-confirm-err" : undefined}
 							required
 							minLength={6}
 						/>
+
+						{errors.confirm && (
+							<p id="reg-confirm-err" className="field-error" role="alert">{errors.confirm}</p>
+						)}
 					</div>
 
-					{showFormError && (
-						<div className="admin-login-error">{showFormError}</div>
+					{serverError && (
+						<div className="admin-login-error">{serverError}</div>
 					)}
 
 					<button

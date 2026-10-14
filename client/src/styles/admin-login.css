@@ -334,3 +334,58 @@
   }
 }
 
+
+/* ---------- FIELD ERROR STATES (all validated forms) ----------
+   Inline, per-field error UX:
+   - input.invalid  → red border + red focus ring (overrides the magenta one)
+   - .field-error   → one short line under the field, 12px, danger color
+   - .admin-login-error / .admin-form-error banners stay for SERVER errors
+     only (e.g. "an account with this email already exists").
+   Applied in ClientRegister, Login, ForgotPassword, VerifyEmail,
+   ResetPassword, PasswordSection, BookingAccountStep, ClientPetForm. */
+
+/* Login/auth page fields (admin-login.css owns these inputs) */
+.admin-login-field input.invalid {
+	border-color: var(--danger);
+	box-shadow: 0 0 0 3px rgba(192, 39, 64, 0.12);
+}
+.admin-login-field input.invalid:focus {
+	border-color: var(--danger);
+	box-shadow: 0 0 0 3px rgba(192, 39, 64, 0.18);
+}
+
+/* Booking wizard fields (booking.css) */
+.appointment-field input.invalid,
+.appointment-field select.invalid {
+	border-color: var(--danger);
+}
+.appointment-field input.invalid:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(192, 39, 64, 0.15);
+}
+
+/* Modal / settings grid fields (admin-modals.css) */
+.admin-form-field input.invalid,
+.admin-form-field select.invalid,
+.admin-form-field textarea.invalid {
+	border-color: var(--danger);
+}
+.admin-form-field input.invalid:focus,
+.admin-form-field select.invalid:focus,
+.admin-form-field textarea.invalid:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(192, 39, 64, 0.15);
+}
+
+/* The message itself — one short line under the field.
+   `full` stretches it across a 2-col settings grid. */
+.field-error {
+	margin: 0;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.45;
+	color: var(--danger-text);
+}
+.field-error.full {
+	margin-top: 12px;
+}

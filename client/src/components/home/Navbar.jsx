@@ -22,9 +22,12 @@ function Navbar() {
 						Sign In
 					</Link>
 
-					<span className="phone">
-						<FaPhoneAlt /> 0917 123 4567
-					</span>
+					{/*
+
+            <span className="phone">
+              <FaPhoneAlt /> 0917 123 4567
+            </span>
+          */}
 
 					<Link to="/book-appointment" className="book-button">
 						Book Appointment
