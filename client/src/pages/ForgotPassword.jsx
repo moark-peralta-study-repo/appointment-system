@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link, useSearchParams, Navigate } from "react-router-dom";
-import logo from "../assets/logo/pink-paws-mark-sq-256.png";
+import logo from "../assets/logo/pink-paws-full.png";
 import { useAuth } from "../context/useAuth";
 import { useForgotPassword } from "../hooks/useClientData";
 
@@ -87,8 +87,7 @@ function ForgotPassword() {
 				) : (
 					<div style={{ textAlign: "center", marginTop: 8 }}>
 						<p style={{ fontSize: 13, color: "var(--muted)" }}>
-							Didn't get it? Check the spam folder, or request another
-							link.
+							Didn't get it? Check the spam folder, or request another link.
 						</p>
 						<button
 							type="button"
@@ -110,7 +109,10 @@ function ForgotPassword() {
 					}}
 				>
 					Remembered it?{" "}
-					<Link to="/login" style={{ color: "var(--primary)", fontWeight: 700 }}>
+					<Link
+						to="/login"
+						style={{ color: "var(--primary)", fontWeight: 700 }}
+					>
 						Sign in
 					</Link>
 				</p>
@@ -135,8 +137,8 @@ function ForgotPassword() {
 					</h2>
 
 					<p>
-						Your new password only takes effect when you set it — until
-						then, the old one still works for you and only you.
+						Your new password only takes effect when you set it — until then,
+						the old one still works for you and only you.
 					</p>
 				</div>
 

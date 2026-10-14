@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
-import logo from "../assets/logo/pink-paws-mark-sq-256.png";
+import logo from "../assets/logo/pink-paws-full.png";
 import { useResetPassword } from "../hooks/useClientData";
 
 // /reset-password?token=... — the landing page of the email link. The token
@@ -24,16 +24,20 @@ function ResetPassword() {
 	// The token is a signed JWT — decode its payload (no verification,
 	// just the exp claim) so a dead link shows the expired state
 	// immediately instead of waiting for a failed submit.
-	const expired = serverExpired || (() => {
-		try {
-			const payload = JSON.parse(
-				atob(token.replace(/-/g, "+").replace(/_/g, "/").split(".")[1]),
-			);
-			return typeof payload.exp === "number" && payload.exp * 1000 < Date.now();
-		} catch {
-			return false;
-		}
-	})();
+	const expired =
+		serverExpired ||
+		(() => {
+			try {
+				const payload = JSON.parse(
+					atob(token.replace(/-/g, "+").replace(/_/g, "/").split(".")[1]),
+				);
+				return (
+					typeof payload.exp === "number" && payload.exp * 1000 < Date.now()
+				);
+			} catch {
+				return false;
+			}
+		})();
 	const mismatch =
 		confirm && confirm !== password ? "Passwords do not match." : "";
 	const error = reset.error?.message || "";
@@ -139,9 +143,7 @@ function ResetPassword() {
 								</div>
 
 								{(mismatch || error) && (
-									<div className="admin-login-error">
-										{mismatch || error}
-									</div>
+									<div className="admin-login-error">{mismatch || error}</div>
 								)}
 
 								<button
@@ -164,7 +166,10 @@ function ResetPassword() {
 						color: "var(--muted)",
 					}}
 				>
-					<Link to="/login" style={{ color: "var(--primary)", fontWeight: 700 }}>
+					<Link
+						to="/login"
+						style={{ color: "var(--primary)", fontWeight: 700 }}
+					>
 						Back to sign in
 					</Link>
 				</p>
@@ -181,8 +186,8 @@ function ResetPassword() {
 					</h2>
 
 					<p>
-						Use a password you don't reuse elsewhere. We only store a
-						hash of it — even our team can't read your real one.
+						Use a password you don't reuse elsewhere. We only store a hash of it
+						— even our team can't read your real one.
 					</p>
 				</div>
 

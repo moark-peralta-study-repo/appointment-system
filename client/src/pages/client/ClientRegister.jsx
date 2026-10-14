@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
-import logo from "../../assets/logo/pink-paws-mark-sq-256.png";
+import logo from "../../assets/logo/pink-paws-full.png";
 import { useAuth } from "../../context/useAuth";
 import { useRegister } from "../../hooks/useClientData";
 
@@ -43,7 +43,8 @@ function ClientRegister() {
 			{
 				// No token yet — the account activates on the verify screen
 				// (the code was just emailed). Prefill the email there.
-				onSuccess: () => navigate(`/verify-email?email=${encodeURIComponent(email)}`),
+				onSuccess: () =>
+					navigate(`/verify-email?email=${encodeURIComponent(email)}`),
 			},
 		);
 	};

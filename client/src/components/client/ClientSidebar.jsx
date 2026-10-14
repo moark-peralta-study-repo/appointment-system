@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { RxDashboard, RxCalendar, RxPerson } from "react-icons/rx";
 import { CiMedicalClipboard, CiSettings, CiUser } from "react-icons/ci";
 import { FaSignOutAlt } from "react-icons/fa";
-import logo from "../../assets/logo/pink-paws-mark-sq-256.png";
+import logo from "../../assets/logo/pink-paws-full.png";
 import { useAuth } from "../../context/useAuth";
 
 // Pet owner sidebar. Mirrors the AdminSidebar structure 1:1 — same

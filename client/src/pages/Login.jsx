@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link, Navigate } from "react-router-dom";
-import logo from "../assets/logo/pink-paws-mark-sq-256.png";
+import logo from "../assets/logo/pink-paws-full.png";
 import { useAuth } from "../context/useAuth";
 
 // Shared by login (mutate onSuccess) and the "already signed in" redirect,
 // so a vet and an owner each land on the right portal from one place.
-const homeFor = (user) => (user?.role === "vet" ? "/admin" : "/client/dashboard");
+const homeFor = (user) =>
+	user?.role === "vet" ? "/admin" : "/client/dashboard";
 
 // Single sign-in page for both portals. The form is identical to what the
 // old /client/login and /admin/login pages had — the only difference now is
@@ -58,8 +59,8 @@ function Login() {
 					<p>WELCOME BACK</p>
 					<h1>Sign in to your account</h1>
 					<span>
-						Clients and staff share one sign-in — we'll take you to the
-						right portal.
+						Clients and staff share one sign-in — we'll take you to the right
+						portal.
 					</span>
 				</div>
 
@@ -147,10 +148,7 @@ function Login() {
 							color: "var(--muted)",
 						}}
 					>
-						<Link
-							to="/forgot-password"
-							style={{ color: "var(--muted)" }}
-						>
+						<Link to="/forgot-password" style={{ color: "var(--muted)" }}>
 							Forgot your password?
 						</Link>
 					</p>
@@ -201,8 +199,8 @@ function Login() {
 					</h2>
 
 					<p>
-						One sign-in for everyone — pet owners and clinic staff. We
-						recognise your account and take you to the right place.
+						One sign-in for everyone — pet owners and clinic staff. We recognise
+						your account and take you to the right place.
 					</p>
 				</div>
 

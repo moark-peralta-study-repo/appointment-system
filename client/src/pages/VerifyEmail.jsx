@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link, useSearchParams, Navigate } from "react-router-dom";
-import logo from "../assets/logo/pink-paws-mark-sq-256.png";
+import logo from "../assets/logo/pink-paws-full.png";
 import { useAuth } from "../context/useAuth";
 import { useVerifyOtp, useResendOtp } from "../hooks/useClientData";
 
@@ -76,8 +76,7 @@ function VerifyEmail() {
 					<p>ALMOST DONE</p>
 					<h1>Verify your email</h1>
 					<span>
-						We sent a 6-digit code to your inbox. It expires in 15
-						minutes.
+						We sent a 6-digit code to your inbox. It expires in 15 minutes.
 					</span>
 				</div>
 
@@ -106,7 +105,9 @@ function VerifyEmail() {
 							pattern="\d{6}"
 							placeholder="6-digit code"
 							value={otp}
-							onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+							onChange={(e) =>
+								setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+							}
 							autoComplete="one-time-code"
 							required
 						/>
@@ -191,8 +192,8 @@ function VerifyEmail() {
 					</h2>
 
 					<p>
-						Verifying your email keeps your account safe and confirms
-						where we send appointment updates.
+						Verifying your email keeps your account safe and confirms where we
+						send appointment updates.
 					</p>
 				</div>
 

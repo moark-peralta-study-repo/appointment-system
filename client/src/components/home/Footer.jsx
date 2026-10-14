@@ -1,4 +1,4 @@
-import logo from "../../assets/logo/pink-paws-mark-sq-256.png";
+import logo from "../../assets/logo/pink-paws-full.png";
 
 function Footer() {
 	return (

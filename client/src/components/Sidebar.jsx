@@ -1,5 +1,5 @@
 import { RxDashboard, RxPeople, RxPerson } from "react-icons/rx";
-import logo from "../assets/logo/pink-paws-mark-sq-256.png";
+import logo from "../assets/logo/pink-paws-full.png";
 import { FaRegClock } from "react-icons/fa";
 import { CiMedicalCase, CiMedicalClipboard } from "react-icons/ci";
 import { PiGearLight } from "react-icons/pi";
