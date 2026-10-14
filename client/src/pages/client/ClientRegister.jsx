@@ -13,9 +13,8 @@ import {
 	collectErrors,
 } from "../../utils/validate";
 
-// Public pet-owner sign-up. Registration sends a 6-digit verification code
-// to the user's email (no token yet) — the account activates on the
-// /verify-email screen, which is where the session starts. The booking
+// Public pet-owner sign-up. Registration issues a session token
+// immediately (no email verification step on this branch). The booking
 // wizard's "create account" tab calls the same API.
 function ClientRegister() {
 	const navigate = useNavigate();
@@ -69,10 +68,8 @@ function ClientRegister() {
 				password: form.password,
 			},
 			{
-				// No token yet — the account activates on the verify screen
-				// (the code was just emailed). Prefill the email there.
-				onSuccess: () =>
-					navigate(`/verify-email?email=${encodeURIComponent(email)}`),
+				// Session issued immediately — pre-OTP branch has no verify step.
+				onSuccess: () => navigate("/client/dashboard"),
 			},
 		);
 	};

@@ -7,7 +7,7 @@ import {
 	CiSettings,
 	CiUser,
 } from "react-icons/ci";
-import { FaChartBar, FaSignOutAlt, FaStream } from "react-icons/fa";
+import { FaChartBar, FaSignOutAlt } from "react-icons/fa";
 import logo from "../../assets/logo/pink-paws-full.png";
 import { useAuth } from "../../context/useAuth";
 
@@ -115,14 +115,7 @@ function AdminSidebar() {
 						</span>
 						<span>Reports</span>
 					</NavLink>
-
-					<NavLink to="/admin/activity" className="admin-nav-link">
-						<span className="admin-nav-icon">
-							<FaStream />
-						</span>
-						<span>Activity</span>
-					</NavLink>
-				</div>
+					</div>
 			</nav>
 
 			{/* BOTTOM */}
