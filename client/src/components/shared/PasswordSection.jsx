@@ -92,16 +92,17 @@ function PasswordSection() {
 						<FiAlertTriangle size={13} /> {changePassword.error.message}
 					</div>
 				)}
+
+				<div className="settings-actions">
+					<button
+						type="submit"
+						className="admin-primary-button"
+						disabled={!canSubmit}
+					>
+						{changePassword.isPending ? "Updating…" : "Update password"}
+					</button>
+				</div>
 			</form>
-			<div className="settings-actions">
-				<button
-					type="submit"
-					className="admin-primary-button"
-					disabled={!canSubmit}
-				>
-					{changePassword.isPending ? "Updating…" : "Update password"}
-				</button>
-			</div>
 		</section>
 	);
 }
