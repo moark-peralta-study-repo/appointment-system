@@ -7,6 +7,7 @@ import {
 } from "../../../hooks/useAdminData";
 import { SPECIES_OPTIONS, GENDERS } from "../../shared/Species";
 import { FiAlertTriangle } from "react-icons/fi";
+import { required, ageValue, useFieldErrors } from "../../../utils/validate";
 
 function AdminPatientForm({ pet, onClose }) {
 	const { data: users = [] } = useUsers();
@@ -24,12 +25,21 @@ function AdminPatientForm({ pet, onClose }) {
 		notes: pet?.notes ?? "",
 	});
 
-	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+	const [errors, validate, clear] = useFieldErrors();
+	const set = (k) => (e) => {
+		setForm((f) => ({ ...f, [k]: e.target.value }));
+		clear(k)();
+	};
 	const mutation = pet ? updatePet : createPet;
 	const error = mutation.error;
-	const canSubmit = form.name.trim() && form.ownerId;
 
 	const submit = () => {
+		const found = validate({
+			ownerId: form.ownerId ? "" : "Select a pet owner.",
+			name: required(form.name, "Pet name"),
+			age: ageValue(form.age, 30),
+		});
+		if (Object.keys(found).length) return;
 		const body = {
 			name: form.name.trim(),
 			species: form.species,
@@ -63,7 +73,7 @@ function AdminPatientForm({ pet, onClose }) {
 					<button
 						className="admin-primary-button"
 						type="button"
-						disabled={!canSubmit || mutation.isPending}
+						disabled={mutation.isPending}
 						onClick={submit}
 					>
 						{mutation.isPending
@@ -87,6 +97,8 @@ function AdminPatientForm({ pet, onClose }) {
 					<select
 						value={form.ownerId}
 						onChange={set("ownerId")}
+						className={errors.ownerId ? "invalid" : ""}
+						aria-invalid={errors.ownerId ? true : undefined}
 						disabled={Boolean(pet)}
 					>
 						<option value="">Select an owner…</option>
@@ -96,6 +108,9 @@ function AdminPatientForm({ pet, onClose }) {
 							</option>
 						))}
 					</select>
+					{errors.ownerId && (
+						<p className="field-error" role="alert">{errors.ownerId}</p>
+					)}
 					{pet && (
 						<small className="admin-slot-note">
 							Owner is fixed once a patient is registered.
@@ -111,8 +126,13 @@ function AdminPatientForm({ pet, onClose }) {
 						type="text"
 						value={form.name}
 						onChange={set("name")}
+						className={errors.name ? "invalid" : ""}
+						aria-invalid={errors.name ? true : undefined}
 						placeholder="e.g. Mochi"
 					/>
+					{errors.name && (
+						<p className="field-error" role="alert">{errors.name}</p>
+					)}
 				</div>
 
 				<div className="admin-form-field">
@@ -144,7 +164,12 @@ function AdminPatientForm({ pet, onClose }) {
 						max="30"
 						value={form.age}
 						onChange={set("age")}
+						className={errors.age ? "invalid" : ""}
+						aria-invalid={errors.age ? true : undefined}
 					/>
+					{errors.age && (
+						<p className="field-error" role="alert">{errors.age}</p>
+					)}
 				</div>
 
 				<div className="admin-form-field">

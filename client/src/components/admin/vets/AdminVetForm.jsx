@@ -3,7 +3,7 @@ import AdminModal from "../AdminModal";
 import ScheduleEditor, { defaultSchedule } from "../ScheduleEditor";
 import { useCreateVet } from "../../../hooks/useAdminData";
 import { FiAlertTriangle } from "react-icons/fi";
-
+import { required, emailValue, minLength, firstError, useFieldErrors } from "../../../utils/validate";
 
 function AdminVetForm({ onClose }) {
 	const createVet = useCreateVet();
@@ -16,12 +16,19 @@ function AdminVetForm({ onClose }) {
 		bio: "",
 		schedule: defaultSchedule(),
 	});
-	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
-
-	const canSubmit =
-		form.name.trim() && form.email.trim() && form.password.length >= 6;
+	const [errors, validate, clear] = useFieldErrors();
+	const set = (k) => (e) => {
+		setForm((f) => ({ ...f, [k]: e.target.value }));
+		clear(k)();
+	};
 
 	const submit = () => {
+		const found = validate({
+			name: required(form.name, "Full name"),
+			email: firstError(required(form.email, "Email"), emailValue(form.email)),
+			password: firstError(required(form.password, "Password"), minLength(form.password, 6, "Password")),
+		});
+		if (Object.keys(found).length) return;
 		// Only send days marked open.
 		const schedule = form.schedule
 			.filter((s) => s.open !== false)
@@ -59,7 +66,7 @@ function AdminVetForm({ onClose }) {
 					<button
 						className="admin-primary-button"
 						type="button"
-						disabled={!canSubmit || createVet.isPending}
+						disabled={createVet.isPending}
 						onClick={submit}
 					>
 						{createVet.isPending ? "Creating…" : "Create Veterinarian"}
@@ -74,17 +81,46 @@ function AdminVetForm({ onClose }) {
 			<div className="admin-form-grid">
 				<div className="admin-form-field">
 					<label>Full Name <span>*</span></label>
-					<input type="text" value={form.name} onChange={set("name")} placeholder="Dr. Jane Smith" />
+					<input
+						type="text"
+						value={form.name}
+						onChange={set("name")}
+						className={errors.name ? "invalid" : ""}
+						aria-invalid={errors.name ? true : undefined}
+						placeholder="Dr. Jane Smith"
+					/>
+					{errors.name && (
+						<p className="field-error" role="alert">{errors.name}</p>
+					)}
 				</div>
 
 				<div className="admin-form-field">
 					<label>Email <span>*</span></label>
-					<input type="email" value={form.email} onChange={set("email")} placeholder="vet@pinkpaws.com" />
+					<input
+						type="email"
+						value={form.email}
+						onChange={set("email")}
+						className={errors.email ? "invalid" : ""}
+						aria-invalid={errors.email ? true : undefined}
+						placeholder="vet@pinkpaws.com"
+					/>
+					{errors.email && (
+						<p className="field-error" role="alert">{errors.email}</p>
+					)}
 				</div>
 
 				<div className="admin-form-field">
 					<label>Portal Password <span>*</span></label>
-					<input type="text" value={form.password} onChange={set("password")} />
+					<input
+						type="text"
+						value={form.password}
+						onChange={set("password")}
+						className={errors.password ? "invalid" : ""}
+						aria-invalid={errors.password ? true : undefined}
+					/>
+					{errors.password && (
+						<p className="field-error" role="alert">{errors.password}</p>
+					)}
 				</div>
 
 				<div className="admin-form-field">
@@ -109,6 +145,5 @@ function AdminVetForm({ onClose }) {
 		</AdminModal>
 	);
 }
-
 
 export default AdminVetForm;

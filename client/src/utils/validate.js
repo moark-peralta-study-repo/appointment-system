@@ -42,10 +42,10 @@ export function otpValue(value) {
 	return /^\d{6}$/.test(String(value).trim()) ? "" : "Enter the 6-digit code.";
 }
 
-export function ageValue(value) {
+export function ageValue(value, max = 50) {
 	if (value === "" || value == null) return ""; // optional
 	const n = Number(value);
-	return Number.isFinite(n) && n >= 0 && n <= 50 ? "" : "Enter an age between 0 and 50.";
+	return Number.isFinite(n) && n >= 0 && n <= max ? "" : `Enter an age between 0 and ${max}.`;
 }
 
 // First non-empty message wins; all "" → "".
@@ -59,4 +59,29 @@ export function collectErrors(rules) {
 	const errors = {};
 	for (const [key, msg] of Object.entries(rules)) if (msg) errors[key] = msg;
 	return errors;
+}
+
+// React hook (imported as { useFieldErrors } where needed) — pairs with
+// collectErrors: returns [errors, validate, clearField].
+//
+//   const [errors, validate, clear] = useFieldErrors();
+//   validate(rules)          → sets state, returns the found errors
+//   onChange={clear("name")} → drops that field's error as the user edits
+import { useState } from "react";
+
+export function useFieldErrors() {
+	const [errors, setErrors] = useState({});
+	const validate = (rules) => {
+		const found = collectErrors(rules);
+		setErrors(found);
+		return found;
+	};
+	const clear = (key) => () =>
+		setErrors((prev) => {
+			if (!prev[key]) return prev;
+			const next = { ...prev };
+			delete next[key];
+			return next;
+		});
+	return [errors, validate, clear];
 }

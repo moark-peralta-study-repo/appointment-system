@@ -4,6 +4,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { FiCheck, FiAlertTriangle } from "react-icons/fi";
 import { PiCat, PiDog, PiBird, PiPawPrint, PiRabbit } from "react-icons/pi";
 import { useMyPets, useCreateMyPet } from "../../hooks/useClientData";
+import { required, ageValue, collectErrors } from "../../utils/validate";
 import { PET_TYPES } from "../../data/catalog";
 
 const iconFor = (s) =>
@@ -31,7 +32,11 @@ function BookingPetStep({ onDone, onBack }) {
 		gender: "male",
 		notes: "",
 	});
-	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+	const [petErrors, setPetErrors] = useState({});
+	const set = (k) => (e) => {
+		setForm((f) => ({ ...f, [k]: e.target.value }));
+		if (petErrors[k]) setPetErrors((prev) => { const next = { ...prev }; delete next[k]; return next; });
+	};
 
 	// If there's exactly one pet and nothing picked yet, pre-select it.
 	useEffect(() => {
@@ -43,7 +48,12 @@ function BookingPetStep({ onDone, onBack }) {
 
 	function submitNewPet(e) {
 		e.preventDefault();
-		if (!form.name.trim()) return;
+		const found = collectErrors({
+			name: required(form.name, "Pet name"),
+			age: ageValue(form.age),
+		});
+		setPetErrors(found);
+		if (Object.keys(found).length) return;
 		createPet.mutate(
 			{
 				name: form.name.trim(),
@@ -139,9 +149,15 @@ function BookingPetStep({ onDone, onBack }) {
 									value={form.name}
 									onChange={set("name")}
 									placeholder="e.g. Mochi"
+									className={petErrors.name ? "invalid" : ""}
+									aria-invalid={petErrors.name ? true : undefined}
 									required
 									autoFocus
 								/>
+
+								{petErrors.name && (
+								<p className="field-error" role="alert">{petErrors.name}</p>
+								)}
 							</div>
 
 							<div className="appointment-field">
@@ -175,8 +191,14 @@ function BookingPetStep({ onDone, onBack }) {
 									step="0.5"
 									value={form.age}
 									onChange={set("age")}
+									className={petErrors.age ? "invalid" : ""}
+									aria-invalid={petErrors.age ? true : undefined}
 									placeholder="e.g. 2"
 								/>
+
+								{petErrors.age && (
+								<p className="field-error" role="alert">{petErrors.age}</p>
+								)}
 							</div>
 						</div>
 
@@ -192,7 +214,7 @@ function BookingPetStep({ onDone, onBack }) {
 						<button
 							type="submit"
 							className="continue-button"
-							disabled={!form.name.trim() || createPet.isPending}
+							disabled={createPet.isPending}
 						>
 							{createPet.isPending ? "Saving…" : "Add pet & continue"}
 							<FaArrowRight />
