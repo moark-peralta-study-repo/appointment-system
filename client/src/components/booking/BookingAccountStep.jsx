@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaArrowRight, FaCheck } from "react-icons/fa";
 import { FiAlertTriangle } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import { useRegister, useVerifyOtp } from "../../hooks/useClientData";
 import {
@@ -26,6 +27,7 @@ function BookingAccountStep({ onDone }) {
 	const { user, isAuthed, login } = useAuth();
 	const register = useRegister();
 	const verify = useVerifyOtp();
+	const navigate = useNavigate();
 
 	const [mode, setMode] = useState("register"); // "register" | "otp" | "login"
 	const [form, setForm] = useState({
@@ -62,9 +64,13 @@ function BookingAccountStep({ onDone }) {
 				</section>
 
 				<div className="appointment-actions">
-					<a href="/" className="cancel-button">
+					<button
+						type="button"
+						className="cancel-button"
+						onClick={() => navigate("/client/dashboard")}
+					>
 						Cancel
-					</a>
+					</button>
 
 					<button type="button" className="continue-button" onClick={onDone}>
 						Continue <FaArrowRight />
@@ -167,9 +173,13 @@ function BookingAccountStep({ onDone }) {
 						)}
 
 						<div className="appointment-actions">
-							<a href="/" className="cancel-button">
+							<button
+								type="button"
+								className="cancel-button"
+								onClick={() => navigate("/")}
+							>
 								Cancel
-							</a>
+							</button>
 
 							<button type="submit" className="continue-button" disabled={busy || otp.length !== 6}>
 								{busy ? "One moment…" : "Verify & continue"}
@@ -308,9 +318,13 @@ function BookingAccountStep({ onDone }) {
 					)}
 
 					<div className="appointment-actions">
-						<a href="/" className="cancel-button">
+						<button
+							type="button"
+							className="cancel-button"
+							onClick={() => navigate("/")}
+						>
 							Cancel
-						</a>
+						</button>
 
 						<button type="submit" className="continue-button" disabled={busy}>
 							{busy
