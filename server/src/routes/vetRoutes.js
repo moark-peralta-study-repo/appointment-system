@@ -22,16 +22,16 @@ router.get("/", listVets);
 
 // Staff — MUST be declared before "/:id", otherwise "users"/"stats"
 // would be parsed as a vet id and hit getVetDetails
-router.get("/users", protectAuth, authorize("vet"), listUsers);
-router.get("/stats", protectAuth, authorize("vet"), getStats);
+router.get("/users", protectAuth, authorize("vet", "staff", "admin"), listUsers);
+router.get("/stats", protectAuth, authorize("vet", "staff", "admin"), getStats);
 
 router.get("/:id", getVetDetails);
 
-// Vet mutations
+// Vet-directory management is the owner (admin)'s job.
 router.post(
 	"/",
 	protectAuth,
-	authorize("vet"),
+	authorize("admin"),
 	createVetValidation,
 	handleValidation,
 	createVet
@@ -39,7 +39,7 @@ router.post(
 router.put(
 	"/:id",
 	protectAuth,
-	authorize("vet"),
+	authorize("admin"),
 	idParamValidation,
 	handleValidation,
 	updateVet
@@ -47,7 +47,7 @@ router.put(
 router.delete(
 	"/:id",
 	protectAuth,
-	authorize("vet"),
+	authorize("admin"),
 	idParamValidation,
 	handleValidation,
 	deactivateVet
