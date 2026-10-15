@@ -10,6 +10,7 @@ import {
 	firstError,
 	collectErrors,
 } from "../../utils/validate";
+import { isPortal } from "../../utils/roles";
 
 // Step 1 — make sure there's a verified pet-owner account behind the booking.
 //
@@ -40,8 +41,10 @@ function BookingAccountStep({ onDone }) {
 		if (errors[k]) setErrors((prev) => { const next = { ...prev }; delete next[k]; return next; });
 	};
 
-	// Already a signed-in owner → no forms needed.
-	if (isAuthed && user?.role !== "vet") {
+	// Already a signed-in owner → no forms needed. (Portal staff —
+	// vet/front desk/admin — book on behalf of owners, so they keep the
+	// account forms on the public wizard.)
+	if (isAuthed && !isPortal(user?.role)) {
 		return (
 			<div className="appointment-card">
 				<section className="form-section">

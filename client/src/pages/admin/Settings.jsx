@@ -166,7 +166,11 @@ function Settings() {
 	};
 
 	const roleLabel =
-		user?.role === "vet" ? "Veterinarian" : "Clinic Administrator";
+		user?.role === "vet"
+			? "Veterinarian"
+			: user?.role === "staff"
+				? "Clinic Staff"
+				: "Clinic Administrator";
 	const initials =
 		user?.name
 			?.split(" ")
