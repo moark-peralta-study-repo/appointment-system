@@ -45,6 +45,23 @@ export const createVetValidation = [
 		.withMessage("password must be at least 6 chars"),
 ];
 
+export const createStaffValidation = [
+	body("name")
+		.isString()
+		.trim()
+		.isLength({ min: 1 })
+		.withMessage("name is required"),
+	body("email")
+		.isString()
+		.trim()
+		.isEmail()
+		.withMessage("email must be valid"),
+	body("password")
+		.isString()
+		.isLength({ min: 6 })
+		.withMessage("password must be at least 6 chars"),
+];
+
 export const idParamValidation = [
 	param("id").isMongoId().withMessage("id must be a valid id"),
 ];

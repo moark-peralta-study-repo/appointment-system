@@ -4,6 +4,7 @@ import morgan from "morgan";
 import userRoutes from "./routes/userRoutes.js";
 import petRoutes from "./routes/petRoutes.js";
 import vetRoutes from "./routes/vetRoutes.js";
+import staffRoutes from "./routes/staffRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
 import auditRoutes from "./routes/auditRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/api/auth", userRoutes);
 app.use("/api/pets", petRoutes);
 app.use("/api/vets", vetRoutes);
+app.use("/api/staff", staffRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/audit", auditRoutes);
 
