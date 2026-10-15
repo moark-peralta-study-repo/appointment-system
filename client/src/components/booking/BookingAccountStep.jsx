@@ -3,6 +3,7 @@ import { FaArrowRight, FaCheck } from "react-icons/fa";
 import { FiAlertTriangle } from "react-icons/fi";
 import { useAuth } from "../../context/useAuth";
 import { useRegister } from "../../hooks/useClientData";
+import { isPortal } from "../../utils/roles";
 
 // Step 1 — make sure there's a pet-owner account behind the booking.
 //
@@ -23,8 +24,10 @@ function BookingAccountStep({ onDone }) {
 	});
 	const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
-	// Already a signed-in owner → no forms needed.
-	if (isAuthed && user?.role !== "vet") {
+	// Already a signed-in owner → no forms needed. (Portal staff —
+	// vet/front desk/admin — book on behalf of owners, so they keep the
+	// account forms on the public wizard.)
+	if (isAuthed && !isPortal(user?.role)) {
 		return (
 			<div className="appointment-card">
 				<section className="form-section">

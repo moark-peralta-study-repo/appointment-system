@@ -7,9 +7,10 @@ import {
 	CiSettings,
 	CiUser,
 } from "react-icons/ci";
-import { FaChartBar, FaSignOutAlt } from "react-icons/fa";
+import { FaChartBar, FaSignOutAlt, FaUserCog } from "react-icons/fa";
 import logo from "../../assets/logo/pink-paws-full.png";
 import { useAuth } from "../../context/useAuth";
+import { isClinical, isManager } from "../../utils/roles";
 
 function AdminSidebar() {
 	const { user, logout } = useAuth();
@@ -37,6 +38,12 @@ function AdminSidebar() {
 		setMenuOpen(false);
 		navigate(path);
 	};
+
+	// Role-scoped nav. All portal roles share the operational pages
+	// (appointments / patients / pet owners). Clinical pages are vet +
+	// admin only; roster management is the owner's job.
+	const clinical = isClinical(user?.role);
+	const manager = isManager(user?.role);
 
 	return (
 		<aside className="admin-sidebar">
@@ -91,31 +98,44 @@ function AdminSidebar() {
 						<span>Pet Owners</span>
 					</NavLink>
 
-					<NavLink to="/admin/veterinarians" className="admin-nav-link">
-						<span className="admin-nav-icon">
-							<CiMedicalCase />
-						</span>
-						<span>Veterinarians</span>
-					</NavLink>
+					{manager && (
+						<NavLink to="/admin/veterinarians" className="admin-nav-link">
+							<span className="admin-nav-icon">
+								<CiMedicalCase />
+							</span>
+							<span>Veterinarians</span>
+						</NavLink>
+					)}
+
+					{manager && (
+						<NavLink to="/admin/staff" className="admin-nav-link">
+							<span className="admin-nav-icon">
+								<FaUserCog />
+							</span>
+							<span>Staff</span>
+						</NavLink>
+					)}
 				</div>
 
-				<div className="admin-nav-group">
-					<p className="admin-nav-title">RECORDS</p>
+				{clinical && (
+					<div className="admin-nav-group">
+						<p className="admin-nav-title">RECORDS</p>
 
-					<NavLink to="/admin/medical-records" className="admin-nav-link">
-						<span className="admin-nav-icon">
-							<CiMedicalClipboard />
-						</span>
-						<span>Medical Records</span>
-					</NavLink>
+						<NavLink to="/admin/medical-records" className="admin-nav-link">
+							<span className="admin-nav-icon">
+								<CiMedicalClipboard />
+							</span>
+							<span>Medical Records</span>
+						</NavLink>
 
-					<NavLink to="/admin/reports" className="admin-nav-link">
-						<span className="admin-nav-icon">
-							<FaChartBar />
-						</span>
-						<span>Reports</span>
-					</NavLink>
+						<NavLink to="/admin/reports" className="admin-nav-link">
+							<span className="admin-nav-icon">
+								<FaChartBar />
+							</span>
+							<span>Reports</span>
+						</NavLink>
 					</div>
+				)}
 			</nav>
 
 			{/* BOTTOM */}
@@ -135,7 +155,11 @@ function AdminSidebar() {
 					<div className="admin-user-details">
 						<strong>{user?.name || "Staff"}</strong>
 						<span>
-							{user?.role === "vet" ? "Veterinarian" : "Clinic Administrator"}
+							{user?.role === "vet"
+								? "Veterinarian"
+								: user?.role === "staff"
+									? "Clinic Staff"
+									: "Clinic Administrator"}
 						</span>
 					</div>
 

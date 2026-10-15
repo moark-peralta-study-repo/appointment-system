@@ -3,11 +3,13 @@ import { useNavigate, Link, Navigate } from "react-router-dom";
 import logo from "../assets/logo/pink-paws-full.png";
 import { useAuth } from "../context/useAuth";
 import { required, emailValue, firstError, collectErrors } from "../utils/validate";
+import { isPortal } from "../utils/roles";
 
 // Shared by login (mutate onSuccess) and the "already signed in" redirect,
-// so a vet and an owner each land on the right portal from one place.
+// so a staff account and an owner each land on the right portal from one
+// place. Any portal role (vet / front desk / admin) → /admin.
 const homeFor = (user) =>
-	user?.role === "vet" ? "/admin" : "/client/dashboard";
+	isPortal(user?.role) ? "/admin" : "/client/dashboard";
 
 // Single sign-in page for both portals. The form is identical to what the
 // old /client/login and /admin/login pages had — the only difference now is

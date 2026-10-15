@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/useAuth";
+import { isPortal } from "../utils/roles";
 import { FiArrowLeft, FiCheck } from "react-icons/fi";
 import BookingHeader from "../components/booking/BookingHeader";
 import BookingAccountStep from "../components/booking/BookingAccountStep";
@@ -31,7 +32,10 @@ function BookAppointment() {
 	});
 	const [confirmed, setConfirmed] = useState(null);
 
-	const account = user?.role !== "vet" ? user : null;
+	// Owner books for themselves; portal staff (vet / front desk / admin)
+	// book on behalf of a pet owner, so they don't carry their own account
+	// into the wizard.
+	const account = isPortal(user?.role) ? null : user;
 
 	if (confirmed) {
 		return <BookingConfirmation appointment={confirmed} />;

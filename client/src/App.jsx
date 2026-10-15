@@ -11,6 +11,7 @@ import Appointments from "./pages/admin/Appointments";
 import Patients from "./pages/admin/Patients";
 import PetOwners from "./pages/admin/PetOwners";
 import Veterinarians from "./pages/admin/Veterinarians";
+import Staff from "./pages/admin/Staff";
 import MedicalRecords from "./pages/admin/MedicalRecords";
 import Reports from "./pages/admin/Reports";
 import Settings from "./pages/admin/Settings";
@@ -81,6 +82,7 @@ function App() {
 						<Route path="patients" element={<Patients />} />
 						<Route path="pet-owners" element={<PetOwners />} />
 						<Route path="veterinarians" element={<Veterinarians />} />
+						<Route path="staff" element={<Staff />} />
 						<Route path="medical-records" element={<MedicalRecords />} />
 						<Route path="reports" element={<Reports />} />
 						<Route path="settings" element={<Settings />} />
