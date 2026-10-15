@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import DogLoader from "../admin/DogLoader";
+import { isPortal } from "../../utils/roles";
 
 // Wraps the /client subtree (dashboard onward). Waits for the profile
 // query to settle, then lets the owner in or bounces to /login.
@@ -21,8 +22,8 @@ function ClientProtectedRoute() {
 		return <Navigate to="/login" replace />;
 	}
 
-	// Staff accounts don't use the pet-owner portal.
-	if (user.role === "vet") {
+	// Staff accounts (vet, front desk, admin) don't use the pet-owner portal.
+	if (isPortal(user.role)) {
 		return <Navigate to="/admin" replace />;
 	}
 

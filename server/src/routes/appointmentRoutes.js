@@ -19,7 +19,7 @@ router.get("/", protectAuth, listAppointments);
 router.post(
 	"/",
 	protectAuth,
-	authorize("user", "vet"),
+	authorize("user", "vet", "staff", "admin"),
 	bookAppointmentValidation,
 	handleValidation,
 	bookAppointment

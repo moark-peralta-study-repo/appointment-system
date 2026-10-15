@@ -6,7 +6,7 @@ import {
 } from "../../hooks/useAdminData";
 import { isToday, format12h } from "../../utils/admin";
 import DogLoader from "../../components/admin/DogLoader";
-import { FaBell, FaClipboardList, FaStethoscope, FaUser } from "react-icons/fa";
+import { FaBell, FaClipboardList, FaStethoscope, FaUser, FaUserCog } from "react-icons/fa";
 import { RxCalendar } from "react-icons/rx";
 import { PiCat, PiDog, PiPawPrint } from "react-icons/pi";
 
@@ -23,6 +23,7 @@ function AdminDashboard() {
 
 	const ownerCount = users.filter((u) => u.role === "user").length;
 	const vetCount = users.filter((u) => u.role === "vet").length;
+	const staffCount = users.filter((u) => u.role === "staff").length;
 
 	const statCards = [
 		{
@@ -48,6 +49,12 @@ function AdminDashboard() {
 			value: vetCount,
 			sub: "staffed on the team",
 			icon: <FaStethoscope size={20} />,
+		},
+		{
+			label: "Clinic Staff",
+			value: staffCount,
+			sub: "reception / front desk",
+			icon: <FaUserCog size={20} />,
 		},
 	];
 

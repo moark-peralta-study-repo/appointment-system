@@ -53,12 +53,23 @@ function daysAgo(n, time, status) {
 // --- Sample data (from the admin UI) ------------------------------------
 
 const VETS = [
-	{ name: "Dr. Evelyn Dane", email: "admin@pinkpaws.com", password: "admin123", phone: "+63 917 245 0001", specialty: "General Practice", bio: "Clinic owner and lead veterinarian." },
 	{ name: "Dr. Alex Mercer", email: "alex.mercer@pinkpaws.com", password: "vet12345", phone: "+63 918 562 0002", specialty: "Surgery & Diagnostics" },
 	{ name: "Dr. Elena Rostova", email: "elena.rostova@pinkpaws.com", password: "vet12345", phone: "+63 905 731 0003", specialty: "Internal Medicine" },
 	{ name: "Dr. Marcus Bennett", email: "marcus.bennett@pinkpaws.com", password: "vet12345", phone: "+63 917 843 0004", specialty: "Dermatology" },
 	{ name: "Dr. Claire Morgan", email: "claire.morgan@pinkpaws.com", password: "vet12345", phone: "+63 919 325 0005", specialty: "Emergency Care" },
 	{ name: "Dr. Noah Williams", email: "noah.williams@pinkpaws.com", password: "vet12345", phone: "+63 906 482 0006", specialty: "Preventive Care" },
+];
+
+// Clinic owner — role "admin" (manages vets + non-vet staff). Seeded
+// separately from the clinical vet directory: in real clinics the owner
+// may also be a vet, but the seed keeps the roles distinct so the admin
+// portal's "Veterinarians" page is the owner's roster, not self.
+const ADMIN = { name: "Dr. Evelyn Dane", email: "admin@pinkpaws.com", password: "admin123", phone: "+63 917 245 0001" };
+
+// Non-vet clinic staff (reception / front desk) — role "staff".
+const STAFF = [
+	{ name: "Rosa Dela Cruz", email: "rosa@pinkpaws.com", password: "staff123", phone: "+63 917 555 0001" },
+	{ name: "Miguel Santos", email: "miguel@pinkpaws.com", password: "staff123", phone: "+63 918 555 0002" },
 ];
 
 const OWNERS = [
@@ -121,6 +132,11 @@ async function seed() {
 			// the demo accounts still log in after the login gate shipped.
 			u.isVerified = true;
 			await u.save();
+		} else if (u.role !== doc.role) {
+			// Role re-seeded (e.g. Evelyn promoted vet → admin): apply it,
+			// keep the user's existing password (upsert never overwrites it).
+			u.role = doc.role;
+			await u.save();
 		}
 		return u;
 	}
@@ -137,16 +153,22 @@ async function seed() {
 		role: "user",
 		phone: "+63 917 245 9999",
 	});
+	// Clinic owner (admin) — Evelyn is the owner AND a veterinarian, so a
+	// vet profile is created for her below: her appointments keep working.
+	users[ADMIN.name] = await upsertUser({ ...ADMIN, role: "admin" });
 	for (const v of VETS) {
 		users[v.name] = await upsertUser({ name: v.name, email: v.email, password: v.password, role: "vet", phone: v.phone });
 	}
+	for (const s of STAFF) {
+		users[s.name] = await upsertUser({ ...s, role: "staff" });
+	}
 
-	// --- Vet profiles ----------------------------------------------------
+	// --- Vet profiles (clinical directory, incl. the owner-vet) ------------
 	const vetProfiles = {};
-	for (const v of VETS) {
+	for (const v of [ADMIN, ...VETS]) {
 		vetProfiles[v.name] = await Vet.findOneAndUpdate(
 			{ user: users[v.name]._id },
-			{ $setOnInsert: { specialty: v.specialty, bio: v.bio ?? null, schedule: SCHEDULE, active: true } },
+			{ $setOnInsert: { specialty: v.specialty ?? "General Practice", bio: v.bio ?? null, schedule: SCHEDULE, active: true } },
 			{ upsert: true, returnDocument: 'after' },
 		);
 	}

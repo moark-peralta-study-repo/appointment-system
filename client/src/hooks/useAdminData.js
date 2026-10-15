@@ -70,6 +70,7 @@ function useInvalidateAdmin() {
 	return () => {
 		qc.invalidateQueries({ queryKey: ["admin"] });
 		qc.invalidateQueries({ queryKey: ["vets"] });
+		qc.invalidateQueries({ queryKey: ["staff"] });
 		qc.invalidateQueries({ queryKey: ["stats"] });
 	};
 }
@@ -179,6 +180,39 @@ export function useDeactivateVet() {
 	const onSuccess = useInvalidateAdmin();
 	return useMutation({
 		mutationFn: (id) => apiFetch(`/vets/${id}`, { method: "DELETE" }),
+		onSuccess,
+	});
+}
+
+/** Non-vet clinic staff (reception / front desk). Owner-managed roster. */
+export function useStaff() {
+	return useQuery({
+		queryKey: ["staff"],
+		queryFn: () => apiFetch("/staff"),
+	});
+}
+
+export function useCreateStaff() {
+	const onSuccess = useInvalidateAdmin();
+	return useMutation({
+		mutationFn: (body) => apiFetch("/staff", { method: "POST", body }),
+		onSuccess,
+	});
+}
+
+export function useUpdateStaff() {
+	const onSuccess = useInvalidateAdmin();
+	return useMutation({
+		mutationFn: ({ id, body }) =>
+			apiFetch(`/staff/${id}`, { method: "PUT", body }),
+		onSuccess,
+	});
+}
+
+export function useRemoveStaff() {
+	const onSuccess = useInvalidateAdmin();
+	return useMutation({
+		mutationFn: (id) => apiFetch(`/staff/${id}`, { method: "DELETE" }),
 		onSuccess,
 	});
 }

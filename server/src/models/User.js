@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
 		name: { type: String, required: true },
 		email: { type: String, required: true, unique: true, lowercase: true },
 		password: { type: String, required: true, minlength: 6, select: false },
-		role: { type: String, enum: ["user", "vet"], default: "user" },
+		role: { type: String, enum: ["user", "vet", "staff", "admin"], default: "user" },
 		phone: String,
 		// Email verification (guidelines: OTP expires in 15 minutes).
 		// Only the SHA-256 hash is stored — never the plaintext OTP.
