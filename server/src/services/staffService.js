@@ -24,7 +24,6 @@ export async function createStaff({ name, email, password, phone }) {
 		password,
 		phone,
 		role: "staff",
-		isVerified: true, // admin-created → skip OTP, like createVet
 	});
 	const safeUser = await User.findById(user._id);
 	return safeUser;
