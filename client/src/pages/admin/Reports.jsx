@@ -14,6 +14,7 @@ import {
 	YAxis,
 } from "recharts";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
+import { useAuth } from "../../context/useAuth";
 import {
 	useStats,
 	useAppointments,
@@ -181,10 +182,33 @@ function Reports() {
 	const { data: appointments = [] } = useAppointments();
 	const { data: pets = [] } = usePets();
 	const { data: users = [] } = useUsers();
+	const { user } = useAuth();
 	const [range, setRange] = useState("month");
+
+	// Role scoping: vets see their own practice; admin sees the whole clinic.
+	// Staff have no Reports page (sidebar hides it), but if one ever lands
+	// here we show them clinic-wide — their role is front-desk, not clinical.
+	const scopedToVet = user?.role === "vet";
+	const myName = user?.name;
 
 	const start = rangeStart(range);
 	const label = rangeLabel(range);
+
+	// All appointments for this vet (null → every appointment).
+	const myAppointments = useMemo(
+		() =>
+			scopedToVet
+				? appointments.filter((a) => a.vet === myName)
+				: appointments,
+		[appointments, scopedToVet, myName],
+	);
+	// Pets this vet has personally handled (for the "My Patients" count);
+	// clinic-wide for admin.
+	const scopedPets = useMemo(() => {
+		if (!scopedToVet) return pets;
+		const handled = new Set(myAppointments.map((a) => a.pet?._id));
+		return pets.filter((p) => handled.has(p._id));
+	}, [pets, scopedToVet, myAppointments]);
 
 	const ownersById = useMemo(
 		() => Object.fromEntries(users.map((u) => [u._id, u.name])),
@@ -192,21 +216,21 @@ function Reports() {
 	);
 
 	const inRange = useMemo(
-		() => appointments.filter((a) => new Date(a.date) >= start),
-		[appointments, start],
+		() => myAppointments.filter((a) => new Date(a.date) >= start),
+		[myAppointments, start],
 	);
 
 	// ---- trend buckets ------------------------------------------------
 	const buckets = useMemo(
-		() => buildBuckets(appointments, range),
-		[appointments, range],
+		() => buildBuckets(myAppointments, range),
+		[myAppointments, range],
 	);
 	const rangeTotal = inRange.length;
 
 	// New patients registered in each bucket (for the overview line).
 	const newPetsByBucket = useMemo(() => {
 		const counts = Object.fromEntries(buckets.map((b) => [b.key, 0]));
-		for (const p of pets) {
+		for (const p of scopedPets) {
 			if (!p.createdAt) continue;
 			const d = new Date(p.createdAt);
 			if (d < start) continue;
@@ -217,7 +241,7 @@ function Reports() {
 			if (key in counts) counts[key] += 1;
 		}
 		return buckets.map((b) => ({ ...b, newPatients: counts[b.key] }));
-	}, [buckets, pets, range, start]);
+	}, [buckets, scopedPets, range, start]);
 
 	// ---- status breakdown (in range) ---------------------------------
 	const byStatus = { pending: 0, confirmed: 0, completed: 0, cancelled: 0 };
@@ -227,7 +251,7 @@ function Reports() {
 		value: byStatus[m.key] ?? 0,
 		color: m.color,
 	})).filter((d) => d.value > 0);
-	const newPets = pets.filter((p) => new Date(p.createdAt) >= start).length;
+	const newPets = scopedPets.filter((p) => new Date(p.createdAt) >= start).length;
 
 	// ---- vet workload (in range) --------------------------------------
 	const byVet = {};
@@ -281,15 +305,23 @@ function Reports() {
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement("a");
 		a.href = url;
-		a.download = `appointments-${range}-${toDayKey(new Date())}.csv`;
+		a.download = `${
+			scopedToVet ? "my-appointments-" : "appointments-"
+		}${range}-${toDayKey(new Date())}.csv`;
 		document.body.appendChild(a);
 		a.click();
 		a.remove();
 		URL.revokeObjectURL(url);
 	};
 
-	const allTime = stats?.appointments ?? appointments.length;
-	const completedAll = stats?.byStatus?.completed ?? 0;
+	// All-time figures: clinic-wide for admin (real /vets/stats totals),
+	// personal for a vet (derived from their own appointment list).
+	const allTime = scopedToVet
+		? myAppointments.length
+		: stats?.appointments ?? appointments.length;
+	const completedAll = scopedToVet
+		? myAppointments.filter((a) => a.status === "completed").length
+		: stats?.byStatus?.completed ?? 0;
 	const completionRate = allTime
 		? Math.round((completedAll / allTime) * 100)
 		: 0;
@@ -298,8 +330,12 @@ function Reports() {
 		<>
 			<AdminPageHeader
 				eyebrow="CLINIC ANALYTICS"
-				title="Reports"
-				description="Monitor clinic activity, appointments, patients, and veterinarian performance."
+				title={scopedToVet ? "My Reports" : "Reports"}
+				description={
+					scopedToVet
+						? "Your patients, visits, and workload — your own practice only."
+						: "Monitor clinic activity, appointments, patients, and veterinarian performance."
+				}
 				actions={
 					<div className="reports-header-actions">
 						<select
@@ -340,7 +376,11 @@ function Reports() {
 					</div>
 
 					<div>
-						<span>Appointments ({label.toLowerCase()})</span>
+						<span>
+							{scopedToVet
+								? `My Appointments (${label.toLowerCase()})`
+								: `Appointments (${label.toLowerCase()})`}
+						</span>
 						<strong>{rangeTotal}</strong>
 						<small>{allTime} all time</small>
 					</div>
@@ -352,7 +392,7 @@ function Reports() {
 					</div>
 
 					<div>
-						<span>Completed Visits (all time)</span>
+						<span>{scopedToVet ? "My Completed Visits (all time)" : "Completed Visits (all time)"}</span>
 						<strong>{completedAll}</strong>
 						<small>{completionRate}% completion rate</small>
 					</div>
@@ -364,9 +404,13 @@ function Reports() {
 					</div>
 
 					<div>
-						<span>New Patients</span>
+						<span>{scopedToVet ? "My New Patients" : "New Patients"}</span>
 						<strong>{newPets}</strong>
-						<small>registered {label.toLowerCase()}</small>
+						<small>
+							{scopedToVet
+								? `my new patients ${label.toLowerCase()}`
+								: `registered ${label.toLowerCase()}`}
+						</small>
 					</div>
 				</div>
 
@@ -376,9 +420,9 @@ function Reports() {
 					</div>
 
 					<div>
-						<span>Active Patients</span>
-						<strong>{pets.length}</strong>
-						<small>pets on file</small>
+						<span>{scopedToVet ? "My Patients" : "Active Patients"}</span>
+						<strong>{scopedPets.length}</strong>
+						<small>{scopedToVet ? "handled by me" : "pets on file"}</small>
 					</div>
 				</div>
 			</section>
@@ -568,6 +612,7 @@ function Reports() {
 			</section>
 
 			{/* Veterinarian Workload — in range */}
+			{!scopedToVet && (
 			<section className="admin-panel reports-panel reports-vet-panel">
 				<div className="reports-panel-header">
 					<div>
@@ -623,6 +668,7 @@ function Reports() {
 					</div>
 				)}
 			</section>
+			)}
 
 			{/* Popular Services — in range */}
 			<section className="admin-panel reports-panel">
