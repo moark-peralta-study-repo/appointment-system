@@ -25,3 +25,24 @@ export const isPortal = (role) => PORTAL_ROLES.includes(role);
 export const isOperational = (role) => OPERATIONAL_ROLES.includes(role);
 export const isClinical = (role) => CLINICAL_ROLES.includes(role);
 export const isManager = (role) => MANAGER_ROLES.includes(role);
+
+/**
+ * Can this user act on (change status / cancel) this specific appointment?
+ *   owner (user)  → only their own appointments
+ *   vet           → only the ones they are assigned to (clinical decision)
+ *   staff / admin → any appointment (they coordinate the schedule)
+ * `appointment.vet` is the assigned vet User id (ObjectId), `appointment.owner`
+ * the pet-owner User id.
+ */
+export const canActOnAppointment = (actor, appointment) => {
+	// staff & admin coordinate the whole schedule → any appointment.
+	if (actor.role === "staff" || actor.role === "admin") return true;
+	// vet: only the ones they are assigned to (clinical decision).
+	if (actor.role === "vet") {
+		return appointment.vet && String(appointment.vet) === String(actor._id);
+	}
+	// owner (user): their own appointments only.
+	return appointment.owner.equals
+		? appointment.owner.equals(actor._id)
+		: String(appointment.owner) === String(actor._id);
+};
