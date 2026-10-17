@@ -5,7 +5,7 @@ import User from "../models/User.js";
 import Vet from "../models/Vet.js";
 import ApiError from "../utils/ApiError.js";
 import { getFreeSlots } from "../utils/slots.js";
-import { isOperational, isClinical } from "../utils/roles.js";
+import { isOperational, isClinical, canActOnAppointment } from "../utils/roles.js";
 
 const STATUS_FLOW = {
 	pending: ["confirmed", "completed", "cancelled"],
@@ -119,7 +119,7 @@ export async function updateStatus(actor, appointmentId, { status, vetNotes }) {
 	if (!appointment) throw new ApiError(404, "Appointment not found");
 
 
-	if (!isOperational(actor.role) && !appointment.owner.equals(actor._id)) {
+	if (!canActOnAppointment(actor, appointment)) {
 		throw new ApiError(403, "Not your appointment");
 	}
 
@@ -153,10 +153,7 @@ export async function cancelAppointment(actor, appointmentId) {
 	const appointment = await Appointment.findById(appointmentId);
 	if (!appointment) throw new ApiError(404, "Appointment not found");
 
-	if (
-		!isOperational(actor.role) &&
-		!appointment.owner.equals(actor._id)
-	) {
+	if (!canActOnAppointment(actor, appointment)) {
 		throw new ApiError(403, "Not your appointment");
 	}
 

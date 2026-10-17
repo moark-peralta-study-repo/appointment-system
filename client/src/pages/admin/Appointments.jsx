@@ -6,6 +6,7 @@ import {
 	useUpdateAppointmentStatus,
 	useCancelAppointment,
 } from "../../hooks/useAdminData";
+import { useAuth } from "../../context/useAuth";
 import { format12h, isToday } from "../../utils/admin";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import NewAppointmentModal from "../../components/admin/booking/NewAppointmentModal";
@@ -16,7 +17,12 @@ function Appointments() {
 	const { data: appointments = [], isPending } = useAppointments();
 	const { data: users = [] } = useUsers();
 	const { data: stats } = useStats();
+	const { user } = useAuth();
 
+	// Vets default to "My appointments" and can only act on the rows they're
+	// assigned to; staff/admin see & manage the whole clinic book.
+	const isVet = user?.role === "vet";
+	const [scope, setScope] = useState(isVet ? "mine" : "all");
 	const [statusFilter, setStatusFilter] = useState("all");
 	const [dateFilter, setDateFilter] = useState("today");
 	const [search, setSearch] = useState("");
@@ -27,11 +33,19 @@ function Appointments() {
 
 	const ownersById = Object.fromEntries(users.map((u) => [u._id, u]));
 
-	const todayCount = appointments.filter((a) => isToday(a.date)).length;
+	// Can this user act on this row? (mirrors server canActOnAppointment —
+	// the API still enforces it; this just keeps the UI honest.)
+	const canActOn = (a) =>
+		user?.role === "staff" ||
+		user?.role === "admin" ||
+		a.vet === user?.name;
 
 	const rows = useMemo(() => {
 		const q = search.trim().toLowerCase();
 		return appointments
+			.filter((a) =>
+				scope === "mine" ? a.vet === user?.name : true,
+			)
 			.filter((a) => statusFilter === "all" || a.status === statusFilter)
 			.filter((a) => {
 				if (dateFilter === "today") return isToday(a.date);
@@ -57,10 +71,15 @@ function Appointments() {
 				const dx = new Date(x.date) - new Date(y.date);
 				return dx !== 0 ? dx : x.time > y.time ? 1 : -1;
 			});
-	}, [appointments, statusFilter, dateFilter, search, ownersById]);
+	}, [appointments, scope, statusFilter, dateFilter, search, ownersById, user]);
 
 	const summary = [
-		{ label: "Today's Appointments", value: todayCount },
+		{
+			label: isVet ? "My Appointments Today" : "Today's Appointments",
+			value: appointments.filter(
+				(a) => isToday(a.date) && (isVet ? a.vet === user?.name : true),
+			).length,
+		},
 		{ label: "Confirmed", value: stats?.byStatus?.confirmed ?? 0 },
 		{ label: "Pending", value: stats?.byStatus?.pending ?? 0 },
 		{ label: "Completed", value: stats?.byStatus?.completed ?? 0 },
@@ -76,7 +95,11 @@ function Appointments() {
 			<AdminPageHeader
 				eyebrow="CLINIC MANAGEMENT"
 				title="Appointments"
-				description="Manage and monitor all scheduled veterinary appointments."
+				description={
+					isVet
+						? "Your patient schedule — complete your own visits; reception and the admin manage the rest."
+						: "Manage and monitor all scheduled veterinary appointments."
+				}
 				actions={
 					<button
 						className="admin-primary-button"
@@ -112,6 +135,16 @@ function Appointments() {
 					</div>
 
 					<div className="appointment-filters">
+						{isVet && (
+							<select
+								value={scope}
+								onChange={(e) => setScope(e.target.value)}
+							>
+								<option value="mine">My Appointments</option>
+								<option value="all">All Appointments</option>
+							</select>
+						)}
+
 						<select
 							value={statusFilter}
 							onChange={(e) => setStatusFilter(e.target.value)}
@@ -160,10 +193,11 @@ function Appointments() {
 							{rows.map((appointment) => {
 								const owner = ownersById[appointment.owner];
 								const active =
-									appointment.status === "pending" ||
-									appointment.status === "confirmed";
+									(appointment.status === "pending" ||
+										appointment.status === "confirmed") &&
+									canActOn(appointment);
 								return (
-									<tr key={appointment._id}>
+										<tr key={appointment._id}>
 										<td>
 											<strong>{format12h(appointment.time)}</strong>
 											<span className="table-date-sub">
