@@ -30,15 +30,18 @@ export function passwordsMatch(password, confirm) {
 	return confirm === password ? "" : "Passwords do not match.";
 }
 
-// Philippine mobile number — optional field, only validated when something
-// was typed. Accepts 09xx xxx xxxx, +63 9xx xxx xxxx, or bare 9xxxxxxxxx
-// (10–11 digits after stripping spaces/dashes/parens/leading +).
+// Philippine mobile number — 11 digits, no more, no less:
+//   0917 123 4567   (local, leading 0)
+//   +63 917 123 4567 / 639171234567  (international, 0 dropped)
+// Optional field — only validated when something was typed.
 export function phoneValue(value) {
 	if (!value || !String(value).trim()) return "";
-	const digits = String(value).replace(/[\s\-().+]/g, "");
-	return /^(?:63|0)?9\d{9}$/.test(digits)
+	let s = String(value).trim();
+	if (s[0] === "+") s = s.slice(1); // the only symbol allowed, only up front
+	const digits = s.replace(/[\s\-().]/g, "");
+	return /^(09|639)\d{9}$/.test(digits)
 		? ""
-		: "Enter a valid PH mobile number (e.g. 0917 123 4567).";
+		: "Enter an 11-digit PH mobile number (e.g. 0917 123 4567).";
 }
 
 export function otpValue(value) {

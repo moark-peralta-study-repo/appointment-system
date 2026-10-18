@@ -1,16 +1,21 @@
 import { body, validationResult } from "express-validator";
 
-// Philippine mobile: 09xx xxx xxxx / +63 9xx xxx xxxx / bare 9xxxxxxxxx.
+// Philippine mobile — 11 digits, no more, no less:
+//   0917 123 4567          (local)
+//   +63 917 123 4567       (international; the 0 becomes nothing)
+//   639171234567           (international, no plus)
 // Blank (or absent) is allowed — it means "no phone" / "clear it".
 const phPhone = body("phone")
 	.optional({ values: "undefined" })
 	.custom((v) => {
 		const trimmed = String(v).trim();
 		if (trimmed === "") return true; // blank → nothing to validate
-		const digits = trimmed.replace(/[\s\-().]/g, "");
-		return /^(?:\+?63|0)?9\d{9}$/.test(digits);
+		let s = trimmed;
+		if (s[0] === "+") s = s.slice(1); // only symbol allowed, only up front
+		const digits = s.replace(/[\s\-().]/g, "");
+		return /^(09|639)\d{9}$/.test(digits);
 	})
-	.withMessage("phone must be a valid PH mobile number (e.g. 0917 123 4567)");
+	.withMessage("phone must be an 11-digit PH mobile number (e.g. 0917 123 4567)");
 
 export const registerValidation = [
 	body("name")
