@@ -3,6 +3,7 @@ import { FaArrowRight } from "react-icons/fa";
 import { FiArrowLeft } from "react-icons/fi";
 import { useVets, useVetFreeSlots } from "../../hooks/useAdminData";
 import { SERVICES } from "../../data/catalog";
+import { required, firstError, useFieldErrors } from "../../utils/validate";
 
 function localYYYYMMDD(d) {
 	return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -20,6 +21,7 @@ function BookingScheduleStep({ onDone, onBack }) {
 	const [date, setDate] = useState("");
 	const [time, setTime] = useState("");
 	const [notes, setNotes] = useState("");
+	const [errors, validate, clear] = useFieldErrors();
 
 	const selectedVet = vets.find((v) => v._id === vetId);
 	const {
@@ -40,9 +42,31 @@ function BookingScheduleStep({ onDone, onBack }) {
 	// Keep the time valid when the vet or date changes.
 	useEffect(() => {
 		setTime("");
+		// Drop any stale "pick a time" error — the options changed.
+		if (errors.time) clear("time")();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [vetId, date]);
 
+	const today = localYYYYMMDD(new Date());
 	const canContinue = Boolean(service && vetId && date && slots.includes(time));
+
+	// Continue always runs validation so missing fields show an inline
+	// message instead of the button just sitting greyed out.
+	function continueBooking() {
+		const found = validate({
+			service: required(service, "Service"),
+			vet: required(vetId, "Veterinarian"),
+			date: firstError(
+				required(date, "Date"),
+				date && date < today ? "Date can't be in the past." : "",
+			),
+			// Only enforce once a date is chosen (otherwise "pick a
+			// date" and "pick a time" show together, which is noisy).
+			time: date ? firstError(required(time, "Time"), required(vetId, "Veterinarian")) : "",
+		});
+		if (Object.keys(found).length) return;
+		if (canContinue) onDone({ service, vetId, date, time, notes: notes.trim() });
+	}
 
 	return (
 		<div className="appointment-card">
@@ -55,23 +79,43 @@ function BookingScheduleStep({ onDone, onBack }) {
 				</p>
 
 				<div className="appointment-field">
-					<label>Service *</label>
+				<label>Service *</label>
 
-					<select value={service} onChange={(e) => setService(e.target.value)}>
-						<option value="">Select a service</option>
+				<select
+					value={service}
+					onChange={(e) => {
+						setService(e.target.value);
+						clear("service")();
+					}}
+					className={errors.service ? "invalid" : ""}
+					aria-invalid={errors.service ? true : undefined}
+				>
+					<option value="">Select a service</option>
 
-						{SERVICES.map((s) => (
-							<option key={s.id} value={s.label}>
-								{s.label} — {s.price}
-							</option>
-						))}
-					</select>
+					{SERVICES.map((s) => (
+						<option key={s.id} value={s.label}>
+							{s.label} — {s.price}
+						</option>
+					))}
+				</select>
+
+				{errors.service && (
+					<p className="field-error" role="alert">{errors.service}</p>
+				)}
 				</div>
 
 				<div className="appointment-field">
-					<label>Preferred veterinarian</label>
+					<label>Preferred veterinarian *</label>
 
-					<select value={vetId} onChange={(e) => setVetId(e.target.value)}>
+					<select
+						value={vetId}
+						onChange={(e) => {
+							setVetId(e.target.value);
+							clear("vet")();
+						}}
+						className={errors.vet ? "invalid" : ""}
+						aria-invalid={errors.vet ? true : undefined}
+					>
 						<option value="" disabled>
 							Choose a veterinarian
 						</option>
@@ -83,6 +127,10 @@ function BookingScheduleStep({ onDone, onBack }) {
 							</option>
 						))}
 					</select>
+
+					{errors.vet && (
+						<p className="field-error" role="alert">{errors.vet}</p>
+					)}
 				</div>
 
 				<div className="date-time-form">
@@ -93,8 +141,17 @@ function BookingScheduleStep({ onDone, onBack }) {
 							type="date"
 							value={date}
 							min={localYYYYMMDD(new Date())}
-							onChange={(e) => setDate(e.target.value)}
+							onChange={(e) => {
+								setDate(e.target.value);
+								clear("date")();
+							}}
+							className={errors.date ? "invalid" : ""}
+							aria-invalid={errors.date ? true : undefined}
 						/>
+
+						{errors.date && (
+							<p className="field-error" role="alert">{errors.date}</p>
+						)}
 					</div>
 
 					<div className="appointment-field">
@@ -102,8 +159,13 @@ function BookingScheduleStep({ onDone, onBack }) {
 
 						<select
 							value={time}
-							onChange={(e) => setTime(e.target.value)}
+							onChange={(e) => {
+								setTime(e.target.value);
+								clear("time")();
+							}}
 							disabled={!vetId || !date || slotsPending}
+							className={errors.time ? "invalid" : ""}
+							aria-invalid={errors.time ? true : undefined}
 						>
 							<option value="">
 								{!vetId
@@ -123,6 +185,10 @@ function BookingScheduleStep({ onDone, onBack }) {
 								</option>
 							))}
 						</select>
+
+						{errors.time && (
+							<p className="field-error" role="alert">{errors.time}</p>
+						)}
 					</div>
 				</div>
 
@@ -166,11 +232,8 @@ function BookingScheduleStep({ onDone, onBack }) {
 				<button
 					type="button"
 					className="continue-button"
-					disabled={!canContinue}
-					onClick={() =>
-						canContinue &&
-						onDone({ service, vetId, date, time, notes: notes.trim() })
-					}
+					disabled={slotsPending}
+					onClick={continueBooking}
 				>
 					Review booking <FaArrowRight />
 				</button>
