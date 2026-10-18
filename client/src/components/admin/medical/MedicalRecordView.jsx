@@ -1,6 +1,16 @@
 import AdminModal from "../AdminModal";
 
+const RECORD_ROWS = [
+	["FINDINGS", "findings"],
+	["DIAGNOSIS", "diagnosis"],
+	["TREATMENT", "treatment"],
+	["MEDICATIONS", "medications"],
+	["FOLLOW-UP", "followUp"],
+];
+
 function MedicalRecordView({ record, onClose }) {
+	const rec = record.medicalRecord;
+	const hasStructured = Boolean(rec?.findings);
 	return (
 		<AdminModal
 			eyebrow="MEDICAL RECORD"
@@ -30,18 +40,53 @@ function MedicalRecordView({ record, onClose }) {
 					<span>RECORD TYPE</span>
 					<strong>{record.recordType}</strong>
 				</div>
-				<div className="admin-detail-item full">
-					<span>VISIT NOTES</span>
-					<strong
-						style={{
-							whiteSpace: "pre-wrap",
-							fontFamily: "'Baloo Thambi 2', sans-serif",
-							fontSize: 15,
-						}}
-					>
-						{record.notes || "No notes recorded for this visit."}
-					</strong>
-				</div>
+
+				{hasStructured ? (
+					RECORD_ROWS.map(([label, key]) =>
+						rec[key] ? (
+							<div className="admin-detail-item full" key={key}>
+								<span>{label}</span>
+								<strong
+									style={{
+										whiteSpace: "pre-wrap",
+										fontFamily: "'Baloo Thambi 2', sans-serif",
+										fontSize: 15,
+									}}
+								>
+									{rec[key]}
+								</strong>
+							</div>
+						) : null,
+					)
+				) : (
+					<div className="admin-detail-item full">
+						<span>VISIT NOTES</span>
+						<strong
+							style={{
+								whiteSpace: "pre-wrap",
+								fontFamily: "'Baloo Thambi 2', sans-serif",
+								fontSize: 15,
+							}}
+						>
+							{record.notes || "No notes recorded for this visit."}
+						</strong>
+					</div>
+				)}
+
+				{hasStructured && record.notes && (
+					<div className="admin-detail-item full">
+						<span>VISIT SUMMARY (EMAIL)</span>
+						<strong
+							style={{
+								whiteSpace: "pre-wrap",
+								fontFamily: "'Baloo Thambi 2', sans-serif",
+								fontSize: 15,
+							}}
+						>
+							{record.notes}
+						</strong>
+					</div>
+				)}
 			</div>
 		</AdminModal>
 	);

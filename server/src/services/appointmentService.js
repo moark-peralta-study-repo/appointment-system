@@ -110,7 +110,7 @@ export async function bookAppointment(user, { vetId, petId, date: dateParam, tim
 	};
 }
 
-export async function updateStatus(actor, appointmentId, { status, vetNotes }) {
+export async function updateStatus(actor, appointmentId, { status, vetNotes, record }) {
 	if (!mongoose.isValidObjectId(appointmentId)) {
 		throw new ApiError(404, "Appointment not found");
 	}
@@ -136,6 +136,26 @@ export async function updateStatus(actor, appointmentId, { status, vetNotes }) {
 		);
 	}
 
+	// Structured medical record — clinical roles only, written with (or after)
+	// completing the visit. `findings` is the one required field; the rest are
+	// optional. Plain-text vetNotes remain the short summary used in email and
+	// list previews.
+	const canWriteRecord =
+		isClinical(actor.role) && record !== undefined;
+	if (canWriteRecord) {
+		const findings = (record.findings ?? "").trim();
+		if (!findings) {
+			throw new ApiError(400, "Medical record findings are required");
+		}
+		appointment.medicalRecord = {
+			findings,
+			diagnosis: (record.diagnosis ?? "").trim() || undefined,
+			treatment: (record.treatment ?? "").trim() || undefined,
+			medications: (record.medications ?? "").trim() || undefined,
+			followUp: (record.followUp ?? "").trim() || undefined,
+		};
+	}
+
 	appointment.status = status;
 	// vetNotes are clinical — only vets / admin write them, not front desk.
 	if (vetNotes !== undefined && isClinical(actor.role)) {
@@ -154,6 +174,8 @@ export async function cancelAppointment(actor, appointmentId) {
 	const appointment = await Appointment.findById(appointmentId);
 	if (!appointment) throw new ApiError(404, "Appointment not found");
 
+	const previousStatus = appointment.status;
+
 	if (!canActOnAppointment(actor, appointment)) {
 		throw new ApiError(403, "Not your appointment");
 	}
@@ -165,5 +187,5 @@ export async function cancelAppointment(actor, appointmentId) {
 	appointment.status = "cancelled";
 	await appointment.save();
 
-	return { message: "Appointment cancelled", appointment };
+	return { message: "Appointment cancelled", appointment, previousStatus };
 }

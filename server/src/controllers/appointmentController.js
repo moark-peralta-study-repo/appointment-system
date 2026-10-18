@@ -1,5 +1,6 @@
 import * as appointmentService from "../services/appointmentService.js";
 import { logAction, clientIp } from "../services/auditService.js";
+import { notifyClient } from "../services/appointmentEmailService.js";
 
 export async function listAppointments(req, res, next) {
 	try {
@@ -48,6 +49,8 @@ export async function updateStatus(req, res, next) {
 			details: { from: previousStatus, to: appointment.status },
 			ip: clientIp(req),
 		});
+		// Fire-and-forget client email; never blocks the response.
+		void notifyClient(appointment, previousStatus, req.user, req.user.role);
 		res.json(appointment);
 	} catch (err) {
 		next(err);
@@ -68,6 +71,8 @@ export async function cancelAppointment(req, res, next) {
 			details: { by: req.user.role === "vet" ? "vet" : "owner" },
 			ip: clientIp(req),
 		});
+		// notifyClient no-ops on the owner's own cancel (they already know).
+		void notifyClient(result.appointment, result.previousStatus, req.user, req.user.role);
 		res.json(result);
 	} catch (err) {
 		next(err);

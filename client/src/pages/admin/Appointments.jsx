@@ -11,6 +11,7 @@ import { format12h, isToday } from "../../utils/admin";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import NewAppointmentModal from "../../components/admin/booking/NewAppointmentModal";
 import { PiCat, PiDog } from "react-icons/pi";
+import AdminVisitNoteForm from "../../components/admin/medical/VisitNoteForm";
 import { FiSearch } from "react-icons/fi";
 
 function Appointments() {
@@ -27,6 +28,8 @@ function Appointments() {
 	const [dateFilter, setDateFilter] = useState("today");
 	const [search, setSearch] = useState("");
 	const [showNew, setShowNew] = useState(false);
+	// Which visit the "Complete" action should record (null = closed).
+	const [completing, setCompleting] = useState(null);
 
 	const updateStatus = useUpdateAppointmentStatus();
 	const cancel = useCancelAppointment();
@@ -87,6 +90,7 @@ function Appointments() {
 
 	function act(row, action) {
 		if (action === "cancel") cancel.mutate(row._id);
+		else if (action === "completed") setCompleting(row);
 		else updateStatus.mutate({ id: row._id, status: action });
 	}
 
@@ -293,8 +297,16 @@ function Appointments() {
 				</div>
 			</section>
 
-			{showNew && <NewAppointmentModal onClose={() => setShowNew(false)} />}
-		</>
+		{showNew && <NewAppointmentModal onClose={() => setShowNew(false)} />}
+
+		{completing && (
+			<AdminVisitNoteForm
+				appointments={appointments}
+				presetId={completing._id}
+				onClose={() => setCompleting(null)}
+			/>
+		)}
+	</>
 	);
 }
 

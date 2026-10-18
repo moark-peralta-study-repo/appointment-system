@@ -27,6 +27,19 @@ const appointmentSchema = new mongoose.Schema(
 			default: "pending",
 		},
 		vetNotes: { type: String },
+		// Structured medical record written by a clinical role (vet/admin)
+		// when the visit is completed. A completed appointment IS the visit
+		// record — per-pet history = that pet's completed appointments.
+		// `findings` is the one required field; enforced in the service +
+		// validation middleware (Mongoose `required` on a nested path would
+		// fire on every save once the record exists, so we validate there).
+		medicalRecord: {
+			findings: { type: String },
+			diagnosis: { type: String },
+			treatment: { type: String },
+			medications: { type: String },
+			followUp: { type: String },
+		},
 	},
 	{ timestamps: true },
 );
