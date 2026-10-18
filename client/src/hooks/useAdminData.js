@@ -84,27 +84,37 @@ export function useBookAppointment() {
 	});
 }
 
-/** Confirm / complete an appointment (vet). */
+/** Confirm / complete an appointment (vet). `record` is the structured
+ *  medical record, sent with (or after) completion. */
 export function useUpdateAppointmentStatus() {
 	const onSuccess = useInvalidateAdmin();
 	return useMutation({
-		mutationFn: ({ id, status, vetNotes }) =>
+		mutationFn: ({ id, status, vetNotes, record }) =>
 			apiFetch(`/appointments/${id}/status`, {
 				method: "PATCH",
-				body: vetNotes !== undefined ? { status, vetNotes } : { status },
+				body: {
+					status,
+					...(vetNotes !== undefined ? { vetNotes } : {}),
+					...(record !== undefined ? { record } : {}),
+				},
 			}),
 		onSuccess,
 	});
 }
 
-/** Record a visit: patch a completed appointment's vetNotes. */
+/** Record a visit: patch a completed appointment's structured medical
+ *  record (findings required; the rest optional) + the short note. */
 export function useAddVisitNote() {
 	const onSuccess = useInvalidateAdmin();
 	return useMutation({
-		mutationFn: ({ id, vetNotes }) =>
+		mutationFn: ({ id, vetNotes, record }) =>
 			apiFetch(`/appointments/${id}/status`, {
 				method: "PATCH",
-				body: { status: "completed", vetNotes },
+				body: {
+					status: "completed",
+					...(vetNotes !== undefined ? { vetNotes } : {}),
+					...(record !== undefined ? { record } : {}),
+				},
 			}),
 		onSuccess,
 	});

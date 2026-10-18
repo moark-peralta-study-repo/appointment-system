@@ -3,9 +3,17 @@ import AdminModal from "../AdminModal";
 import { useAddVisitNote } from "../../../hooks/useAdminData";
 import { formatDate } from "../../../utils/admin";
 import { FiAlertTriangle } from "react-icons/fi";
-import { useFieldErrors } from "../../../utils/validate";
+import { useFieldErrors, required } from "../../../utils/validate";
 
-function AdminVisitNoteForm({ appointments, onClose }) {
+const RECORD_FIELDS = [
+	{ key: "findings", label: "Findings", required: true, rows: 4, placeholder: "Exam observations: body condition, vitals, abnormalities…" },
+	{ key: "diagnosis", label: "Diagnosis", required: false, rows: 2, placeholder: "Working or confirmed diagnosis" },
+	{ key: "treatment", label: "Treatment", required: false, rows: 2, placeholder: "What was done: procedure, surgery, imaging…" },
+	{ key: "medications", label: "Medications", required: false, rows: 2, placeholder: "Drug, dose, frequency, duration" },
+	{ key: "followUp", label: "Follow-up", required: false, rows: 2, placeholder: "Recheck date or recommended next steps" },
+];
+
+function AdminVisitNoteForm({ appointments, presetId, onClose }) {
 	const addNote = useAddVisitNote();
 
 	// Only confirmed (today) or pending visits can become records.
@@ -13,19 +21,28 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 		.filter((a) => a.status === "confirmed" || a.status === "pending")
 		.sort((x, y) => new Date(y.date) - new Date(x.date));
 
-	const [apptId, setApptId] = useState(eligible[0]?._id ?? "");
+	const [apptId, setApptId] = useState(
+		presetId && eligible.some((a) => a._id === presetId)
+			? presetId
+			: eligible[0]?._id ?? "",
+	);
 	const selected = eligible.find((a) => a._id === apptId);
-	const [notes, setNotes] = useState("");
+	const [record, setRecord] = useState({});
 	const [errors, validate, clear] = useFieldErrors();
 
 	const submit = () => {
-		const found = validate({
+		const rules = {
 			visit: selected ? "" : "Select a visit to record.",
-			notes: notes.trim().length > 0 ? "" : "Write a visit note first.",
-		});
-		if (Object.keys(found).length) return;
+			findings: required(record.findings, "Findings are required"),
+		};
+		if (Object.keys(validate(rules)).length) return;
+		const clean = {};
+		for (const f of RECORD_FIELDS) {
+			const v = (record[f.key] ?? "").trim();
+			if (v) clean[f.key] = v;
+		}
 		addNote.mutate(
-			{ id: selected._id, vetNotes: notes.trim() },
+			{ id: selected._id, record: clean },
 			{ onSuccess: onClose },
 		);
 	};
@@ -64,7 +81,7 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 			{eligible.length === 0 ? (
 				<p className="admin-slot-note">
 					No pending or confirmed visits to record. Mark a visit Complete first
-					— or add a note via the Appointments page.
+					— or add a record via the Appointments page.
 				</p>
 			) : (
 				<div className="admin-form-grid">
@@ -72,7 +89,11 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 						<label>Visit to Record</label>
 						<select
 							value={apptId}
-							onChange={(e) => { setApptId(e.target.value); clear("visit")(); }}
+							onChange={(e) => {
+								setApptId(e.target.value);
+								setRecord({});
+								clear("visit")();
+							}}
 							className={errors.visit ? "invalid" : ""}
 							aria-invalid={errors.visit ? true : undefined}
 						>
@@ -84,32 +105,43 @@ function AdminVisitNoteForm({ appointments, onClose }) {
 							))}
 						</select>
 						{errors.visit && (
-							<p className="field-error" role="alert">{errors.visit}</p>
+							<p className="field-error" role="alert">
+								{errors.visit}
+							</p>
 						)}
 						{selected && (
 							<p className="admin-slot-note">
-								Saving marks this visit as <strong>Completed</strong> and stores
-								the note below.
+								Saving marks this visit as <strong>Completed</strong> and
+								stores the structured record below. The owner is emailed a
+								summary of the visit.
 							</p>
 						)}
 					</div>
 
-					<div className="admin-form-field full">
-						<label>
-							Visit Notes <span>*</span>
-						</label>
-						<textarea
-							rows="5"
-							value={notes}
-							onChange={(e) => { setNotes(e.target.value); clear("notes")(); }}
-							className={errors.notes ? "invalid" : ""}
-							aria-invalid={errors.notes ? true : undefined}
-							placeholder="Findings, prescriptions, follow-up plan…"
-						/>
-						{errors.notes && (
-							<p className="field-error" role="alert">{errors.notes}</p>
-						)}
-					</div>
+					{RECORD_FIELDS.map((f) => (
+						<div className="admin-form-field full" key={f.key}>
+							<label>
+								{f.label}
+								{f.required ? <span> *</span> : null}
+							</label>
+							<textarea
+								rows={f.rows}
+								value={record[f.key] ?? ""}
+								onChange={(e) => {
+									setRecord((r) => ({ ...r, [f.key]: e.target.value }));
+									clear(f.key)();
+								}}
+								className={errors[f.key] ? "invalid" : ""}
+								aria-invalid={errors[f.key] ? true : undefined}
+								placeholder={f.placeholder}
+							/>
+							{errors[f.key] && (
+								<p className="field-error" role="alert">
+									{errors[f.key]}
+								</p>
+							)}
+						</div>
+					))}
 				</div>
 			)}
 		</AdminModal>

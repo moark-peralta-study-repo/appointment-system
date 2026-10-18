@@ -26,6 +26,20 @@ export const updateStatusValidation = [
 		.isString()
 		.isIn(["pending", "confirmed", "completed", "cancelled"])
 		.withMessage("status must be pending, confirmed, completed or cancelled"),
+	// Optional structured medical record (clinical roles). Findings are
+	// mandatory whenever a record is provided; the rest are free-text.
+	// Service layer re-checks + trims (empty string → 400).
+	body("record").optional().isObject().withMessage("record must be an object"),
+	body("record.findings")
+		.if((v, { req }) => req.body.record !== undefined)
+		.isString()
+		.trim()
+		.isLength({ min: 1 })
+		.withMessage("record.findings is required"),
+	body("record.diagnosis").optional().isString().trim(),
+	body("record.treatment").optional().isString().trim(),
+	body("record.medications").optional().isString().trim(),
+	body("record.followUp").optional().isString().trim(),
 ];
 
 export const createVetValidation = [

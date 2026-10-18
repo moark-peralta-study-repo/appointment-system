@@ -194,16 +194,25 @@ async function seed() {
 		{ date: today, time: "11:00", pet: "Max", owner: "Jamie Rivera", vet: "Dr. Claire Morgan", reason: "General Check-up", status: "confirmed" },
 	];
 	// History: completed visits → the Medical Records page + reports data.
+	// Each carries a structured medicalRecord (findings required; the rest
+	// optional) so the per-pet record view has something to show.
 	const history = [
-		{ ...daysAgo(7, "10:00", "completed"), pet: "Mochi", owner: "Maria Lopez", vet: "Dr. Evelyn Dane", reason: "General Check-up", vetNotes: "Healthy. Weight stable. Boosters current." },
-		{ ...daysAgo(5, "14:30", "completed"), pet: "Luna", owner: "James Reyes", vet: "Dr. Alex Mercer", reason: "Vaccination", vetNotes: "Annual rabies + FVRCP administered. Mild soreness possible for a day." },
-		{ ...daysAgo(14, "13:00", "completed"), pet: "Cookie", owner: "Anna Garcia", vet: "Dr. Evelyn Dane", reason: "Dental Cleaning", vetNotes: "Full dental clean, one extraction. On antibiotics 5 days." },
-		{ ...daysAgo(10, "15:00", "completed"), pet: "Bella", owner: "Jamie Rivera", vet: "Dr. Evelyn Dane", reason: "Vaccination", vetNotes: "FVRCP + rabies up to date. Clear eyes and ears." },
+		{ ...daysAgo(7, "10:00", "completed"), pet: "Mochi", owner: "Maria Lopez", vet: "Dr. Evelyn Dane", reason: "General Check-up", vetNotes: "Healthy. Weight stable. Boosters current.", medicalRecord: { findings: "Bright, alert, good body condition (BSIS 4/5). Heart & lungs clear. Weight 12.4 kg, stable vs last visit.", diagnosis: "No acute findings.", treatment: "Routine care. Keep current diet.", medications: "None prescribed.", followUp: "Next annual check-up in 12 months." } },
+		{ ...daysAgo(5, "14:30", "completed"), pet: "Luna", owner: "James Reyes", vet: "Dr. Alex Mercer", reason: "Vaccination", vetNotes: "Annual rabies + FVRCP administered. Mild soreness possible for a day.", medicalRecord: { findings: "Well-appeared cat, normal temp (38.6°C), no signs of vaccine reaction.", diagnosis: "Healthy — preventive visit.", treatment: "Rabies + FVRCP administered SC.", medications: "No analgesic needed; expected mild soreness 24h.", followUp: "Boosters again next year." } },
+		{ ...daysAgo(14, "13:00", "completed"), pet: "Cookie", owner: "Anna Garcia", vet: "Dr. Evelyn Dane", reason: "Dental Cleaning", vetNotes: "Full dental clean, one extraction. On antibiotics 5 days.", medicalRecord: { findings: "Moderate tartar, grade II periodontal disease. One non-vital premolar.", diagnosis: "Periodontal disease, premolar 107 non-vital.", treatment: "Ultrasonic scaling + polish under GA; extraction of 107.", medications: "Amoxicillin 125 mg, 1 tab every 12h, 5 days. Meloxicam 0.2 mg/kg for 3 days.", followUp: "Recheck in 2 weeks to confirm healing." } },
+		{ ...daysAgo(10, "15:00", "completed"), pet: "Bella", owner: "Jamie Rivera", vet: "Dr. Evelyn Dane", reason: "Vaccination", vetNotes: "FVRCP + rabies up to date. Clear eyes and ears.", medicalRecord: { findings: "Normal exam. Weight 5.8 kg, coat good, no parasites found on fecal float.", diagnosis: "Healthy — preventive visit.", treatment: "FVRCP + rabies administered IM.", medications: "None.", followUp: "Annual booster due next year; keep flea prevention year-round." } },
 	];
 
 	for (const a of [...todays, ...history]) {
 		const exists = await Appointment.findOne({ pet: pets[a.pet]._id, date: a.date, time: a.time });
-		if (exists) continue;
+		if (exists) {
+			// Backfill the structured medical record on re-seed (idempotent).
+			if (a.medicalRecord && !exists.medicalRecord?.findings) {
+				exists.medicalRecord = a.medicalRecord;
+				await exists.save();
+			}
+			continue;
+		}
 		await Appointment.create({
 			owner: users[a.owner]._id,
 			pet: pets[a.pet]._id,
@@ -213,6 +222,7 @@ async function seed() {
 			reason: a.reason,
 			status: a.status,
 			vetNotes: a.vetNotes,
+			medicalRecord: a.medicalRecord,
 		});
 		console.log(`Appointment: ${a.pet} @ ${localDateStr(a.date)} ${a.time} (${a.status})`);
 	}
