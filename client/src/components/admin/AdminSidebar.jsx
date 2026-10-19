@@ -135,14 +135,19 @@ function AdminSidebar() {
 							<span>Reports</span>
 						</NavLink>
 
+					</div>
+				)}
+
+				{/* ACTIVITY — all portal roles (vet/staff/admin) */}
+				<div className="admin-nav-group">
+					<p className="admin-nav-title">ACTIVITY</p>
 						<NavLink to="/admin/activity" className="admin-nav-link">
 							<span className="admin-nav-icon">
 								<FaStream />
 							</span>
 							<span>Activity</span>
 						</NavLink>
-					</div>
-				)}
+				</div>
 			</nav>
 
 			{/* BOTTOM */}
