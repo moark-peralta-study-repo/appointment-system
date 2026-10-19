@@ -177,6 +177,8 @@ function Patients() {
 							<option value="all">All Species</option>
 							<option value="dog">Dogs</option>
 							<option value="cat">Cats</option>
+							<option value="bird">Birds</option>
+							<option value="other">Other</option>
 						</select>
 
 						<select

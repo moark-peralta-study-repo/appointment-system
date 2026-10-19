@@ -53,6 +53,7 @@ function BookingScheduleStep({ onDone, onBack }) {
 	// Continue always runs validation so missing fields show an inline
 	// message instead of the button just sitting greyed out.
 	function continueBooking() {
+		console.log("Review booking clicked");
 		const found = validate({
 			service: required(service, "Service"),
 			vet: required(vetId, "Veterinarian"),
@@ -62,10 +63,13 @@ function BookingScheduleStep({ onDone, onBack }) {
 			),
 			// Only enforce once a date is chosen (otherwise "pick a
 			// date" and "pick a time" show together, which is noisy).
-			time: date ? firstError(required(time, "Time"), required(vetId, "Veterinarian")) : "",
+			time: date
+				? firstError(required(time, "Time"), required(vetId, "Veterinarian"))
+				: "",
 		});
 		if (Object.keys(found).length) return;
-		if (canContinue) onDone({ service, vetId, date, time, notes: notes.trim() });
+		if (canContinue)
+			onDone({ service, vetId, date, time, notes: notes.trim() });
 	}
 
 	return (
@@ -79,29 +83,31 @@ function BookingScheduleStep({ onDone, onBack }) {
 				</p>
 
 				<div className="appointment-field">
-				<label>Service *</label>
+					<label>Service *</label>
 
-				<select
-					value={service}
-					onChange={(e) => {
-						setService(e.target.value);
-						clear("service")();
-					}}
-					className={errors.service ? "invalid" : ""}
-					aria-invalid={errors.service ? true : undefined}
-				>
-					<option value="">Select a service</option>
+					<select
+						value={service}
+						onChange={(e) => {
+							setService(e.target.value);
+							clear("service")();
+						}}
+						className={errors.service ? "invalid" : ""}
+						aria-invalid={errors.service ? true : undefined}
+					>
+						<option value="">Select a service</option>
 
-					{SERVICES.map((s) => (
-						<option key={s.id} value={s.label}>
-							{s.label} — {s.price}
-						</option>
-					))}
-				</select>
+						{SERVICES.map((s) => (
+							<option key={s.id} value={s.label}>
+								{s.label} — {s.price}
+							</option>
+						))}
+					</select>
 
-				{errors.service && (
-					<p className="field-error" role="alert">{errors.service}</p>
-				)}
+					{errors.service && (
+						<p className="field-error" role="alert">
+							{errors.service}
+						</p>
+					)}
 				</div>
 
 				<div className="appointment-field">
@@ -129,7 +135,9 @@ function BookingScheduleStep({ onDone, onBack }) {
 					</select>
 
 					{errors.vet && (
-						<p className="field-error" role="alert">{errors.vet}</p>
+						<p className="field-error" role="alert">
+							{errors.vet}
+						</p>
 					)}
 				</div>
 
@@ -150,7 +158,9 @@ function BookingScheduleStep({ onDone, onBack }) {
 						/>
 
 						{errors.date && (
-							<p className="field-error" role="alert">{errors.date}</p>
+							<p className="field-error" role="alert">
+								{errors.date}
+							</p>
 						)}
 					</div>
 
@@ -187,7 +197,9 @@ function BookingScheduleStep({ onDone, onBack }) {
 						</select>
 
 						{errors.time && (
-							<p className="field-error" role="alert">{errors.time}</p>
+							<p className="field-error" role="alert">
+								{errors.time}
+							</p>
 						)}
 					</div>
 				</div>
@@ -232,7 +244,6 @@ function BookingScheduleStep({ onDone, onBack }) {
 				<button
 					type="button"
 					className="continue-button"
-					disabled={slotsPending}
 					onClick={continueBooking}
 				>
 					Review booking <FaArrowRight />
