@@ -18,6 +18,7 @@ import {
 	emailOnlyValidation,
 	resetPasswordValidation,
 	profileValidation,
+	changePasswordValidation,
 	handleValidation,
 } from "../middleware/validation/userValidation.js";
 
@@ -48,6 +49,6 @@ router.post(
 );
 router.get("/profile", protectAuth, getUserProfile);
 router.patch("/profile", protectAuth, profileValidation, handleValidation, updateMyProfile);
-router.post("/password", protectAuth, changePasswordHandler);
+router.post("/password", protectAuth, changePasswordValidation, handleValidation, changePasswordHandler);
 
 export default router;

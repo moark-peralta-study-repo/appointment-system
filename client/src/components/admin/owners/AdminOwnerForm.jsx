@@ -2,7 +2,7 @@ import { useState } from "react";
 import AdminModal from "../AdminModal";
 import { useCreateOwner } from "../../../hooks/useAdminData";
 import { FiAlertTriangle } from "react-icons/fi";
-import { required, emailValue, phoneValue, minLength, firstError, useFieldErrors } from "../../../utils/validate";
+import { required, emailValue, phoneValue, newPasswordValue, firstError, useFieldErrors } from "../../../utils/validate";
 
 function AdminOwnerForm({ onClose }) {
 	const register = useCreateOwner();
@@ -24,7 +24,7 @@ function AdminOwnerForm({ onClose }) {
 			name: required(form.name, "Full name"),
 			email: firstError(required(form.email, "Email"), emailValue(form.email)),
 			phone: phoneValue(form.phone),
-			password: firstError(required(form.password, "Password"), minLength(form.password, 6, "Password")),
+			password: firstError(required(form.password, "Password"), newPasswordValue(form.password)),
 		});
 		if (Object.keys(found).length) return;
 		register.mutate(

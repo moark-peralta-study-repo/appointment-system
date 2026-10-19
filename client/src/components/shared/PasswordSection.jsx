@@ -3,14 +3,17 @@ import { useChangePassword } from "../../hooks/useClientData";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
 import {
 	required,
-	minLength,
+	newPasswordValue,
 	passwordsMatch,
 	firstError,
 	collectErrors,
 } from "../../utils/validate";
+import PasswordStrength from "./PasswordStrength";
+import { useAuth } from "../../context/useAuth";
 
 function PasswordSection() {
 	const changePassword = useChangePassword();
+	const { user } = useAuth();
 	const [form, setForm] = useState({ current: "", next: "", confirm: "" });
 	const set = (k) => (e) => {
 		setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -25,11 +28,11 @@ function PasswordSection() {
 			current: required(form.current, "Current password"),
 			next: firstError(
 				required(form.next, "New password"),
-				minLength(form.next, 6, "New password")
+				newPasswordValue(form.next, { email: user?.email, name: user?.name }),
 			),
 			confirm: firstError(
 				required(form.confirm, "Confirmation"),
-				passwordsMatch(form.next, form.confirm)
+				passwordsMatch(form.next, form.confirm),
 			),
 		});
 		setErrors(found);
@@ -53,8 +56,8 @@ function PasswordSection() {
 				<div>
 					<h2>Password</h2>
 					<p>
-						Use at least 6 characters. Your session stays signed in after the
-						change.
+						Use at least 8 characters — longer is stronger. Avoid common
+						passwords and your name or email.
 					</p>
 				</div>
 				{done ? (
@@ -92,9 +95,10 @@ function PasswordSection() {
 						className={errors.next ? "invalid" : ""}
 						aria-invalid={errors.next ? true : undefined}
 						aria-describedby={errors.next ? "pwd-next-err" : undefined}
-						minLength={6}
+						minLength={8}
 						required
 					/>
+					<PasswordStrength password={form.next} error={errors.next} />
 					{errors.next && (
 						<p id="pwd-next-err" className="field-error" role="alert">{errors.next}</p>
 					)}

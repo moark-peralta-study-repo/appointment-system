@@ -48,3 +48,28 @@ img {
 }
 
 
+
+/* PASSWORD STRENGTH METER (new-password inputs) */
+.password-strength {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 8px;
+}
+.password-strength-bars {
+	display: flex;
+	gap: 4px;
+	flex: 1;
+	max-width: 180px;
+}
+.password-strength-seg {
+	height: 4px;
+	flex: 1;
+	border-radius: 2px;
+	transition: background 0.2s ease;
+}
+.password-strength-label {
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.03em;
+}

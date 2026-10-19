@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import logo from "../assets/logo/pink-paws-full.png";
 import { useResetPassword } from "../hooks/useClientData";
 import { useAuth } from "../context/useAuth";
-import { required, minLength, passwordsMatch, firstError, collectErrors } from "../utils/validate";
+import { required, newPasswordValue, passwordsMatch, firstError, collectErrors } from "../utils/validate";
 
 // /reset-password?token=... — the landing page of the email link. The token
 // is a signed JWT (1h, purpose "password-reset"). Setting a new password
@@ -63,7 +63,7 @@ function ResetPassword() {
 		const found = collectErrors({
 			password: firstError(
 				required(password, "Password"),
-				minLength(password, 6, "Password")
+				newPasswordValue(password, { email: form.email })
 			),
 			confirm: firstError(
 				required(confirm, "Confirmation"),
@@ -104,7 +104,7 @@ function ResetPassword() {
 								? "This reset link is incomplete — request a new one."
 								: expired
 									? "This link has expired — request a fresh one."
-									: "Enter a new password. It must be at least 6 characters."}
+									: "Enter a new password. It must be at least 8 characters."}
 					</span>
 				</div>
 
@@ -138,7 +138,7 @@ function ResetPassword() {
 									<input
 										id="reset-password"
 										type="password"
-										placeholder="At least 6 characters"
+										placeholder="At least 8 characters"
 										value={password}
 										onChange={(e) => {
 											setPassword(e.target.value);

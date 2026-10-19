@@ -3,7 +3,7 @@ import { FiSearch, FiAlertTriangle } from "react-icons/fi";
 import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import AdminModal from "../../components/admin/AdminModal";
 import { useStaff, useCreateStaff, useRemoveStaff, useUpdateStaff } from "../../hooks/useAdminData";
-import { required, emailValue, minLength, firstError, useFieldErrors } from "../../utils/validate";
+import { required, emailValue, newPasswordValue, firstError, useFieldErrors } from "../../utils/validate";
 import { initials } from "../../utils/admin";
 
 // Add / edit form for a non-vet staff account (reception / front desk).
@@ -31,7 +31,7 @@ function StaffForm({ member, onClose }) {
 				? {}
 				: {
 						email: firstError(required(form.email, "Email"), emailValue(form.email)),
-						password: firstError(required(form.password, "Password"), minLength(form.password, 6, "Password")),
+						password: firstError(required(form.password, "Password"), newPasswordValue(form.password)),
 				  }),
 		});
 		if (Object.keys(found).length) return;
@@ -132,7 +132,7 @@ function StaffForm({ member, onClose }) {
 						onChange={set("password")}
 						className={errors.password ? "invalid" : ""}
 						aria-invalid={errors.password ? true : undefined}
-						placeholder={editing ? "Leave blank to keep current" : "At least 6 characters"}
+						placeholder={editing ? "Leave blank to keep current" : "At least 8 characters"}
 					/>
 					{errors.password && (
 						<p className="field-error" role="alert">{errors.password}</p>

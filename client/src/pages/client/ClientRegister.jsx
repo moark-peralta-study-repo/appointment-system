@@ -3,10 +3,11 @@ import { useNavigate, Navigate } from "react-router-dom";
 import logo from "../../assets/logo/pink-paws-full.png";
 import { useAuth } from "../../context/useAuth";
 import { useRegister } from "../../hooks/useClientData";
+import PasswordStrength from "../../components/shared/PasswordStrength";
 import {
 	required,
 	emailValue,
-	minLength,
+	newPasswordValue,
 	passwordsMatch,
 	phoneValue,
 	firstError,
@@ -45,7 +46,7 @@ function ClientRegister() {
 			phone: phoneValue(form.phone),
 			password: firstError(
 				required(form.password, "Password"),
-				minLength(form.password, 6, "Password")
+				newPasswordValue(form.password, { email: form.email, name: form.name })
 			),
 			confirm: firstError(
 				required(form.confirm, "Confirmation"),
@@ -175,7 +176,7 @@ function ClientRegister() {
 						<input
 							id="reg-password"
 							type="password"
-							placeholder="At least 6 characters"
+							placeholder="At least 8 characters"
 							value={form.password}
 							onChange={set("password")}
 							autoComplete="new-password"
@@ -183,8 +184,10 @@ function ClientRegister() {
 							aria-invalid={errors.password ? true : undefined}
 							aria-describedby={errors.password ? "reg-password-err" : undefined}
 							required
-							minLength={6}
+							minLength={8}
 						/>
+
+						<PasswordStrength password={form.password} error={errors.password} />
 
 						{errors.password && (
 							<p id="reg-password-err" className="field-error" role="alert">{errors.password}</p>

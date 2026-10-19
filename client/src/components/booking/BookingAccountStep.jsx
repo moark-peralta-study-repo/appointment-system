@@ -8,6 +8,7 @@ import {
 	required,
 	emailValue,
 	phoneValue,
+	newPasswordValue,
 	firstError,
 	collectErrors,
 } from "../../utils/validate";
@@ -103,7 +104,7 @@ function BookingAccountStep({ onDone }) {
 							phone: phoneValue(form.phone),
 							password: firstError(
 								required(form.password, "Password"),
-								form.password.length < 6 ? "Password must be at least 6 characters." : ""
+								newPasswordValue(form.password, { email: form.email, name: form.name })
 							),
 				  }
 		);
@@ -296,7 +297,7 @@ function BookingAccountStep({ onDone }) {
 							value={form.password}
 							onChange={set("password")}
 							placeholder={
-								mode === "register" ? "At least 6 characters" : "Your password"
+								mode === "register" ? "At least 8 characters" : "Your password"
 							}
 							autoComplete={
 								mode === "register" ? "new-password" : "current-password"

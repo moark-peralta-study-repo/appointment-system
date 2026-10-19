@@ -3,7 +3,7 @@ import AdminModal from "../AdminModal";
 import ScheduleEditor, { defaultSchedule } from "../ScheduleEditor";
 import { useCreateVet } from "../../../hooks/useAdminData";
 import { FiAlertTriangle } from "react-icons/fi";
-import { required, emailValue, minLength, firstError, useFieldErrors } from "../../../utils/validate";
+import { required, emailValue, newPasswordValue, firstError, useFieldErrors } from "../../../utils/validate";
 
 function AdminVetForm({ onClose }) {
 	const createVet = useCreateVet();
@@ -26,7 +26,7 @@ function AdminVetForm({ onClose }) {
 		const found = validate({
 			name: required(form.name, "Full name"),
 			email: firstError(required(form.email, "Email"), emailValue(form.email)),
-			password: firstError(required(form.password, "Password"), minLength(form.password, 6, "Password")),
+			password: firstError(required(form.password, "Password"), newPasswordValue(form.password)),
 		});
 		if (Object.keys(found).length) return;
 		// Only send days marked open.
