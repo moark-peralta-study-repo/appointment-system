@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch, getToken, setToken, clearToken } from "../lib/api";
 import { AuthContext } from "./useAuth";
@@ -33,14 +33,10 @@ export function AuthProvider({ children }) {
 		},
 	});
 
-	const logout = () => {
+	const logout = useCallback(() => {
 		clearToken();
-		// v5: setQueryData(key, undefined) is a NO-OP (an updater that returns
-		// undefined leaves the data unchanged), so the old user stayed cached and
-		// the route guard kept us signed in. Set null explicitly so `data`
-		// becomes null → user null → the guard bounces to the login page.
 		queryClient.setQueryData(["profile"], null);
-	};
+	}, [queryClient]);
 
 	const user = data?.user ?? null;
 	// Wait only while a request is actually in flight. A disabled query

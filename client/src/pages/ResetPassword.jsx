@@ -3,7 +3,13 @@ import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import logo from "../assets/logo/pink-paws-full.png";
 import { useResetPassword } from "../hooks/useClientData";
 import { useAuth } from "../context/useAuth";
-import { required, newPasswordValue, passwordsMatch, firstError, collectErrors } from "../utils/validate";
+import {
+	required,
+	newPasswordValue,
+	passwordsMatch,
+	firstError,
+	collectErrors,
+} from "../utils/validate";
 
 // /reset-password?token=... — the landing page of the email link. The token
 // is a signed JWT (1h, purpose "password-reset"). Setting a new password
@@ -63,11 +69,11 @@ function ResetPassword() {
 		const found = collectErrors({
 			password: firstError(
 				required(password, "Password"),
-				newPasswordValue(password, { email: form.email })
+				newPasswordValue(password),
 			),
 			confirm: firstError(
 				required(confirm, "Confirmation"),
-				passwordsMatch(password, confirm)
+				passwordsMatch(password, confirm),
 			),
 		});
 		setErrors(found);
@@ -131,7 +137,6 @@ function ResetPassword() {
 							</button>
 						) : (
 							<>
-
 								<div className="admin-login-field">
 									<label htmlFor="reset-password">New Password</label>
 
@@ -142,19 +147,32 @@ function ResetPassword() {
 										value={password}
 										onChange={(e) => {
 											setPassword(e.target.value);
-											if (errors.password) setErrors((prev) => { const next = { ...prev }; delete next.password; return next; });
+											if (errors.password)
+												setErrors((prev) => {
+													const next = { ...prev };
+													delete next.password;
+													return next;
+												});
 										}}
 										autoComplete="new-password"
 										className={errors.password ? "invalid" : ""}
 										aria-invalid={errors.password ? true : undefined}
-										aria-describedby={errors.password ? "reset-password-err" : undefined}
+										aria-describedby={
+											errors.password ? "reset-password-err" : undefined
+										}
 										required
 										minLength={6}
 										autoFocus
 									/>
 
 									{errors.password && (
-										<p id="reset-password-err" className="field-error" role="alert">{errors.password}</p>
+										<p
+											id="reset-password-err"
+											className="field-error"
+											role="alert"
+										>
+											{errors.password}
+										</p>
 									)}
 								</div>
 
@@ -168,18 +186,31 @@ function ResetPassword() {
 										value={confirm}
 										onChange={(e) => {
 											setConfirm(e.target.value);
-											if (errors.confirm) setErrors((prev) => { const next = { ...prev }; delete next.confirm; return next; });
+											if (errors.confirm)
+												setErrors((prev) => {
+													const next = { ...prev };
+													delete next.confirm;
+													return next;
+												});
 										}}
 										autoComplete="new-password"
 										className={errors.confirm ? "invalid" : ""}
 										aria-invalid={errors.confirm ? true : undefined}
-										aria-describedby={errors.confirm ? "reset-confirm-err" : undefined}
+										aria-describedby={
+											errors.confirm ? "reset-confirm-err" : undefined
+										}
 										required
 										minLength={6}
 									/>
 
 									{errors.confirm && (
-										<p id="reset-confirm-err" className="field-error" role="alert">{errors.confirm}</p>
+										<p
+											id="reset-confirm-err"
+											className="field-error"
+											role="alert"
+										>
+											{errors.confirm}
+										</p>
 									)}
 								</div>
 
