@@ -3,6 +3,8 @@ import AdminPageHeader from "../../components/admin/AdminPageHeader";
 import { useAppointments, usePets, useUsers } from "../../hooks/useAdminData";
 import { formatDate } from "../../utils/admin";
 import AdminVisitNoteForm from "../../components/admin/medical/VisitNoteForm";
+import { useAuth } from "../../context/useAuth";
+import { isClinical } from "../../utils/roles";
 import MedicalRecordView from "../../components/admin/medical/MedicalRecordView";
 import { SpeciesIcon } from "../../components/shared/Species";
 import { FaClipboardList } from "react-icons/fa";
@@ -13,6 +15,7 @@ import { FiCheck, FiSearch } from "react-icons/fi";
 // medicalRecord). This page groups records by PET: pick a patient on the
 // left, read their full clinical history on the right.
 function MedicalRecords() {
+	const { user } = useAuth();
 	const { data: appointments = [], isPending } = useAppointments();
 	const { data: pets = [] } = usePets();
 	const { data: users = [] } = useUsers();
@@ -84,13 +87,15 @@ function MedicalRecords() {
 				title="Medical Records"
 				description="Per-patient clinical history — select a patient to view their visits."
 				actions={
-					<button
-						className="admin-primary-button"
-						type="button"
-						onClick={() => setShowNew(true)}
-					>
-						+ New Medical Record
-					</button>
+					isClinical ? (
+						<button
+							className="admin-primary-button"
+							type="button"
+							onClick={() => setShowNew(true)}
+						>
+							+ New Medical Record
+						</button>
+					) : null
 				}
 			/>
 

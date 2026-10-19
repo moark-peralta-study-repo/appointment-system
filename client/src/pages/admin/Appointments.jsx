@@ -23,6 +23,9 @@ function Appointments() {
 	// Vets default to "My appointments" and can only act on the rows they're
 	// assigned to; staff/admin see & manage the whole clinic book.
 	const isVet = user?.role === "vet";
+	// Only clinical roles (vet/admin) write the medical record —
+	// staff complete visits without the record form.
+	const isClinical = user?.role === "vet" || user?.role === "admin";
 	const [scope, setScope] = useState(isVet ? "mine" : "all");
 	const [statusFilter, setStatusFilter] = useState("all");
 	const [dateFilter, setDateFilter] = useState("today");
@@ -90,7 +93,8 @@ function Appointments() {
 
 	function act(row, action) {
 		if (action === "cancel") cancel.mutate(row._id);
-		else if (action === "completed") setCompleting(row);
+		else if (action === "completed" && isClinical) setCompleting(row);
+		// Staff: complete without the record form (records are clinical).
 		else updateStatus.mutate({ id: row._id, status: action });
 	}
 
