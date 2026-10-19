@@ -135,14 +135,12 @@ function AdminSidebar() {
 							<span>Reports</span>
 						</NavLink>
 
-						{manager && (
-							<NavLink to="/admin/activity" className="admin-nav-link">
-								<span className="admin-nav-icon">
-									<FaStream />
-								</span>
-								<span>Activity</span>
-							</NavLink>
-						)}
+						<NavLink to="/admin/activity" className="admin-nav-link">
+							<span className="admin-nav-icon">
+								<FaStream />
+							</span>
+							<span>Activity</span>
+						</NavLink>
 					</div>
 				)}
 			</nav>
