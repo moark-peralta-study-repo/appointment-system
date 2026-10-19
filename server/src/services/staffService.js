@@ -8,6 +8,7 @@ import User from "../models/User.js";
 import Pet from "../models/Pet.js";
 import Appointment from "../models/Appointment.js";
 import ApiError from "../utils/ApiError.js";
+import { passwordProblem, passwordMessage } from "../utils/passwordPolicy.js";
 import mongoose from "mongoose";
 
 export async function listStaff() {
@@ -41,7 +42,11 @@ export async function updateStaff(actor, staffId, { name, phone, password }) {
 	if (name !== undefined && name.trim()) user.name = name.trim();
 	if (phone !== undefined) user.phone = phone.trim() || undefined;
 	if (password !== undefined && password !== "") {
-		if (password.length < 6) throw new ApiError(400, "Password must be at least 6 chars");
+		const problem = passwordProblem(password, {
+			email: user.email,
+			name: user.name,
+		});
+		if (problem) throw new ApiError(400, passwordMessage(problem));
 		user.password = password; // pre-save hook hashes it
 	}
 
