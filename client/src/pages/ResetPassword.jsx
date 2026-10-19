@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import logo from "../assets/logo/pink-paws-full.png";
 import { useResetPassword } from "../hooks/useClientData";
 import { useAuth } from "../context/useAuth";
+import PasswordStrength from "../components/shared/PasswordStrength";
 import {
 	required,
 	newPasswordValue,
@@ -63,6 +64,31 @@ function ResetPassword() {
 	useEffect(() => {
 		if (reset.isSuccess) logout();
 	}, [reset.isSuccess, logout]);
+
+	// Same rules as submit, applied when a field is left — a blank or
+	// too-weak password says so immediately instead of waiting for submit.
+	const checkPassword = () => {
+		const msg = firstError(required(password, "Password"), newPasswordValue(password));
+		setErrors((prev) => {
+			const next = { ...prev };
+			if (msg) next.password = msg;
+			else delete next.password;
+			return next;
+		});
+	};
+
+	const checkConfirm = () => {
+		const msg = firstError(
+			required(confirm, "Confirmation"),
+			passwordsMatch(password, confirm),
+		);
+		setErrors((prev) => {
+			const next = { ...prev };
+			if (msg) next.confirm = msg;
+			else delete next.confirm;
+			return next;
+		});
+	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -154,6 +180,7 @@ function ResetPassword() {
 													return next;
 												});
 										}}
+										onBlur={checkPassword}
 										autoComplete="new-password"
 										className={errors.password ? "invalid" : ""}
 										aria-invalid={errors.password ? true : undefined}
@@ -161,9 +188,11 @@ function ResetPassword() {
 											errors.password ? "reset-password-err" : undefined
 										}
 										required
-										minLength={6}
+										minLength={8}
 										autoFocus
 									/>
+
+									<PasswordStrength password={password} error={errors.password} />
 
 									{errors.password && (
 										<p
@@ -193,6 +222,7 @@ function ResetPassword() {
 													return next;
 												});
 										}}
+										onBlur={checkConfirm}
 										autoComplete="new-password"
 										className={errors.confirm ? "invalid" : ""}
 										aria-invalid={errors.confirm ? true : undefined}
@@ -200,7 +230,7 @@ function ResetPassword() {
 											errors.confirm ? "reset-confirm-err" : undefined
 										}
 										required
-										minLength={6}
+										minLength={8}
 									/>
 
 									{errors.confirm && (
