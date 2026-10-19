@@ -23,7 +23,7 @@ function AdminOwnerForm({ onClose }) {
 		const found = validate({
 			name: required(form.name, "Full name"),
 			email: firstError(required(form.email, "Email"), emailValue(form.email)),
-			phone: phoneValue(form.phone),
+			phone: firstError(required(form.phone, "Phone"), phoneValue(form.phone)),
 			password: firstError(required(form.password, "Password"), newPasswordValue(form.password)),
 		});
 		if (Object.keys(found).length) return;
@@ -32,7 +32,7 @@ function AdminOwnerForm({ onClose }) {
 				name: form.name.trim(),
 				email: form.email.trim(),
 				password: form.password,
-				phone: form.phone.trim() || undefined,
+				phone: form.phone.trim(),
 			},
 			{ onSuccess: onClose },
 		);
@@ -105,7 +105,7 @@ function AdminOwnerForm({ onClose }) {
 				</div>
 
 				<div className="admin-form-field">
-					<label>Phone</label>
+					<label>Phone *</label>
 					<input
 						type="text"
 						value={form.phone}

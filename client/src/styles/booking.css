@@ -967,3 +967,11 @@
   }
 }
 
+
+/* Step-level inline error (e.g. "select a pet") shown above the actions */
+.booking-pick-error {
+	margin: 0 0 14px;
+	padding: 10px 14px;
+	border-radius: 8px;
+	background: var(--danger-soft, #fdecec);
+}

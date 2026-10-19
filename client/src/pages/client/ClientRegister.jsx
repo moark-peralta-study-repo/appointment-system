@@ -43,7 +43,7 @@ function ClientRegister() {
 		collectErrors({
 			name: required(form.name, "Name"),
 			email: firstError(required(form.email, "Email"), emailValue(form.email)),
-			phone: phoneValue(form.phone),
+			phone: firstError(required(form.phone, "Phone"), phoneValue(form.phone)),
 			password: firstError(
 				required(form.password, "Password"),
 				newPasswordValue(form.password, { email: form.email, name: form.name })
@@ -66,7 +66,7 @@ function ClientRegister() {
 			{
 				name: form.name.trim(),
 				email,
-				phone: form.phone.trim() || undefined,
+				phone: form.phone.trim(),
 				password: form.password,
 			},
 			{
@@ -151,18 +151,19 @@ function ClientRegister() {
 					</div>
 
 					<div className="admin-login-field">
-						<label htmlFor="reg-phone">Phone</label>
+						<label htmlFor="reg-phone">Phone *</label>
 
 						<input
 							id="reg-phone"
 							type="tel"
-							placeholder="+63 917 000 0000"
+							placeholder="0917 123 4567"
 							value={form.phone}
 							onChange={set("phone")}
 							autoComplete="tel"
 							className={errors.phone ? "invalid" : ""}
 							aria-invalid={errors.phone ? true : undefined}
 							aria-describedby={errors.phone ? "reg-phone-err" : undefined}
+							required
 						/>
 
 						{errors.phone && (

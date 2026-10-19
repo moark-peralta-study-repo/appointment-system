@@ -44,7 +44,22 @@ function BookingPetStep({ onDone, onBack }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [pets]);
 
-	const canContinue = Boolean(selected);
+	const [pickError, setPickError] = useState("");
+
+	// Always clickable: an empty click explains what's missing instead of
+	// leaving the user with a dead greyed-out button.
+	function continueStep() {
+		if (!selected) {
+			setPickError(
+				pets.length === 0
+					? "Add your pet below to continue."
+					: "Select which pet this appointment is for.",
+			);
+			return;
+		}
+		setPickError("");
+		onDone(selected);
+	}
 
 	function submitNewPet(e) {
 		e.preventDefault();
@@ -92,7 +107,10 @@ function BookingPetStep({ onDone, onBack }) {
 								key={p._id}
 								type="button"
 								className={`booking-pet-option ${selected?._id === p._id ? "selected" : ""}`}
-								onClick={() => setSelected(p)}
+								onClick={() => {
+									setSelected(p);
+									setPickError("");
+								}}
 							>
 								<span className="booking-pet-avatar">{iconFor(p.species)}</span>
 
@@ -139,7 +157,7 @@ function BookingPetStep({ onDone, onBack }) {
 
 				{/* INLINE ADD-PET FORM */}
 				{(adding || pets.length === 0) && (
-					<form className="booking-add-pet" onSubmit={submitNewPet}>
+					<form className="booking-add-pet" onSubmit={submitNewPet} noValidate>
 						<h3>Add a pet</h3>
 
 						<div className="date-time-form">
@@ -223,6 +241,12 @@ function BookingPetStep({ onDone, onBack }) {
 				)}
 			</section>
 
+			{pickError && (
+				<p className="field-error booking-pick-error" role="alert">
+					{pickError}
+				</p>
+			)}
+
 			<div className="appointment-actions">
 				<button type="button" className="cancel-button" onClick={onBack}>
 					<FiArrowLeft size={14} /> Back
@@ -231,8 +255,8 @@ function BookingPetStep({ onDone, onBack }) {
 				<button
 					type="button"
 					className="continue-button"
-					disabled={!canContinue}
-					onClick={() => canContinue && onDone(selected)}
+					disabled={createPet.isPending}
+					onClick={continueStep}
 				>
 					Continue <FaArrowRight />
 				</button>

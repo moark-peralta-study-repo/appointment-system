@@ -4,18 +4,32 @@ import { body, validationResult } from "express-validator";
 //   0917 123 4567          (local)
 //   +63 917 123 4567       (international; the 0 becomes nothing)
 //   639171234567           (international, no plus)
-// Blank (or absent) is allowed — it means "no phone" / "clear it".
+// Shared shape check; the register/profile rules below decide whether the
+// value is mandatory or optional.
+const isPhMobile = (raw) => {
+	const trimmed = String(raw ?? "").trim();
+	if (trimmed === "") return false;
+	let s = trimmed;
+	if (s[0] === "+") s = s.slice(1); // only symbol allowed, only up front
+	const digits = s.replace(/[\s\-().]/g, "");
+	return /^(09|639)\d{9}$/.test(digits);
+};
+
+const PH_PHONE_MSG =
+	"phone must be an 11-digit PH mobile number (e.g. 0917 123 4567)";
+
+// Registration: the account NEEDS a contact number — required.
+const phPhoneRequired = body("phone")
+	.exists({ values: "null" })
+	.withMessage("phone is required")
+	.custom((v) => isPhMobile(v))
+	.withMessage(PH_PHONE_MSG);
+
+// Profile edits: blank is allowed (clears the number).
 const phPhone = body("phone")
 	.optional({ values: "undefined" })
-	.custom((v) => {
-		const trimmed = String(v).trim();
-		if (trimmed === "") return true; // blank → nothing to validate
-		let s = trimmed;
-		if (s[0] === "+") s = s.slice(1); // only symbol allowed, only up front
-		const digits = s.replace(/[\s\-().]/g, "");
-		return /^(09|639)\d{9}$/.test(digits);
-	})
-	.withMessage("phone must be an 11-digit PH mobile number (e.g. 0917 123 4567)");
+	.custom((v) => String(v).trim() === "" || isPhMobile(v))
+	.withMessage(PH_PHONE_MSG);
 
 // Modern password handling (NIST 800-63B style): length is the main
 // factor; block short, over-long, and the most common/leaked passwords.
@@ -69,7 +83,7 @@ export const registerValidation = [
 		.withMessage("email must be valid"),
 	passwordRule,
 	passwordNotPersonal,
-	phPhone,
+	phPhoneRequired,
 ];
 
 export const profileValidation = [

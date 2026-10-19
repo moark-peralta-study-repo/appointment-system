@@ -8,6 +8,7 @@ import {
 	required,
 	emailValue,
 	phoneValue,
+	otpValue,
 	newPasswordValue,
 	firstError,
 	collectErrors,
@@ -42,6 +43,41 @@ function BookingAccountStep({ onDone }) {
 	const set = (k) => (e) => {
 		setForm((f) => ({ ...f, [k]: e.target.value }));
 		if (errors[k]) setErrors((prev) => { const next = { ...prev }; delete next[k]; return next; });
+	};
+
+	// Rules per field, so the same checks drive BOTH the blur (as-you-leave)
+	// and submit passes — no field can be "required" but silent.
+	const rulesFor = (mode) =>
+		mode === "otp"
+			? {
+					otp: firstError(required(otp, "Verification code"), otpValue(otp)),
+			  }
+			: mode === "login"
+			? {
+					email: firstError(required(form.email, "Email"), emailValue(form.email)),
+					password: required(form.password, "Password"),
+			  }
+			: {
+					name: required(form.name, "Name"),
+					email: firstError(required(form.email, "Email"), emailValue(form.email)),
+					phone: firstError(required(form.phone, "Phone"), phoneValue(form.phone)),
+					password: firstError(
+						required(form.password, "Password"),
+						newPasswordValue(form.password, { email: form.email, name: form.name }),
+					),
+			  };
+
+	// Leaving a field shows its problem immediately, instead of waiting for
+	// a submit the user may never connect to the field.
+	const blur = (k) => () => {
+		const msg = rulesFor(mode)[k];
+		if (msg === undefined) return;
+		setErrors((prev) => {
+			const next = { ...prev };
+			if (msg) next[k] = msg;
+			else delete next[k];
+			return next;
+		});
 	};
 
 	// Already a signed-in owner → no forms needed. (Portal staff —
@@ -92,22 +128,7 @@ function BookingAccountStep({ onDone }) {
 
 	function submit(e) {
 		e.preventDefault();
-		const found = collectErrors(
-			mode === "login"
-				? {
-							email: firstError(required(form.email, "Email"), emailValue(form.email)),
-							password: required(form.password, "Password"),
-				  }
-				: {
-							name: required(form.name, "Name"),
-							email: firstError(required(form.email, "Email"), emailValue(form.email)),
-							phone: phoneValue(form.phone),
-							password: firstError(
-								required(form.password, "Password"),
-								newPasswordValue(form.password, { email: form.email, name: form.name })
-							),
-				  }
-		);
+		const found = collectErrors(rulesFor(mode));
 		setErrors(found);
 		if (Object.keys(found).length) return;
 		if (mode === "register") {
@@ -116,7 +137,7 @@ function BookingAccountStep({ onDone }) {
 				{
 					name: form.name.trim(),
 					email: form.email.trim(),
-					phone: form.phone.trim() || undefined,
+					phone: form.phone.trim(),
 					password: form.password,
 				},
 				{ onSuccess: () => setMode("otp") },
@@ -161,10 +182,25 @@ function BookingAccountStep({ onDone }) {
 								name="otp"
 								placeholder="6-digit code"
 								value={otp}
-								onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+								onChange={(e) => {
+									setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+									if (errors.otp) {
+										setErrors((prev) => {
+											const next = { ...prev };
+											delete next.otp;
+											return next;
+										});
+									}
+								}}
 								autoComplete="one-time-code"
+								className={errors.otp ? "invalid" : ""}
+								aria-invalid={errors.otp ? true : undefined}
 								required
 							/>
+
+							{errors.otp && (
+								<p className="field-error" role="alert">{errors.otp}</p>
+							)}
 						</div>
 
 						{error && (
@@ -234,6 +270,7 @@ function BookingAccountStep({ onDone }) {
 								name="name"
 								value={form.name}
 								onChange={set("name")}
+								onBlur={blur("name")}
 								placeholder="e.g. Mocha Peralta"
 								autoComplete="name"
 								className={errors.name ? "invalid" : ""}
@@ -255,6 +292,7 @@ function BookingAccountStep({ onDone }) {
 							name="email"
 							value={form.email}
 							onChange={set("email")}
+							onBlur={blur("email")}
 							placeholder="you@example.com"
 							autoComplete="email"
 							className={errors.email ? "invalid" : ""}
@@ -269,17 +307,19 @@ function BookingAccountStep({ onDone }) {
 
 					{mode === "register" && (
 						<div className="appointment-field">
-							<label>Phone</label>
+							<label>Phone *</label>
 
 							<input
 								type="tel"
 								name="phone"
 								value={form.phone}
 								onChange={set("phone")}
-								placeholder="+63 917 000 0000"
+								onBlur={blur("phone")}
+								placeholder="0917 123 4567"
 								autoComplete="tel"
 								className={errors.phone ? "invalid" : ""}
 								aria-invalid={errors.phone ? true : undefined}
+								required
 							/>
 
 							{errors.phone && (
@@ -296,6 +336,7 @@ function BookingAccountStep({ onDone }) {
 							name="password"
 							value={form.password}
 							onChange={set("password")}
+							onBlur={blur("password")}
 							placeholder={
 								mode === "register" ? "At least 8 characters" : "Your password"
 							}
