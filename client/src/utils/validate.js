@@ -75,6 +75,9 @@ export function newPasswordValue(value, { email, name } = {}) {
 	if (COMMON_PASSWORDS.some((c) => lower.includes(c))) {
 		return "This password is too common — choose something less predictable.";
 	}
+	if (!/[^a-zA-Z0-9]/.test(pw)) {
+		return "Password must include at least one symbol (e.g. ! @ # $ %).";
+	}
 	return "";
 }
 

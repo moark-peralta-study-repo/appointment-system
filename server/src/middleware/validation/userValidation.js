@@ -36,10 +36,11 @@ const passwordRule = body("password")
 		if (v.length > 72) return false;
 		const lower = v.toLowerCase();
 		if (COMMON_PASSWORDS.some((c) => lower.includes(c))) return false;
+		if (!/[^a-zA-Z0-9]/.test(v)) return false; // require a symbol
 		return true;
 	})
 	.withMessage(
-		"password must be 8-72 characters and not a common password",
+		"password must be 8-72 characters, include a symbol, and not be a common password",
 	);
 
 // When email/name are in the payload, the password must not contain them.
