@@ -32,12 +32,34 @@ const ACTION_LABELS = {
 
 // Sensitivity tint for badges: auth events & deletions get attention.
 const ACTION_TONE = {
+	// Authentication
+	login: "success",
 	login_failed: "danger",
-	appointment_cancelled: "warn",
-	pet_deleted: "danger",
-	vet_deactivated: "warn",
-	password_reset: "accent",
+	register: "success",
+	user_created_admin: "success",
+	email_verified: "success",
+	otp_resend: "accent",
+
+	// Password & account security
 	password_reset_requested: "accent",
+	password_reset: "accent",
+	password_changed: "accent",
+	profile_updated: "default",
+
+	// Appointments
+	appointment_booked: "success",
+	appointment_status_changed: "accent",
+	appointment_cancelled: "warn",
+
+	// Pets
+	pet_created: "success",
+	pet_updated: "default",
+	pet_deleted: "danger",
+
+	// Veterinarians
+	vet_created: "success",
+	vet_updated: "default",
+	vet_deactivated: "warn",
 };
 
 function relativeTime(value) {
@@ -66,7 +88,13 @@ function fullTime(value) {
 
 function ActionBadge({ action }) {
 	const tone = ACTION_TONE[action] || "default";
-	return <span className={`audit-action ${tone}`}>{ACTION_LABELS[action] || action}</span>;
+
+	console.log({ action, tone });
+	return (
+		<span className={`audit-action ${tone}`}>
+			{ACTION_LABELS[action] || action}
+		</span>
+	);
 }
 
 // "What happened" cell: verb + context (email, from→to, pet name…).
@@ -129,7 +157,8 @@ function Activity() {
 				description="Audit trail of sign-ins, account changes, and data modifications across the clinic."
 				actions={
 					<span className="admin-panel-meta">
-						<PiListChecks size={15} /> {total} event{total === 1 ? "" : "s"} recorded
+						<PiListChecks size={15} /> {total} event{total === 1 ? "" : "s"}{" "}
+						recorded
 					</span>
 				}
 			/>
@@ -192,7 +221,10 @@ function Activity() {
 								{logs.map((log) => (
 									<tr key={log._id}>
 										<td>
-											<span className="audit-time" title={fullTime(log.createdAt)}>
+											<span
+												className="audit-time"
+												title={fullTime(log.createdAt)}
+											>
 												{relativeTime(log.createdAt)}
 											</span>
 										</td>
@@ -209,7 +241,10 @@ function Activity() {
 											)}
 										</td>
 										<td>
-											<ActionSummary action={log.action} details={log.details} />
+											<ActionSummary
+												action={log.action}
+												details={log.details}
+											/>
 										</td>
 										<td>
 											<span className="audit-entity">
