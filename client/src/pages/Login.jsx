@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link, Navigate } from "react-router-dom";
 import logo from "../assets/logo/pink-paws-full.png";
 import { useAuth } from "../context/useAuth";
+import { useVerifyOtp, useResendOtp } from "../hooks/useClientData";
+import { otpValue } from "../utils/validate";
 import { required, emailValue, firstError, collectErrors } from "../utils/validate";
 import { isPortal } from "../utils/roles";
 
@@ -23,13 +25,35 @@ function Login() {
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 	const [errors, setErrors] = useState({});
+	// First login of an unverified account → prompt for the OTP right
+	// here, instead of bouncing to a separate verify page.
+	const [mode, setMode] = useState("login"); // "login" | "otp"
+	const [otp, setOtp] = useState("");
+	const verify = useVerifyOtp();
+	const resend = useResendOtp();
+	const [resent, setResent] = useState(false);
 
 	// Show the API's message verbatim ("Invalid email or password",
 	// "email must be valid"…). On error we stay on the form so it's visible.
 	const error = login?.error?.message || "";
-	// 403 = valid credentials but email unverified → offer the verify page
-	// (prefilled with the email they just typed). 401 = plain wrong creds.
+	// 403 = valid credentials but email unverified → prompt for the OTP
+	// inline. 401 = plain wrong creds.
 	const unverified = login?.error?.status === 403;
+	useEffect(() => {
+		if (unverified && mode === "login") setMode("otp");
+	}, [unverified, mode]);
+
+	// Verify & continue: the OTP activates the account, then the session
+	// starts immediately (useVerifyOtp stores the token).
+	const handleVerify = (e) => {
+		e.preventDefault();
+		const msg = firstError(required(otp, "Verification code"), otpValue(otp));
+		if (msg) {
+			setErrors({ otp: msg });
+			return;
+		}
+		verify.mutate({ email: email.trim(), otp: otp.trim() });
+	};
 
 	const handleLogin = (e) => {
 		e.preventDefault();
@@ -74,76 +98,51 @@ function Login() {
 					</span>
 				</div>
 
-				{/* Form */}
+{/* Form */}
 				<form
-					onSubmit={handleLogin}
+					onSubmit={mode === "otp" ? handleVerify : handleLogin}
 					className="admin-login-form"
 					noValidate
 				>
-					<div className="admin-login-field">
-						<label htmlFor="login-email">Email Address</label>
+					{mode === "otp" ? (
+						<>
+							<div className="admin-login-field">
+								<label htmlFor="login-otp">Verification code</label>
 
-						<input
-							id="login-email"
-							type="email"
-							placeholder="Enter your email address"
-							value={email}
-							onChange={(e) => {
-								setEmail(e.target.value);
-								if (errors.email) setErrors((prev) => { const next = { ...prev }; delete next.email; return next; });
-							}}
-							autoComplete="email"
-							className={errors.email ? "invalid" : ""}
-							aria-invalid={errors.email ? true : undefined}
-							aria-describedby={errors.email ? "login-email-err" : undefined}
-							required
-						/>
+								<input
+									id="login-otp"
+									type="text"
+									inputMode="numeric"
+									placeholder="6-digit code"
+									value={otp}
+									onChange={(e) => {
+										setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+										if (errors.otp) {
+											setErrors((prev) => {
+												const next = { ...prev };
+												delete next.otp;
+												return next;
+											});
+										}
+									}}
+									autoComplete="one-time-code"
+									className={errors.otp ? "invalid" : ""}
+									aria-invalid={errors.otp ? true : undefined}
+									autoFocus
+								/>
 
-						{errors.email && (
-							<p id="login-email-err" className="field-error" role="alert">{errors.email}</p>
-						)}
-					</div>
+								{errors.otp && (
+									<p className="field-error" role="alert">{errors.otp}</p>
+								)}
 
-					<div className="admin-login-field">
-						<label htmlFor="login-password">Password</label>
-
-						<div className="admin-password-wrapper">
-							<input
-								id="login-password"
-								type={showPassword ? "text" : "password"}
-								placeholder="Enter your password"
-								value={password}
-								onChange={(e) => {
-									setPassword(e.target.value);
-									if (errors.password) setErrors((prev) => { const next = { ...prev }; delete next.password; return next; });
-								}}
-								autoComplete="current-password"
-								className={errors.password ? "invalid" : ""}
-								aria-invalid={errors.password ? true : undefined}
-								aria-describedby={errors.password ? "login-password-err" : undefined}
-								required
-							/>
-
-							<button
-								type="button"
-								className="admin-password-toggle"
-								onClick={() => setShowPassword(!showPassword)}
-							>
-								{showPassword ? "Hide" : "Show"}
-							</button>
-						</div>
-
-						{errors.password && (
-							<p id="login-password-err" className="field-error" role="alert">{errors.password}</p>
-						)}
-					</div>
-
-					{error && (
-						<div className="admin-login-error">
-							{error}
-							{unverified && (
-								<>
-									{" "}
+								<p
+									style={{
+										marginTop: 8,
+										fontSize: 13,
+										color: "var(--muted)",
+									}}
+								>
+									We emailed a code to {email.trim()}.{" "}
 									<button
 										type="button"
 										style={{
@@ -156,55 +155,108 @@ function Login() {
 											cursor: "pointer",
 										}}
 										onClick={() =>
-											navigate(
-												`/verify-email?email=${encodeURIComponent(email.trim())}`,
-											)
+											resend.mutate(email.trim(), {
+												onSuccess: () => {
+													setResent(true);
+													setTimeout(() => setResent(false), 2400);
+												},
+											})
 										}
 									>
-										Verify your email
+										{resent ? "Sent!" : "Resend code"}
 									</button>
-								</>
+								</p>
+							</div>
+
+							{verify.error && (
+								<div className="admin-login-error">
+									{verify.error.message}
+								</div>
 							)}
-						</div>
+
+							<button
+								type="submit"
+								className="admin-login-button"
+								disabled={verify.isPending}
+							>
+								{verify.isPending ? "Verifying…" : "Verify & continue"}
+							</button>
+						</>
+					) : (
+						<>
+							<div className="admin-login-field">
+								<label htmlFor="login-email">Email Address</label>
+
+								<input
+									id="login-email"
+									type="email"
+									placeholder="Enter your email address"
+									value={email}
+									onChange={(e) => {
+										setEmail(e.target.value);
+										if (errors.email) setErrors((prev) => { const next = { ...prev }; delete next.email; return next; });
+									}}
+									autoComplete="email"
+									className={errors.email ? "invalid" : ""}
+									aria-invalid={errors.email ? true : undefined}
+									aria-describedby={errors.email ? "login-email-err" : undefined}
+									required
+								/>
+
+								{errors.email && (
+									<p id="login-email-err" className="field-error" role="alert">{errors.email}</p>
+								)}
+							</div>
+
+							<div className="admin-login-field">
+								<label htmlFor="login-password">Password</label>
+
+								<div className="admin-password-wrapper">
+									<input
+										id="login-password"
+										type={showPassword ? "text" : "password"}
+										placeholder="Enter your password"
+										value={password}
+										onChange={(e) => {
+											setPassword(e.target.value);
+											if (errors.password) setErrors((prev) => { const next = { ...prev }; delete next.password; return next; });
+										}}
+										autoComplete="current-password"
+										className={errors.password ? "invalid" : ""}
+										aria-invalid={errors.password ? true : undefined}
+										aria-describedby={errors.password ? "login-password-err" : undefined}
+										required
+									/>
+
+									<button
+										type="button"
+										className="admin-password-toggle"
+										onClick={() => setShowPassword(!showPassword)}
+									>
+										{showPassword ? "Hide" : "Show"}
+									</button>
+								</div>
+
+								{errors.password && (
+									<p id="login-password-err" className="field-error" role="alert">{errors.password}</p>
+								)}
+							</div>
+
+							{error && (
+								<div className="admin-login-error">
+									{error}
+								</div>
+							)}
+
+							<button
+								type="submit"
+								className="admin-login-button"
+								disabled={login?.isPending}
+							>
+								{login?.isPending ? "Signing in…" : "Sign In"}
+							</button>
+						</>
 					)}
-
-					<button
-						type="submit"
-						className="admin-login-button"
-						disabled={login?.isPending}
-					>
-						{login?.isPending ? "Signing in…" : "Sign In"}
-					</button>
-
-					<p
-						style={{
-							textAlign: "center",
-							marginTop: 12,
-							fontSize: 13,
-							color: "var(--muted)",
-						}}
-					>
-						<Link to="/forgot-password" style={{ color: "var(--muted)" }}>
-							Forgot your password?
-						</Link>
-					</p>
-
-					<p
-						style={{
-							textAlign: "center",
-							marginTop: 12,
-							fontSize: 13,
-							color: "var(--muted)",
-						}}
-					>
-						New to the portal?{" "}
-						<Link
-							to="/client/register"
-							style={{ color: "var(--primary)", fontWeight: 700 }}
-						>
-							Create an account
-						</Link>
-					</p>
 				</form>
 
 				{/* Demo Account Credentials */}
